@@ -93,12 +93,12 @@ O desenvolvimento do aplicativo está previsto para ser concluído em 6 meses, c
 
 #### 6. Orçamento
 
-O orçamento para o desenvolvimento do aplicativo está estimado em R$ 50.000,00, incluindo:
+O orçamento para o desenvolvimento do aplicativo está estimado em R$ XXXXXXXX, incluindo:
 
-* Desenvolvimento do aplicativo: R$ 40.000,00;
-* Testes: R$ 5.000,00;
-* Hospedagem: R$ 3.000,00;
-* Outros custos: R$ 2.000,00.
+* Desenvolvimento do aplicativo: R$ XXXXXX;
+* Testes: R$ XXX;
+* Hospedagem: R$ XXXXX;
+* Outros custos: R$ XXXXXX.
 
 
 #### 7. Considerações finais
