@@ -1,0 +1,42 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Meus Treinos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-row>
+    <ion-label>
+      Escolha o seu treino de hoje:
+    </ion-label>
+    <ion-select (ionChange)="onTreinoSelected($event)" [value]="selectedTreino.id">
+      <ion-select-option *ngFor="let treino of user?.treinos" [value]="treino.id">{{treino.descricao}}
+      </ion-select-option>
+    </ion-select>
+  </ion-row>
+
+
+  <ion-grid>
+    <ion-list *ngIf="selectedTreino" [inset]="true">
+      <ion-item *ngFor="let ex of selectedTreino.exercicios" class="ion-justify-content-around">
+        <ion-col size="1">
+          <ion-checkbox></ion-checkbox>
+        </ion-col>
+        <ion-col class="ion-margin" size="10">
+          <h4>
+            {{ex.exercicio.descricao.toUpperCase()}}
+          </h4>
+          {{ex.series}} X {{ex.repeticao}}
+          <p  *ngIf="ex.carga">
+            com {{ex.carga}} kg
+          </p>
+          <p  *ngIf="ex.equipamento">
+            com {{ex.equipamento.toUpperCase()}}
+          </p>
+        </ion-col>
+        <!-- <ion-col size="1">[ ] </ion-col> -->
+
+      </ion-item>
+    </ion-list>
+  </ion-grid>
+</ion-content>
