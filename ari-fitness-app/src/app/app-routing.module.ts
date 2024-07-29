@@ -14,10 +14,7 @@ const routes: Routes = [
     path: 'treinos',
     loadChildren: () => import('./treinos/treinos.module').then( m => m.TreinosPageModule)
   },
-  {
-    path: 'pessoa-form',
-    loadChildren: () => import('./pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule)
-  }
+
 ];
 @NgModule({
   imports: [

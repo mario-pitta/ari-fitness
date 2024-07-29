@@ -6,54 +6,217 @@
 
 <ion-content [fullscreen]="true">
 
-  <div class="container">
+  <div class="">
     <ion-card class=" ion-padding">
       <ion-card-content>
-    <form [formGroup]="form" class="ion-text-left" (ionChange)="onFormChange($event)">
-      <div class="form-group">
-        <ion-input formControlName="nome" label="Nome"></ion-input>
-      </div>
-      <div class="form-group">
-        <ion-input formControlName="dataNascimento" label="Data de Nascimento" type="date"></ion-input>
-      </div>
-      <div class="form-group">
-        <ion-input formControlName="cpf" label="CPF" type="text" placeholder="000.000.000-00"></ion-input>
-      </div>
-      <div class="form-group">
-        <ion-input formControlName="whatsapp" label="Whatsapp" type="text" placeholder="(00) 0 0000-0000"></ion-input>
-      </div>
-      <div class="form-group">
-        <ion-select formControlName="genero" [value]="null" label="Gênero" placeholder="--SELECIONE--">
-          <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
-          <ion-select-option value="1">Masculino</ion-select-option>
-          <ion-select-option value="2">Feminino</ion-select-option>
-        </ion-select>
-      </div>
-      <div class="form-group">
-        <ion-select formControlName="tipoUsuario" class="ion-color-danger" [value]="null"  label="Tipo de usuário" placeholder="--SELECIONE--" (ionChange)="onChangeTipoUser()">
-          <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
-          <ion-select-option [value]="1">Aluno</ion-select-option>
-          <ion-select-option [value]="2">Funcionário</ion-select-option>
-        </ion-select>
+        <form [formGroup]="form" class="ion-text-left" (ionChange)="onFormChange($event)">
+          <h1>Dados Pessoais</h1>
+          <div class="form-group">
+            <ion-input formControlName="nome" autocapitalize="words" label="Nome"></ion-input>
+          </div>
+          <div class="form-group">
+            <ion-input formControlName="data_nascimento" label="Data de Nascimento" type="date"></ion-input>
+          </div>
+          <div class="form-group">
+            <ion-input formControlName="cpf" [maskito]="cpfMask" [maskitoElement]="maskPredicate" label="CPF"
+              type="text" placeholder="000.000.000-00"></ion-input>
+          </div>
+          <div class="form-group">
+            <ion-input formControlName="whatsapp" [maskito]="phoneMask" [maskitoElement]="maskPredicate"
+              label="Whatsapp" type="text" placeholder="(00) 0 0000-0000">
+            </ion-input>
+          </div>
 
-        <ng-container *ngIf="form.value.tipoUsuario === 1 && alunoForm; else funcionarioForm">
-        </ng-container>
-      </div>
+          <div class="form-group">
+            <ion-select formControlName="genero" [value]="null" label="Gênero" placeholder="--SELECIONE--">
+              <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+              <ion-select-option value="M">Masculino</ion-select-option>
+              <ion-select-option value="F">Feminino</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="form-group">
+            <ion-select formControlName="tipo_usuario" class="ion-color-danger" [value]="null" label="Tipo de usuário"
+              placeholder="--SELECIONE--" (ionChange)="onChangeTipoUser()">
+              <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+              <ion-select-option *ngFor="let tipoUser of tipoUsuarioList" [value]="tipoUser.id">{{tipoUser.descricao}}
+              </ion-select-option>
+
+            </ion-select>
+
+            <ng-container *ngIf="form.value.tipo_usuario !== 5; else alunoForm">
+              <ion-checkbox class="ion-text-wrap" *ngIf="form.value.tipo_usuario" labelPlacement="end"
+                formControlName="flagAdmin">Adminstrador
+              </ion-checkbox>
+            </ng-container>
+          </div>
 
 
-      <ng-template #alunoForm>
-        <div class="form-group">
-          <ion-input>
+          <ng-template #alunoForm>
+            <br>
+            <ion-row>
+              <ion-col size="6">
+                <ion-select formControlName="horario_id" class="ion-color-danger" [value]="null" label="Horário"
+                  placeholder="--SELECIONE--">
+                  <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+                  <ion-select-option *ngFor="let horario of horarios" [value]="horario.id">
+                    {{horario.hora_inicio}} - {{horario.hora_fim}}</ion-select-option>
 
-          </ion-input>
-        </div>
-      </ng-template>
-      <ng-template #funcionarioForm>
-        <ion-checkbox labelPlacement="end" formControlName="flagAdmin">Adminstrador</ion-checkbox>
-      </ng-template>
+                </ion-select>
+              </ion-col>
+              <ion-col size="6">
+                <ion-select formControlName="plano" class="ion-color-danger" [value]="null" label="Plano"
+                  placeholder="--SELECIONE--">
+                  <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+                  <ion-select-option *ngFor="let plano of planos" [value]="plano.id">{{plano.descricao}}
+                  </ion-select-option>
 
-    </form>
-  </ion-card-content>
-  </ion-card>
+                </ion-select>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-select formControlName="data_vencimento" class="ion-color-danger" [value]="null"
+                label="Dia de Vencimento" placeholder="--SELECIONE--">
+                <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+                <ion-select-option *ngFor="let dia of [5, 10, 15, 20, 25, 30]" [value]="dia">{{dia}}
+                </ion-select-option>
+
+              </ion-select>
+            </ion-row>
+            <br>
+            <h1>Medidas Básicas</h1>
+            <br>
+            <ion-row>
+              <ion-col size="6">
+                <div class="form-group">
+                  <ion-input formControlName="altura" [maskitoElement]="maskPredicate" [maskito]="alturaMask"
+                    label="Altura" type="text" placeholder="0.00 m" (ionChange)="calcIMC()"></ion-input>
+                </div>
+              </ion-col>
+              <ion-col size="6">
+                <div class="form-group">
+                  <ion-input formControlName="peso" [maskitoElement]="maskPredicate" [maskito]="pesoMask" label="Peso"
+                    type="text" placeholder="00.00 kg" (ionChange)="calcIMC()"></ion-input>
+                </div>
+              </ion-col>
+              <!-- <ion-col size="6">
+                <div class="form-group">
+                  <ion-input formControlName="rcq" label="RCQ Real" type="number" placeholder="00.00"></ion-input>
+                </div>
+              </ion-col> -->
+              <ion-col size="6">
+                <div class="form-group">
+                  <ion-input formControlName="imc" label="IMC Real" type="number" placeholder="00.00"></ion-input>
+                </div>
+              </ion-col>
+              <!-- <ion-col size="6">
+                <div class="form-group">
+                  <ion-input  label="RCQ Ideal" type="number" placeholder="00.00" [(ngModel)]="rcqIdeal" [ngModelOptions]="{standalone: true}" disabled></ion-input>
+                </div>
+              </ion-col> -->
+              <ion-col size="6">
+                <div class="form-group">
+                  <ion-input label="IMC Ideal" type="number" placeholder="00.00" [(ngModel)]="imcIdeal"
+                    [ngModelOptions]="{standalone: true}" disabled></ion-input>
+                </div>
+              </ion-col>
+            </ion-row>
+
+
+            <br>
+            <h1>Anaminese</h1>
+            <br>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #temDoenca label="" type="number"
+                placeholder="00.00">Tenho
+                alguma patologia.</ion-checkbox>
+              <ng-container *ngIf="temDoenca.checked === true">
+                <ion-input label="Qual(s) ? " type="text" formControlName="doencas"></ion-input>
+              </ng-container>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #flagMedicamento #label="" type="number"
+                placeholder="00.00">Uso ou
+                estou usando alguma medicação.</ion-checkbox>
+              <ng-container *ngIf="flagMedicamento.checked === true">
+                <ion-input label="Qual(s) ? " type="text" formControlName="medicacao_em_uso"></ion-input>
+              </ng-container>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #cirurgia label="" type="number"
+                placeholder="00.00">
+                Passei por cirurgia, internação e/ou fraturas nos últimos 6 meses. </ion-checkbox>
+              <ion-input *ngIf="cirurgia.checked === true" label="Qual(s) ? " type="text"
+                formControlName="medicacao_em_uso"></ion-input>
+
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="cardiopata" label=""
+                type="number" placeholder="00.00">Eu sou, ou tenho cardiopáta(s) na família </ion-checkbox>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #relato_dor label="" type="number"
+                placeholder="00.00">Sinto dores frequentes, ou senti dores nas últimas semanas. </ion-checkbox>
+              <ion-input *ngIf="relato_dor.checked === true" label="Qual(s) ? " type="text"
+                formControlName="relato_dor"></ion-input>
+            </div>
+
+            <br>
+            <h1>Antecedente Familiar (Mãe, Pai, Avós)</h1>
+            <br>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="avc" label="" type="number"
+                placeholder="00.00">Tenho
+                diabétes ou alguém próximo de mim tem.</ion-checkbox>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="diabete" label="" type="number"
+                placeholder="00.00">Já
+                houve Acidente Vascular Cerebral (AVC) na família.</ion-checkbox>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="infarto" label="" type="number"
+                placeholder="00.00">Já
+                infartei, ou alguém próximo infartou.</ion-checkbox>
+            </div>
+            <div class="form-group">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="pressao_arterial" label=""
+                type="number" placeholder="00.00">Tenho pressão arterial fora do padrão para minha idade.
+              </ion-checkbox>
+            </div>
+
+            <div class="form-group">
+              <ion-select formControlName="classificacao_risco" id="classificacao_risco" [value]="null"
+                [ngClass]="form.value.classificacao_risco === 1 ? 'ion-text-success' : form.value.classificacao_risco === 2 ? 'ion-text-warning' : 'ion-text-danger'"
+                label="Classificação de Risco" placeholder="--SELECIONE--">
+                <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
+                <ion-select-option *ngFor="let grau of [1, 2, 3]" [value]="grau"
+                  [ngClass]="grau === 1 ? 'ion-text-success' : grau === 2 ? 'ion-text-warning' : 'ion-text-danger'">
+                  {{grau}} <ion-icon [color]="grau === 1 ? 'success' : grau === 2 ? 'warning' : 'danger' "></ion-icon>
+                </ion-select-option>
+
+              </ion-select>
+            </div>
+            <div class="form-group">
+              <ion-textarea label="Observações: " formControlName="observacoes" labelPlacement="fixed"
+                placeholder="Escreva aqui" maxlength="250" [counterFormatter]="customCounterFormatter"></ion-textarea>
+            </div>
+            <br>
+
+          </ng-template>
+
+        </form>
+      </ion-card-content>
+      <ion-button expand="block" type="submit" (click)="submitForm()" color="primary"
+        [disabled]="form.invalid || loading">
+        <span *ngIf="!loading; else spinner">
+          Enviar
+        </span>
+        <ion-icon slot="end" name="send"></ion-icon>
+      </ion-button>
+    </ion-card>
   </div>
 </ion-content>
+
+<ng-template #spinner>
+  <ion-spinner name="circles"></ion-spinner>
+</ng-template>

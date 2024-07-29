@@ -1,8 +1,8 @@
 {
   "name": "ari-fitness-app",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Mario Pitta",
+  "homepage": "",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -27,6 +27,8 @@
     "@capacitor/keyboard": "6.0.1",
     "@capacitor/status-bar": "6.0.0",
     "@ionic/angular": "^8.0.0",
+    "@maskito/angular": "^3.0.0",
+    "@maskito/core": "^3.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "ionicons": "^7.0.0",

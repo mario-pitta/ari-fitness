@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Usuários</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment value="5" (ionChange)="changeTipoUsuario($event)">
+    <ion-segment-button [value]="Constants.ALUNO_ID">
+      <ion-label>Alunos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button [value]="Constants.INSTRUTOR_ID">
+      <ion-label>Instrutores</ion-label>
+    </ion-segment-button>
+    <ion-segment-button [value]="Constants.GERENCIA_ID">
+      <ion-label>Gerentes</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false"
+    [routerLink]="['/cadastro-usuario', tipoSelected]">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-list *ngIf="usuarioList.length" [inset]="true">
+    <ion-item *ngFor="let usuario of usuarioList" >
+
+
+      <div class="d-flex">
+        <h3>{{usuario.nome}}</h3>
+        <ion-row>
+          <ion-col size="6">
+            <ion-label>Genero: </ion-label>{{ usuario.genero }}
+            <ion-label>Idade: </ion-label>{{ usuario.idade }}
+          </ion-col>
+          <ion-col size="6">
+            <ion-label>Plano: </ion-label>{{ usuario.plano }}
+            <ion-label>Horario: </ion-label>{{ usuario.horarios.hora_inicio }} - {{ usuario.horarios.hora_fim}}
+          </ion-col>
+        </ion-row>
+      </div>
+
+    </ion-item>
+  </ion-list>
+
+</ion-content>

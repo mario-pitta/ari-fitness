@@ -20,8 +20,16 @@ const routes: Routes = [
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
       },
       {
-        path: 'settings',
+        path: 'cadastro-usuario/:id',
         loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+      },
+      {
+        path: 'pessoa-form',
+        loadChildren: () => import('../pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule)
+      },
+      {
+        path: 'usuarios',
+        loadChildren: () => import('../usuarios/usuarios.module').then( m => m.UsuariosPageModule)
       },
       {
         path: '',
