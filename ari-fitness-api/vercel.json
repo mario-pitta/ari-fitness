@@ -2,20 +2,23 @@
     "version": 2,
     "builds": [
         {
-          "src": "main.ts",
-          "use": "@vercel/node"
+            "src": "./dist/index.html",
+            "use": "@vercel/html"
+        },
+        {
+            "src": "/dist/main.js",
+            "use": "@vercel/node"
+        },
+        {
+            "src": "/(.*)",
+            "use": "@vercel/node"
         }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "main.ts",
-      "methods": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE"
-         ]
-      }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "main.map.js",
+            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+        }
     ]
-  }
+}
