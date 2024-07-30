@@ -12,6 +12,7 @@ import { EquipamentoModule } from './equipamento/equipamento.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path'
+import { DataBaseModule } from './datasource/database.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -26,7 +27,8 @@ import { join } from 'path'
     HorarioModule,
     PlanoModule,
     MusculoModule,
-    EquipamentoModule
+    EquipamentoModule,
+    DataBaseModule
   ],
   controllers: [AppController],
   providers: [AppService],

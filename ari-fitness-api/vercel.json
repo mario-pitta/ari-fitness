@@ -1,24 +1,29 @@
 {
     "version": 2,
+    
     "builds": [
         {
-            "src": "./dist/index.html",
-            "use": "@vercel/html"
-        },
-        {
-            "src": "/dist/main.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "/(.*)",
+            "src": "src/main.ts",
             "use": "@vercel/node"
         }
     ],
+    "installCommand": "npm install",
+    "public": true,
+    "devCommand": "npm run start:dev",
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "main.js",
-            "methods": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+            "dest": "src/main.ts",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "HEAD",
+                "OPTIONS"
+            ]
         }
-    ]
+    ],
+    "buildCommand": "npm run build"
 }
