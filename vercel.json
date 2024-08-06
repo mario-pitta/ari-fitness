@@ -1,0 +1,29 @@
+{
+    "version": 2,
+    
+    "builds": [
+        {
+            "src": "src/main.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "installCommand": "npm install",
+    "public": true,
+    "devCommand": "npm run start:dev",
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "ari-fitness-api/src/main.ts",
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "PATCH",
+                "DELETE",
+                "HEAD",
+                "OPTIONS"
+            ]
+        }
+    ],
+    "buildCommand": "npm run build"
+}
