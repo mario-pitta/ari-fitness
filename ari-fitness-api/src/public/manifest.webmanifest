@@ -1,7 +1,7 @@
 {
-  "name": "app",
-  "short_name": "app",
-  "theme_color": "#1976d2",
+  "name": "AriFitnessApp",
+  "short_name": "AriFitnessApp",
+  "theme_color": "#12191f",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
