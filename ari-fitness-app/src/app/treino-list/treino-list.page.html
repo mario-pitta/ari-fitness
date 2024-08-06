@@ -1,0 +1,129 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <!-- <ion-title>Meus Treinos</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- <ion-row class="ion-justify-content-center ion-align-items-center">
+    <h3>{{selectedTreino?.descricao}}</h3>
+  </ion-row>
+  <div class="ion-padding">
+    <ion-row class="ion-align-items-center">
+      <ion-input type="number" label="Defina o descanso (s)" labelPlacement="floating" [(ngModel)]="interval" />
+    </ion-row>
+  </div> -->
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false">
+    <ion-fab-button id="open-treino-modal" fill="outlined" (click)="openModal = !openModal">
+      <ion-icon name="add" size="large"></ion-icon>
+    </ion-fab-button>
+
+  </ion-fab>
+
+  <ion-grid>
+    <ion-searchbar show-cancel-button="always" cancel-button-text="Custom Cancel" cancel-button-icon="filter"
+      placeholder="Pesquisar..." [(ngModel)]="searchText" (click)="searchText = ''" (keyup)="filterList()" (ionClear)="filteredTreinos = treinos"></ion-searchbar>
+    <ion-list [inset]="true">
+      <ion-item *ngFor="let treino of filteredTreinos" class="ion-justify-content-between ion-align-items-center">
+        <ion-label>
+          <h2>{{ treino.nome }}</h2>
+          <p>Nível: {{ treino.nivel_dificuldade }}</p>
+          <p>Grupo Muscular: {{ treino.grupo_muscular?.nome }}</p>
+        </ion-label>
+        <ion-icon name="create" slot="end"(click)="openTreinoEditor(treino)"></ion-icon>
+        <ion-icon name="trash" slot="end" (click)="excluirTreino(treino.id)"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </ion-grid>
+</ion-content>
+
+
+
+<ion-modal #modal trigger="open-treino-modal" [isOpen]="openModal" (didDismiss)="openModal = false">
+  <ng-template>
+    <ion-card class="ion-padding">
+      <ion-row class="ion-justify-content-between ion-align-items-center">
+        <h3>Cadastro de Treino</h3>
+        <ion-button fill="clear" (click)="closeModal()">
+          <ion-icon name="close" color="danger"></ion-icon>
+        </ion-button>
+      </ion-row>
+      <form [formGroup]="form">
+        <ion-row class="ion-padding ion-align-items-center">
+          <ion-input label="Nome:" labelPlacement="floating" [formControlName]="'nome'" />
+          <ion-textarea label="Descricao:" labelPlacement="floating" [formControlName]="'descricao'"
+            placeholder="Insira informações sobre o treino que está cadastrando..."></ion-textarea>
+          <ion-select label="Dificuldade:" labelPlacement="floating" [formControlName]="'nivel_dificuldade'">
+            <ion-select-option *ngFor="let d of [1,2,3]">{{d}}</ion-select-option>
+          </ion-select>
+          <ion-select label="Parte do Corpo:" labelPlacement="floating" [formControlName]="'parte_do_corpo_id'">
+            <ion-select-option *ngFor="let p of partesDoCorpo" [value]="p.id">{{p.nome}}</ion-select-option>
+          </ion-select>
+          <ion-select label="Grupo Muscular:" labelPlacement="floating" [formControlName]="'grupo_muscular_id'">
+            <ion-select-option *ngFor="let g of gruposMusculares" [value]="g.id">{{g.nome}}</ion-select-option>
+          </ion-select>
+          <ion-checkbox label="Público" labelPlacement="end" [value]="f.value.fl_publico" [formControlName]="'fl_publico'">
+            Público
+          </ion-checkbox>
+          <!-- <ion-input label="Nome:" labelPlacement="floating" />
+        <ion-input label="Nome:" labelPlacement="floating" /> -->
+
+        </ion-row>
+        <ion-list formArrayName="exercicios">
+          <ion-row class="ion-justify-content-between">
+            <h4>Exercícios</h4>
+            <ion-buttons *ngIf="!user.flagAdmin">
+              <ion-button fill="solid" color="primary" (click)="openTreinoForm()">
+                <ion-icon name="add"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-row>
+          <ion-item *ngFor="let ex of exercicios.value; let i = index" class="ion-text-capitalize">
+            <ion-card fill="block" class="w-100">
+              <!-- <ion-row>
+              <h3>{{ex.exercicio.nome}}</h3>
+            </ion-row> -->
+              <ion-item class="ion-text-capitalize">
+                <ion-label [formGroupName]="i">
+                  {{ex.exercicio?.nome || ex.exercicios?.nome}} <span *ngIf="ex.equipamento || ex.equipamentos"> - {{ex.equipamento?.nome || ex.equipamentos?.nome }}</span>
+                </ion-label>
+                <ion-button slot="end" color="danger" (click)="removeExercicio(i)">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <ion-row>
+                <ion-col>
+                  <ion-label> Musculo: {{ex.exercicio?.musculo?.nome || ex.exercicios?.musculo?.nome}}</ion-label>
+                </ion-col>
+                <ion-col>
+                  <ion-label> Grupo Muscular:
+                    {{ex.grupo_muscular?.nome || ex.exercicio?.musculo?.nome || ex.exercicio?.musculo?.grupo_muscular?.nome}}
+                  </ion-label>
+                </ion-col>
+                <ion-col>
+                  <ion-label> Parte do Corpo:
+                    {{ex.parte_do_corpo?.nome || ex.exercicio?.parte_do_corpo?.nome || ex.exercicio?.musculo?.parte_do_corpo?.nome || ex.exercicios?.parte_do_corpo?.nome || ex.exercicios?.musculo?.parte_do_corpo?.nome}}
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>
+
+                  <ion-label>
+                    <span *ngIf="ex.repeticoes">{{ex.series}} Séries </span>
+                    <span *ngIf="ex.series">x {{ex.repeticoes}} Repetições </span>
+                    <span *ngIf="ex.carga"> com {{ex.carga}} Kg</span>
+                  </ion-label>
+                </ion-col>
+              </ion-row>
+
+            </ion-card>
+          </ion-item>
+        </ion-list>
+        <ion-button class="success" size="block" color="primary" [disabled]="loading || f.invalid"
+          (click)="submitForm()">CONFIRMAR</ion-button>
+
+      </form>
+    </ion-card>
+  </ng-template>
+</ion-modal>

@@ -7,13 +7,18 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    path: 'login',
+    loadChildren: () => import('./auth/login/login.module').then( m => m.LoginPageModule)
   },
   {
-    path: 'treinos',
-    loadChildren: () => import('./treinos/treinos.module').then( m => m.TreinosPageModule)
+    path: 'ficha-treino-aluno',
+    loadChildren: () => import('./ficha-treino-aluno/ficha-treino-aluno.module').then( m => m.FichaTreinoAlunoPageModule)
   },
+  {
+    path: 'treino-list',
+    loadChildren: () => import('./treino-list/treino-list.module').then( m => m.TreinoListPageModule)
+  },
+
 
 ];
 @NgModule({

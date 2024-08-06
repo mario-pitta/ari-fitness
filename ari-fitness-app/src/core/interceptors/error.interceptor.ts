@@ -23,17 +23,20 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err: HttpErrorResponse) => {
         if (err) {
-          // switch (err.status) {
-          //   // case 400:
-          //   //   throwError(() => err.message);
-          //   //   break;
-          //   // case 401:
-          //   //   throwError(() => err.message);
-          //   //   break;
-          //   // default:
-          //   //   throwError(() => err.message);
-          //   //   break;
-          // }
+          switch (err.status) {
+            case 400:
+              throwError(() => err.message);
+              break;
+            case 401:
+              this.router.navigate(['/login'])
+              localStorage.clear();
+              // location.reload();
+              throwError(() => err.message);
+              break;
+            default:
+              throwError(() => err.message);
+              break;
+          }
           throwError(err);
           this.toastr.error(
             'Algo deu errado.' +

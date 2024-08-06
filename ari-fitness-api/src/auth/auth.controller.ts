@@ -20,8 +20,10 @@ export class AuthController {
         if (_res.error)
           return res.status(400).send({ status: 500, ..._res.error }); //throw new Error(_res.error.message);
 
+        if(!_res.data.length)
+          return res.status(401).send({status: 401, message: "Usuario/Senha inválidos"})
         console.log('vai retornar ok?: ', _res);
-        return res.send(_res.data);
+        return res.send(_res.data[0]);
       });
   }
 }

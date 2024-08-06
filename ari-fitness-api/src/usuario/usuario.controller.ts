@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { query, Response } from 'express';
 import { Usuario } from './Usuario.interface';
 import { UsuarioService } from './usuario.service';
@@ -91,7 +92,11 @@ export class UsuarioController {
    * `usuarioService` with the `body` parameter passed to it.
    */
   @Put()
-  update(@Body() body: Partial<Usuario>) {
-    return this.usuarioService.update(body);
+  update(@Body() body: Partial<Usuario>, @Res() res: Response) {
+    return this.usuarioService.update(body).then((_res) => {
+      if (_res.error) res.status(500).send(_res.error);
+
+      res.status(201).send(_res.data);
+    });
   }
 }

@@ -26,7 +26,7 @@ export class EquipamentoService {
 
       )
       .match({ ...filter })
-      .order('id', {
+      .order('nome', {
         ascending: true,
       });
   }
@@ -51,7 +51,7 @@ export class EquipamentoService {
    * @returns The `update` method is returning a promise that represents the result of updating the
    * record in the database table specified by `tableName` with the data provided in the `body` object.
    */
-  update(body: Partial<Equipamento>) {
+  update(body: Equipamento | Partial<Equipamento>) {
     return this.database.supabase
       .from(tableName)
       .update(body)

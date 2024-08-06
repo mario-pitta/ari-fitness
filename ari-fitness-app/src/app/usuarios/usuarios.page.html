@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Usuários</ion-title>
+    <!-- <ion-title>Usuários</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
@@ -16,32 +16,88 @@
       <ion-label>Gerentes</ion-label>
     </ion-segment-button>
   </ion-segment>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false"
-    [routerLink]="['/cadastro-usuario', tipoSelected]">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false" [routerLink]="['/cadastro-usuario']">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <ion-list *ngIf="usuarioList.length" [inset]="true">
-    <ion-item *ngFor="let usuario of usuarioList" >
+    <!-- <ion-item *ngFor="let usuario of usuarioList">
 
 
-      <div class="d-flex">
-        <h3>{{usuario.nome}}</h3>
-        <ion-row>
-          <ion-col size="6">
-            <ion-label>Genero: </ion-label>{{ usuario.genero }}
-            <ion-label>Idade: </ion-label>{{ usuario.idade }}
-          </ion-col>
-          <ion-col size="6">
-            <ion-label>Plano: </ion-label>{{ usuario.plano }}
-            <ion-label>Horario: </ion-label>{{ usuario.horarios.hora_inicio }} - {{ usuario.horarios.hora_fim}}
-          </ion-col>
+      <div class="w-100">
+        <ion-row class="ion-align-items-center">
+          <div class="w-90">
+            <span class="d-flex ion-align-items-center ion-margin">
+              <ion-avatar slot="start">
+                <img alt="Silhouette of a person's head"src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+              </ion-avatar>
+              <ion-label style="margin: 15px; font-weight: bold; font-size: large;">{{usuario?.nome}}</ion-label>
+
+            </span>
+            <ion-row>
+              <ion-col size="6">
+                <ion-label>Genero: </ion-label>{{ usuario?.genero }}
+                <ion-label>Idade: </ion-label>{{ usuario?.idade }}
+              </ion-col>
+              <ion-col size="6">
+                <ion-label>Plano: </ion-label>{{ usuario?.planos.descricao }}
+                <ion-label>Horario: </ion-label>{{ usuario?.horarios.hora_inicio }} - {{ usuario?.horarios.hora_fim}}
+              </ion-col>
+
+            </ion-row>
+          </div>
+          <div class="w-10">
+            <ion-col size="1">
+              <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512" style="cursor: pointer;" tooltip="Treinos">
+                <path fill="currentColor"
+                  d="M165.906 18.688C15.593 59.28-42.187 198.55 92.72 245.375h-1.095c.635.086 1.274.186 1.906.28c8.985 3.077 18.83 5.733 29.532 7.94C173.36 273.35 209.74 321.22 212.69 368c-33.514 23.096-59.47 62.844-59.47 62.844l26.28 38.686L138.28 493h81.97c-40.425-40.435-11.76-85.906 36.125-85.906c48.54 0 73.945 48.112 36.156 85.906h81.126l-40.375-23.47l26.283-38.686s-26.376-40.4-60.282-63.406c3.204-46.602 39.5-94.167 89.595-113.844c10.706-2.207 20.546-4.86 29.53-7.938c.633-.095 1.273-.195 1.908-.28h-1.125c134.927-46.82 77.163-186.094-73.157-226.69c-40.722 39.37 6.54 101.683 43.626 56.877c36.9 69.08 8.603 127.587-72.28 83.406c-11.88 24.492-34.213 41.374-60.688 41.374c-26.703 0-49.168-17.167-60.97-42c-81.774 45.38-110.512-13.372-73.437-82.78c37.09 44.805 84.35-17.508 43.626-56.876zm90.79 35.92c-27.388 0-51.33 27.556-51.33 63.61c0 36.056 23.942 62.995 51.33 62.995s51.327-26.94 51.327-62.994c0-36.058-23.94-63.61-51.328-63.61z" />
+              </svg>
+            </ion-col>
+          </div>
         </ion-row>
+
       </div>
 
+    </ion-item> -->
+    <ion-item *ngFor="let
+    usuario of usuarioList">
+      <ion-avatar slot="start">
+        <img
+          [src]="usuario?.genero === 'M' ? 'https://cdn-icons-png.flaticon.com/128/4140/4140048.png': 'https://cdn-icons-png.flaticon.com/128/4140/4140047.png'" />
+      </ion-avatar>
+      <ion-row class="w-75 ion-align-items-center ion-margin">
+        <ion-col>
+          <ion-label>
+            <h2>{{ usuario?.nome }}</h2>
+            <!-- <p>Sexo: {{ usuario?.genero }}</p> -->
+            <p>Idade: {{ usuario?.idade }}</p>
+            <p *ngIf="usuario?.planos">Plano: {{ usuario?.planos?.descricao }}</p>
+            <p *ngIf="usuario?.horarios">Horário: {{ usuario?.horarios?.hora_inicio?.slice(0, 5)}}</p>
+          </ion-label>
+        </ion-col>
+        <ion-col size="1">
+          <ion-button [id]="'poppover-router-options-trigger_'+usuario.id" (click)="showNavigationOptions(usuario)" fill="clear">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+          </ion-button>
+
+
+        </ion-col>
+      </ion-row>
     </ion-item>
   </ion-list>
 
 </ion-content>
+
+
+<ion-popover  [isOpen]="isOpen" (didDismiss)="isOpen = false" reference="trigger" [trigger]="'poppover-router-options-trigger_'+selectedUsuario?.id">
+  <ng-template>
+    <!-- <ion-content class="ion-padding"> -->
+      <ion-list>
+        <ion-item (click)="navigate('/cadastro-usuario', selectedUsuario)">Ficha de Inscrição</ion-item>
+        <ion-item (click)="navigate('/ficha-treino', selectedUsuario)">Ficha de Treino</ion-item>
+      </ion-list>
+    <!-- </ion-content> -->
+  </ng-template>
+</ion-popover>

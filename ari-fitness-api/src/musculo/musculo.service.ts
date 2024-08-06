@@ -17,9 +17,19 @@ export class MusculoService {
   findAll(filter: Partial<Musculo> | Musculo) {
     return this.database.supabase
       .from(tableName)
-      .select('*')
+      .select(`
+        *,
+         parte_do_corpo (
+          *
+        ),
+        grupo_muscular (
+          *
+        )
+        
+      `,
+      )
       .match({ ...filter })
-      .order('id', {
+      .order('nome', {
         ascending: true,
       });
   }

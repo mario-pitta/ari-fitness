@@ -15,7 +15,7 @@ export class UsuarioService {
    * selected.
    */
   findAll() {
-    return this.database.supabase.from(tableName).select('*').order('id', {
+    return this.database.supabase.from(tableName).select('*').order('nome', {
       ascending: true,
     });
   }
@@ -34,7 +34,7 @@ export class UsuarioService {
         `,
       )
       .match({ ...filters })
-      .order('id', {
+      .order('nome', {
         ascending: true,
       });
   }

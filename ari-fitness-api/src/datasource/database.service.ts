@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /*
 https://docs.nestjs.com/providers#services
 */
@@ -14,13 +15,9 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 @Injectable()
 export class DataBaseService {
   supabase: SupabaseClient = supabase;
-  constructor() {}
-
-  from(cpf: string, dataNascimento: string) {
-    return this.supabase
-      .from('usuario')
-      .select('*')
-      .eq('cpf', cpf)
-      .eq('dataNascimento', dataNascimento);
+  private counter = 0;
+  constructor() {
+    this.counter++;
+    console.log('DataBaseService construction...', this.counter);
   }
 }

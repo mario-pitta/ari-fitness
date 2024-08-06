@@ -38,7 +38,7 @@
             <ion-select formControlName="tipo_usuario" class="ion-color-danger" [value]="null" label="Tipo de usuário"
               placeholder="--SELECIONE--" (ionChange)="onChangeTipoUser()">
               <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
-              <ion-select-option *ngFor="let tipoUser of tipoUsuarioList" [value]="tipoUser.id">{{tipoUser.descricao}}
+              <ion-select-option *ngFor="let tipoUser of tiposUsuario" [value]="tipoUser.id">{{tipoUser.nome}}
               </ion-select-option>
 
             </ion-select>
@@ -126,36 +126,36 @@
             <h1>Anaminese</h1>
             <br>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #temDoenca label="" type="number"
-                placeholder="00.00">Tenho
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #temDoenca [checked]="form.value.doencas"
+                type="number" placeholder="00.00">Tenho
                 alguma patologia.</ion-checkbox>
               <ng-container *ngIf="temDoenca.checked === true">
                 <ion-input label="Qual(s) ? " type="text" formControlName="doencas"></ion-input>
               </ng-container>
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #flagMedicamento #label="" type="number"
-                placeholder="00.00">Uso ou
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #flagMedicamento
+                [checked]="form.value.medicacao_em_uso" type="number" placeholder="00.00">Uso ou
                 estou usando alguma medicação.</ion-checkbox>
               <ng-container *ngIf="flagMedicamento.checked === true">
                 <ion-input label="Qual(s) ? " type="text" formControlName="medicacao_em_uso"></ion-input>
               </ng-container>
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #cirurgia label="" type="number"
-                placeholder="00.00">
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #cirurgia [checked]="form.value.cirurgia"
+                type="number" placeholder="00.00">
                 Passei por cirurgia, internação e/ou fraturas nos últimos 6 meses. </ion-checkbox>
-              <ion-input *ngIf="cirurgia.checked === true" label="Qual(s) ? " type="text"
-                formControlName="medicacao_em_uso"></ion-input>
+              <ion-input *ngIf="cirurgia.checked === true" label="Qual(s) ? " type="text" formControlName="cirurgia">
+              </ion-input>
 
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="cardiopata" label=""
-                type="number" placeholder="00.00">Eu sou, ou tenho cardiopáta(s) na família </ion-checkbox>
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="cardiopata">Eu sou, ou tenho
+                cardiopáta(s) na família </ion-checkbox>
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #relato_dor label="" type="number"
-                placeholder="00.00">Sinto dores frequentes, ou senti dores nas últimas semanas. </ion-checkbox>
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" #relato_dor [checked]="form.value.relato_dor">
+                Sinto dores frequentes, ou senti dores nas últimas semanas. </ion-checkbox>
               <ion-input *ngIf="relato_dor.checked === true" label="Qual(s) ? " type="text"
                 formControlName="relato_dor"></ion-input>
             </div>
@@ -164,18 +164,15 @@
             <h1>Antecedente Familiar (Mãe, Pai, Avós)</h1>
             <br>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="avc" label="" type="number"
-                placeholder="00.00">Tenho
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="avc">Tenho
                 diabétes ou alguém próximo de mim tem.</ion-checkbox>
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="diabete" label="" type="number"
-                placeholder="00.00">Já
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="diabete">Já
                 houve Acidente Vascular Cerebral (AVC) na família.</ion-checkbox>
             </div>
             <div class="form-group">
-              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="infarto" label="" type="number"
-                placeholder="00.00">Já
+              <ion-checkbox class="ion-text-wrap" labelPlacement="end" formControlName="infarto">Já
                 infartei, ou alguém próximo infartou.</ion-checkbox>
             </div>
             <div class="form-group">

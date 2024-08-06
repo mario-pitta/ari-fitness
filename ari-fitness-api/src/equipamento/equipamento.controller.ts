@@ -4,12 +4,10 @@ import { Equipamento } from './equipamento.interface';
 import { EquipamentoService } from './equipamento.service';
 import { Body, Controller, Get, Post, Put, Query, Res } from '@nestjs/common';
 
-
-
-const controller = 'equipamentos'
+const controller = 'equipamentos';
 @Controller(controller)
 export class EquipamentoController {
-  constructor(private musculoService: EquipamentoService) {}
+  constructor(private equipamentoService: EquipamentoService) {}
 
   /**
    * The function `findAll` retrieves all users and sends the data or an error response using the
@@ -28,7 +26,7 @@ export class EquipamentoController {
     @Query() filter: Partial<Equipamento> | Equipamento,
   ) {
     console.log('getting all ...', controller);
-    return this.musculoService.findAll(filter).then((_res) => {
+    return this.equipamentoService.findAll(filter).then((_res) => {
       if (_res.error) {
         console.error('erro no Equipamento/findAll', _res.error);
         res.status(500).send({
@@ -37,7 +35,7 @@ export class EquipamentoController {
         });
       }
 
-      return res.send(_res.data);
+      return res.send(_res.data?.sort((a, b) => a.nome.localeCompare(b.nome) ));
     });
   }
 
@@ -52,7 +50,7 @@ export class EquipamentoController {
    */
   @Post()
   create(@Body() body: Equipamento) {
-    return this.musculoService.create(body);
+    return this.equipamentoService.create(body);
   }
 
   /**
@@ -66,6 +64,11 @@ export class EquipamentoController {
    */
   @Put()
   update(@Body() body: Partial<Equipamento>) {
-    return this.musculoService.update(body);
+    console.log('Body', body);
+
+    if (!body.id) throw new Error('Id não informado');
+
+    console.log('Equipamento to update:', body.id, body.nome);
+    return this.equipamentoService.update(body);
   }
 }

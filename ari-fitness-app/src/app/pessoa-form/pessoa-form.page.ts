@@ -15,12 +15,12 @@ import { TipoUsuario } from 'src/core/models/TipoUsuario';
 import { Horario } from 'src/core/models/Horario';
 import { Plano } from 'src/core/models/Plano';
 
-import { TipoUsuarioService } from 'src/core/services/tipoUsuario/tipoUsuario.service';
+import { TipoUsuarioService } from 'src/core/services/tipo-usuario/tipoUsuario.service';
 import { PlanoService } from 'src/core/services/plano/plano.service';
 import { HorarioService } from 'src/core/services/horario/horario.service';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -30,56 +30,16 @@ import { ActivatedRoute } from '@angular/router';
 export class PessoaFormPage implements OnInit {
   loading: boolean = false;
 
-  phoneMask: MaskitoOptions = {
-    mask: [
-      '(',
-      /\d/,
-      /\d/,
-      ')',
-      ' ',
-      /\d/,
-      ' ',
-      /\d/,
-      /\d/,
-      /\d/,
-      /\d/,
-      '-',
-      /\d/,
-      /\d/,
-      /\d/,
-      /\d/,
-    ],
-  };
-  cpfMask: MaskitoOptions = {
-    mask: [
-      /\d/,
-      /\d/,
-      /\d/,
-      '.',
-      /\d/,
-      /\d/,
-      /\d/,
-      '.',
-      /\d/,
-      /\d/,
-      /\d/,
-      '-',
-      /\d/,
-      /\d/,
-    ],
-  };
-  alturaMask: MaskitoOptions = {
-    mask: [/\d/, '.', /\d/, /\d/],
-  };
-  pesoMask: MaskitoOptions = {
-    mask: [/\d/, /\d/, '.', /\d/, /\d/],
-  };
+  phoneMask: MaskitoOptions = Constants.phoneMask
+  cpfMask: MaskitoOptions = Constants.cpfMask
+  alturaMask: MaskitoOptions = Constants.alturaMask
+  pesoMask: MaskitoOptions = Constants.pesoMask
 
-  tipoUsuarioList: TipoUsuario[] = [];
   maskPredicate: MaskitoElementPredicate = async (el) =>
     (el as HTMLIonInputElement).getInputElement();
   planos: Plano[] = [];
   horarios: Horario[] = [];
+  tiposUsuario: TipoUsuario[] = [];
 
   onFormChange($event: Event) {
     console.log($event);
@@ -94,16 +54,29 @@ export class PessoaFormPage implements OnInit {
     private tipoUsuarioService: TipoUsuarioService,
     private planoService: PlanoService,
     private horarioService: HorarioService,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private router: Router,
   ) {}
 
   ngOnInit() {
     console.log(
-      'this.aRoute.snapshot.params["id"] : ',
-      this.aRoute.snapshot.params['id']
+      'this.aRoute.snapshot.params["userId"] : ',
+      this.aRoute.snapshot.queryParams['userId']
     );
     this.createForm();
     this.loadData();
+    if (this.aRoute.snapshot.queryParams['userId']) {
+      this.getUserInfo(this.aRoute.snapshot.queryParams['userId']);
+    }
+  }
+
+  getUserInfo(id: any) {
+    this.usuarioService.findByFilters({ id: id }).subscribe({
+      next: (data: Usuario[]) => {
+        this.form.patchValue(data[0]);
+        console.log(this.form.value);
+      },
+    });
   }
 
   loadData() {
@@ -155,7 +128,7 @@ export class PessoaFormPage implements OnInit {
     this.loading = true;
     return this.tipoUsuarioService.findAll().subscribe({
       next: (res: TipoUsuario[]) => {
-        if (res) this.tipoUsuarioList = res;
+        if (res) this.tiposUsuario = res;
       },
       error: (err) => {
         this.loading = false;
@@ -240,28 +213,22 @@ export class PessoaFormPage implements OnInit {
       senha: [null, [Validators.nullValidator]],
       rcq: [null, [Validators.nullValidator]],
       imc: [null, [Validators.nullValidator]],
-      flagAdmin: [false, [Validators.required]],
+      flagAdmin: [null, [Validators.required]],
       fl_ativo: [true, [Validators.required]],
       foto_url: ['', [Validators.nullValidator]],
-      avc: [false, [Validators.required]],
-      dac: [false, [Validators.required]],
-      diabete: [false, [Validators.required]],
-      pressao_arterial: [false, [Validators.required]],
-      cardiopata: [false, [Validators.required]],
-      infarto: [false, [Validators.required]],
-      fumante: [false, [Validators.required]],
-      relato_dor: [false, [Validators.required]],
-      medicacao_em_uso: [false, [Validators.required]],
-      profissao: [false, [Validators.required]],
-      fl_pratica_atividade_fisica: [false, [Validators.required]],
-      data_vencimento: [
-        null,
-        [
-          Number(this.aRoute.snapshot.params['id']) == Constants.ALUNO_ID
-            ? Validators.required
-            : Validators.nullValidator,
-        ],
-      ],
+      avc: [null, [Validators.nullValidator]],
+      dac: [null, [Validators.nullValidator]],
+      diabete: [null, [Validators.nullValidator]],
+      pressao_arterial: [null, [Validators.nullValidator]],
+      cardiopata: [null, [Validators.nullValidator]],
+      cirurgia: [null, [Validators.nullValidator]],
+      infarto: [null, [Validators.nullValidator]],
+      fumante: [null, [Validators.nullValidator]],
+      relato_dor: [null, [Validators.nullValidator]],
+      medicacao_em_uso: [null, [Validators.nullValidator]],
+      profissao: [null, [Validators.nullValidator]],
+      fl_pratica_atividade_fisica: [null, [Validators.nullValidator]],
+      data_vencimento: [null, [Validators.nullValidator]],
       created_at: [null, [Validators.nullValidator]],
       classificacao_risco: [1, [Validators.nullValidator]],
       observacoes: ['', [Validators.nullValidator]],
@@ -275,7 +242,7 @@ export class PessoaFormPage implements OnInit {
   onChangeTipoUser() {
     const newValue = this.form.value.tipo_usuario;
     this.form.patchValue({
-      flagAdmin: this.tipoUsuarioList.find((tu) => tu.id == newValue)
+      flagAdmin: this.tiposUsuario.find((tu) => tu.id == newValue)
         ?.adm_padrao,
     });
 
@@ -292,22 +259,31 @@ export class PessoaFormPage implements OnInit {
   }
 
   submitForm() {
+    console.log('this.form: ', this.form);
+
     this.loading = true;
-    this.usuarioService.create(this.form.value).subscribe({
+
+    const msg = !this.form.value.id ? 'cadastrado' : 'atualizado';
+    const req = !this.form.value.id
+      ? this.usuarioService.create(this.form.value)
+      : this.usuarioService.update(this.form.value);
+
+    this.form.disable();
+    req.subscribe({
       next: (res: any) => {
         console.log('ok');
-        this.toastr.success('Usuário cadastrado com sucesso!');
-        this.createForm();
+        this.toastr.success(`Usuário ${msg} com sucesso!`);
+        this.form.enable();
+        if (!this.form.value.id) {
+          this.createForm();
+        }else{
+          this.router.navigateByUrl('/usuarios')
+        }
       },
       error: (err: any) => {
         this.loading = false;
-
+        this.form.enable();
         console.log(err);
-        this.loading = false;
-        // this.toastr.error(
-        //   'Algo deu errado.' +
-        //     JSON.stringify(err.error.details || err.error.message)
-        // );
       },
       complete: () => {
         this.loading = false;

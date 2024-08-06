@@ -1,3 +1,4 @@
+import { GrupoMuscularModule } from './grupoMuscular/grupo-muscular.module';
 /* eslint-disable prettier/prettier */
 import { TipoUsuarioModule } from './tipoUsuario/tipo-usuario.module';
 import { Module } from '@nestjs/common';
@@ -11,8 +12,11 @@ import { MusculoModule } from './musculo/musculo.module';
 import { EquipamentoModule } from './equipamento/equipamento.module';
 
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path'
+import { join } from 'path';
 import { DataBaseModule } from './datasource/database.module';
+import { TreinoModule } from './treino/treino.module';
+import { ExercicioModule } from './exercicio/exercicio.module';
+import { ParteDoCorpoModule } from './parte-do-corpo/parte-do-corpo.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -20,15 +24,19 @@ import { DataBaseModule } from './datasource/database.module';
       serveRoot: join(__dirname, '..', 'client'),
       renderPath: join(__dirname, 'public', 'index.html'),
     }),
-    TipoUsuarioModule, 
-    AuthModule, 
-    UsuarioModule, 
+    TipoUsuarioModule,
+    AuthModule,
+    UsuarioModule,
     TipoUsuarioModule,
     HorarioModule,
     PlanoModule,
     MusculoModule,
     EquipamentoModule,
-    DataBaseModule
+    DataBaseModule,
+    TreinoModule,
+    ExercicioModule,
+    GrupoMuscularModule,
+    ParteDoCorpoModule
   ],
   controllers: [AppController],
   providers: [AppService],

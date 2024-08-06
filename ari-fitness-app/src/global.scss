@@ -76,3 +76,37 @@ ion-content {
 * ion-button.ion-color-primary {
   --ion-color-contrast: aliceblue !important
 }
+
+svg {
+  color: white;
+}
+.tab-selected svg {
+  color: var(--ion-tab-bar-color-selected, var(--ion-color-primary, #0054e9));
+}
+.ion-selectable:hover * {
+  color: var(--ion-tab-bar-color-selected, var(--ion-color-primary, #0054e9));
+
+}
+.d-flex {
+  display: flex !important;
+}
+
+.w-100 {
+  width: 100% !important  ;
+}
+.w-90 {
+  width: 90% !important  ;
+}
+.w-75 {
+  width: 75% !important  ;
+}
+.w-10 {
+  width: 10% !important  ;
+}
+
+
+
+.swal2-container {
+  z-index: 99999999999;
+  height: 100vh;
+}

@@ -17,6 +17,13 @@ export class UsuarioService {
       .post<Usuario>(environment.apiUrl + '/usuario', usuario)
       .pipe(take(1));
   }
+  update(usuario: Usuario | Partial<Usuario>) {
+
+    delete usuario.created_at;
+    return this.http
+      .put<Usuario>(environment.apiUrl + '/usuario', usuario)
+      .pipe(take(1));
+  }
 
   findByFilters(filters: Partial<Usuario> | Usuario) {
     const query = Object.keys(filters).map(

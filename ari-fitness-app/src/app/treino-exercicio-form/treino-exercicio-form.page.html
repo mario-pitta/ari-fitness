@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Formulário de Treino</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <form [formGroup]="form">
+
+        <ion-item>
+          <ion-select formControlName="exercicio" interface="action-sheet" class="ion-text-capitalize" label="Exercício" labelPlacement="floating">
+            <ion-select-option class="ion-text-capitalize" *ngFor="let exercicio of exercicios" [value]="exercicio">
+              {{exercicio.nome}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-select formControlName="equipamento" interface="action-sheet" class="ion-text-capitalize" label="Equipamento"
+            labelPlacement="floating">
+            <ion-select-option class="ion-text-capitalize" *ngFor="let equipamento of equipamentos"
+              [value]="equipamento">{{equipamento.nome}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="number" min="1" labelPlacement="floating" formControlName="series" label="Séries"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="number" min="1" labelPlacement="floating" formControlName="repeticoes" label="Repetições"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input type="number" min="0" labelPlacement="floating" formControlName="intervalo" label="Tempo de Descanso (segundos)"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="number" min="0" labelPlacement="floating" formControlName="carga" label="Carga (kg)"></ion-input>
+        </ion-item>
+
+        <ion-button expand="block" type="submit" (click)="onSaveButtonClick()">Salvar</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

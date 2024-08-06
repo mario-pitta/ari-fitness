@@ -12,7 +12,7 @@ async function bootstrap() {
     "optionsSuccessStatus": 204,
     "credentials": true,
   };
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {cors: corsConfig});
 
 
   app.useStaticAssets(path.join(__dirname, 'public'));
