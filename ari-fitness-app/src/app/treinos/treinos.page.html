@@ -1,71 +1,118 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <!-- <ion-title>Meus Treinos</ion-title> -->
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-row class="ion-justify-content-center ion-align-items-center">
-    <h3>{{selectedTreino?.descricao}}</h3>
-    <ion-button id="open-treino-modal" fill="outlined" (click)="openModal = !openModal;">
-      <ion-icon name="list" size="large" ></ion-icon>
-    </ion-button>
+    <h3>{{selectedTreino?.nome}}</h3>
   </ion-row>
-  <div class="ion-padding">
-    <ion-row class="ion-align-items-center">
-      <ion-input type="number" label="Defina o descanso (s)" labelPlacement="floating" [(ngModel)]="interval" />
-    </ion-row>
-  </div>
-
   <ion-grid>
+
     <ion-list *ngIf="selectedTreino" [inset]="true">
-      <ion-item *ngFor="let exercicio of selectedTreino?.exercicios">
+      <ion-item *ngFor="let ex of selectedTreino?.treino_exercicio">
         <div class="div w-90">
-          <h5>{{ exercicio.exercicio.descricao.toUpperCase() }} ({{ exercicio.equipamento}})</h5>
+          <h5>{{ ex.exercicio.nome.toUpperCase() }}
+            <span *ngIf="ex.exercicio.equipamentos|| ex.equipamentos">
+              ({{ ex.exercicio.equipamentos?.nome.toUpperCase() || ex.equipamentos?.nome.toUpperCase()}})</span>
+          </h5>
           <ion-row class="w-100 ion-align-items-center ion-justify-content-around">
             <ion-col size="1">
               <ion-label>
-                <ion-checkbox style="--size: 35px" [(ngModel)]="exercicio.concluido"></ion-checkbox>
+                <ion-checkbox style="--size: 35px" [(ngModel)]="ex.exercicio.concluido"></ion-checkbox>
               </ion-label>
             </ion-col>
             <ion-col size="8">
               <ion-label>
-                <p>Carga: {{ exercicio.carga }} kg</p>
-                <p>{{ exercicio.series }} séries x {{ exercicio.repeticao }} repetições</p>
+                <p>Carga: {{ ex.carga }} kg</p>
+                <p>{{ ex.series }} séries x {{ ex.repeticoes }} repetições</p>
                 <p>15 s de intervalo</p>
               </ion-label>
             </ion-col>
           </ion-row>
         </div>
         <div class="w-10">
-          <ion-icon name="time" size="large" [id]="'timer_'+exercicio.exercicio.id" (click)="enableRotation($event)">
+          <ion-icon name="play-outline" fill="clear" color="primary" size="large"
+            (click)="selectedExercicio = ex; counter = ex.intervalo; openModal = true">
           </ion-icon>
-
         </div>
       </ion-item>
+
+
+      <ion-button class="success" size="block" color="primary">FINALIZAR</ion-button>
+
+
     </ion-list>
 
-    <ion-button class="success" size="block" color="primary">FINALIZAR</ion-button>
   </ion-grid>
 </ion-content>
 
 
 
-<ion-modal #modal trigger="open-treino-modal" [isOpen]="openModal" (didDismiss)="openModal = false">
+<ion-modal [isOpen]="openModal" [initialBreakpoint]="1" [breakpoints]="[0, 1]" (didDismiss)="resetCounter(); openModal=false"
+  (didPresent)="buildExercicioPresets()">
   <ng-template>
-    <ion-row class="ion-padding ion-justify-content-center ion-align-items-center">
-      <ion-label>
-        Selecione o seu treino:
-      </ion-label>
-      <ion-buttons *ngIf="!user.flagAdmin" >
-        <ion-button (click)="openTreinoForm()"><ion-icon name="add"></ion-icon></ion-button>
-      </ion-buttons>
+    <ion-title class="ion-margin-top ion-margin-bottom-0 ">
+      {{selectedExercicio.exercicio.nome.toUpperCase()}}
+      <hr>
+
+    </ion-title>
+    <ion-row class="ion-padding ion-justify-content-center">
+      <ion-col class="form-group">
+        <p>
+          <ion-label>Series:</ion-label>
+        </p>
+        <p>
+          <ion-label>{{exercicioPresets.series}}</ion-label>
+        </p>
+      </ion-col>
+      <ion-col class="form-group">
+        <p>
+          <ion-label>Repetições</ion-label>
+        </p>
+        <p>
+          <ion-label>{{exercicioPresets.repeticoes}}</ion-label>
+        </p>
+      </ion-col>
     </ion-row>
-    <ion-picker>
-      <ion-picker-column [value]="selectedTreino?.id" (ionChange)="onTreinoSelected($event)">
-        <!-- <ion-picker-column-option *ngFor="let treino of user?.treinos" [value]="treino.id">{{treino.descricao}}
-        </ion-picker-column-option> -->
-      </ion-picker-column>
-    </ion-picker>
+    <ion-row class="w-100 ion-justify-content-center ion-margin-start ion-align-items-center ">
+      <ion-col class="ion-justify-content-center ion-align-items-center">
+        <ion-icon size="large" name="remove"  (click)="exercicioPresets.carga = exercicioPresets.carga - 1"></ion-icon>
+      </ion-col>
+      <ion-col class="form-group">
+        <p>
+          <ion-label>Carga (kg)</ion-label>
+        </p>
+        <ion-input [value]="exercicioPresets.carga"></ion-input>
+      </ion-col>
+      <ion-col class="ion-justify-content-center ion-align-items-center">
+        <ion-icon size="large" name="add" (click)="exercicioPresets.carga = exercicioPresets.carga+1"></ion-icon>
+      </ion-col>
+    </ion-row>
+
+
+    <div class="counter w-75 ion-justify-content-between ion-align-items-center">
+      <ion-title>
+        Descanso:
+      </ion-title>
+      <ion-text class="ion-margin-end">
+        {{counter}}
+      </ion-text>
+      <ion-icon [name]="icon" (click)="toggleClock(selectedExercicio.intervalo)"></ion-icon>
+    </div>
+    <div class="ion-padding">
+      <p>
+        Séries Completas:
+      </p>
+      <ul style="list-style: none;gap: 1em;">
+        <li style="display: inline;" class="ion-margin" *ngFor="let s of [0,1,2,3]">
+          <ion-checkbox style=" --size: 25px;"></ion-checkbox>
+        </li>
+      </ul>
+    </div>
+
+    <ion-button color="primary">Concluir</ion-button>
+
+
+
+
+
+
   </ng-template>
 </ion-modal>
+<!-- [buttons]="actionSheetButtons" -->

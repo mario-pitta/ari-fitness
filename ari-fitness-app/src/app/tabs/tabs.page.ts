@@ -230,7 +230,7 @@ export class TabsPage implements OnInit, OnDestroy {
     console.log('iniciando tabsPage')
     this.user = JSON.parse(localStorage.getItem('user') as string);
     if (this.user) {
-      this.updateLoggedUserData();
+      // this.updateLoggedUserData();
     } else {
       this.router.navigate(['login']);
     }
@@ -242,6 +242,13 @@ export class TabsPage implements OnInit, OnDestroy {
         console.log('user: ', user);
       },
     });
+  }
+
+  navigate(path: string){
+    setTimeout(() => {
+      console.log("dentro do timeout")
+      this.router.navigate([path], {queryParams: {userId: this.user.id}})
+    },80)
   }
 
   ngOnDestroy(){

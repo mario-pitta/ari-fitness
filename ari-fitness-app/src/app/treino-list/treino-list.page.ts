@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { FichaAlunoService } from './../../core/services/ficha-aluno/ficha-aluno.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalController, ToastController } from '@ionic/angular';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
@@ -14,6 +15,7 @@ import { GrupoMuscular } from 'src/core/models/GrupoMuscular';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
 import Swal from 'sweetalert2';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-treinos-list',
@@ -21,8 +23,8 @@ import Swal from 'sweetalert2';
   styleUrls: ['./treino-list.page.scss'],
 })
 export class TreinosListPage implements OnInit {
+  @Input() selectedTreinos: any[] = [];
   filteredTreinos: Treino[] = [];
-
   user!: Usuario;
   selectedTreino: any;
   interval: number = 15;
@@ -33,13 +35,17 @@ export class TreinosListPage implements OnInit {
   partesDoCorpo: ParteDoCorpo[] = [];
   gruposMusculares: GrupoMuscular[] = [];
   searchText: string = '';
+  @Input() enableEdit: boolean = true;
+
   constructor(
+    private aRoute: ActivatedRoute,
     private auth: AuthService,
     private fb: FormBuilder,
     private modalController: ModalController,
     private treinoService: TreinoService,
     private parteDoCorpoService: ParteDoCorpoService,
     private grupoMuscularService: GrupoMuscularService,
+    private fichaAlunoService: FichaAlunoService,
     private toastr: ToastrService
   ) {}
 
@@ -63,7 +69,26 @@ export class TreinosListPage implements OnInit {
   getTreinos() {
     return this.treinoService.find().subscribe({
       next: (treinos: Treino[]) => {
-        return (this.filteredTreinos = this.treinos = treinos);
+        this.filteredTreinos = this.treinos = treinos;
+
+        console.log('treinos selecionados...', this.selectedTreinos, this.filteredTreinos);
+
+        this.filteredTreinos = this.filteredTreinos.map((ftr: Treino) => {
+
+          if (
+            this.selectedTreinos.find(
+              (str: any) => str.treino.id === ftr.id
+            )
+          ) {
+            ftr.checked = true;
+            console.log('TEM QUE PRINTAR ISSO !!!')
+          }
+          return ftr;
+        });
+
+        console.log('depois de filtrados...', this.filteredTreinos);
+
+        return this.filteredTreinos;
       },
     });
   }
@@ -101,44 +126,41 @@ export class TreinosListPage implements OnInit {
 
   openTreinoEditor(treino: Treino) {
     this.openModal = !this.openModal;
+    console.log('treino patchValue', treino);
     this.f.patchValue(treino);
-    treino.treino_exercicio.forEach((tr: any) => {
-      this.setNewExercicio(tr);
+    treino.treino_exercicio.forEach((trex: any) => {
+      this.setNewExercicio(trex);
     });
   }
 
+  listenItemEvents(event: { action: string; value: any }) {
+    console.log(event);
+    switch (event.action) {
+      case 'check':
+        console.log('checando treino: ', event.value.id);
+        this.treinos.map((tr) => {
+          if (tr.id == event.value.id) {
+            tr = {
+              ...tr,
+              checked: !tr.checked || false,
+            };
+          }
+          return tr;
+        });
+        this.filterList();
+        break;
+
+      default:
+        break;
+    }
+  }
+
   setNewExercicio(ex: Exercicio) {
-    console.log('setando novo exer:: ', ex);
-
-    this.exercicios.setControl(
-      this.exercicios.value.length,
-      this.fb.group(
-        ex
-        //   {
-        //   id: [null, [Validators.nullValidator]],
-        //   created_at: [null, [Validators.nullValidator]],
-        //   nome: [null, [Validators.nullValidator]],
-        //   fl_ativo: [null, [Validators.nullValidator]],
-        //   grupo_muscular_id: [null, [Validators.nullValidator]],
-        //   grupo_muscular: [null, [Validators.nullValidator]],
-        //   musculo_id: [null, [Validators.nullValidator]],
-        //   musculo: [null, [Validators.nullValidator]],
-        //   equipamento_id: [null, [Validators.nullValidator]],
-        //   equipamentos: [null, [Validators.nullValidator]],
-
-        // }
-      )
-    );
-
-    console.log('this.f: ', this.f);
+    this.exercicios.setControl(this.exercicios.value.length, this.fb.group(ex));
   }
 
   removeExercicio(index: number) {
-    // const _exercicios = this.exercicios.value;
     this.exercicios.removeAt(index);
-    // this.exercicios.patchValue({
-    //   ...this.exercicios.value.slice(index, 1),
-    // });
   }
 
   setInterval(e: any) {
@@ -203,6 +225,16 @@ export class TreinosListPage implements OnInit {
     this.modalController.dismiss();
   }
 
+  onSelectTreino() {}
+
+  associateToUser() {
+    const body = {
+      aluno_id: this.aRoute.snapshot.queryParams['userId'],
+      treinos: this.filteredTreinos.filter((tr) => tr.checked),
+    };
+    this.modalController.dismiss(body);
+  }
+
   submitForm() {
     console.log('Submitting form...', this.f.value);
     const req = !this.f.value.id
@@ -252,24 +284,4 @@ export class TreinosListPage implements OnInit {
       tr.nome.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
-}
-
-@Component({
-  selector: 'app-treinos-list',
-  template: `<div class="ion-card">
-    <h3>{{ message }}</h3>
-    <div class="d-flex">
-      <button mat-button (click)="(onDeny)">Action1</button>
-      <button mat-button (click)="(onConfirm)">Action2</button>
-    </div>
-  </div>`,
-  styleUrls: ['./treino-list.page.scss'],
-})
-export class ConfirmModalComponent {
-  @Input() message!: string;
-  constructor() {}
-
-  onConfirm() {}
-
-  onDeny() {}
 }

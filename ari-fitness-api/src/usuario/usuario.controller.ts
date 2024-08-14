@@ -1,18 +1,16 @@
 /* eslint-disable prettier/prettier */
-import { query, Response } from 'express';
+import { Response } from 'express';
 import { Usuario } from './Usuario.interface';
 import { UsuarioService } from './usuario.service';
 import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Post,
   Put,
   Query,
   Res,
 } from '@nestjs/common';
-import { HTTP_CODE_METADATA } from '@nestjs/common/constants';
 
 @Controller('usuario')
 export class UsuarioController {
@@ -50,7 +48,7 @@ export class UsuarioController {
     @Res() res: Response,
     @Query() filters: Partial<Usuario> | Usuario,
   ) {
-    console.log('getting all users... byFilters', filters);
+    console.log('search users... byFilters', filters);
     return this.usuarioService.findByFilters(filters).then((_res) => {
       if (_res.error) {
         console.error('erro no usuario/findAll', _res.error);

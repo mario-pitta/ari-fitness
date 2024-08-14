@@ -1,6 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <!-- <ion-title>Meus Treinos</ion-title> -->
+    <ion-title class="ion-align-items-center ion-justify-content-between">
+      <ion-button fill="clear">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+      Lista de Treinos
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
@@ -13,28 +19,28 @@
       <ion-input type="number" label="Defina o descanso (s)" labelPlacement="floating" [(ngModel)]="interval" />
     </ion-row>
   </div> -->
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false">
+  <ion-fab *ngIf="user.flagAdmin && enableEdit" slot="fixed" vertical="bottom" horizontal="end" [edge]="false">
     <ion-fab-button id="open-treino-modal" fill="outlined" (click)="openModal = !openModal">
       <ion-icon name="add" size="large"></ion-icon>
     </ion-fab-button>
 
   </ion-fab>
-
   <ion-grid>
     <ion-searchbar show-cancel-button="always" cancel-button-text="Custom Cancel" cancel-button-icon="filter"
-      placeholder="Pesquisar..." [(ngModel)]="searchText" (click)="searchText = ''" (keyup)="filterList()" (ionClear)="filteredTreinos = treinos"></ion-searchbar>
+      placeholder="Pesquisar..." [(ngModel)]="searchText" (click)="searchText = ''" (keyup)="filterList()"
+      (ionClear)="filteredTreinos = treinos"></ion-searchbar>
     <ion-list [inset]="true">
-      <ion-item *ngFor="let treino of filteredTreinos" class="ion-justify-content-between ion-align-items-center">
-        <ion-label>
-          <h2>{{ treino.nome }}</h2>
-          <p>Nível: {{ treino.nivel_dificuldade }}</p>
-          <p>Grupo Muscular: {{ treino.grupo_muscular?.nome }}</p>
-        </ion-label>
-        <ion-icon name="create" slot="end"(click)="openTreinoEditor(treino)"></ion-icon>
-        <ion-icon name="trash" slot="end" (click)="excluirTreino(treino.id)"></ion-icon>
+      <app-treino-list-item *ngFor="let treino of filteredTreinos" [treino]="treino" [user]="user"
+        [enableEdit]="enableEdit" (output)="listenItemEvents($event)"></app-treino-list-item>
+      <ion-item class="ion-align-items-center">
+        <label (click)="openModal = !openModal">
+          <ion-icon name="add"></ion-icon> Cadastrar novo treino...
+        </label>
       </ion-item>
     </ion-list>
   </ion-grid>
+  <ion-button *ngIf="user.flagAdmin && !enableEdit" class="success" size="block" color="primary"
+    (click)="associateToUser()">CONFIRMAR</ion-button>
 </ion-content>
 
 
@@ -53,7 +59,8 @@
           <ion-input label="Nome:" labelPlacement="floating" [formControlName]="'nome'" />
           <ion-textarea label="Descricao:" labelPlacement="floating" [formControlName]="'descricao'"
             placeholder="Insira informações sobre o treino que está cadastrando..."></ion-textarea>
-          <ion-select label="Dificuldade:" labelPlacement="floating" [formControlName]="'nivel_dificuldade'">
+          <ion-select label="Dificuldade:" labelPlacement="floating" [value]="f.value.nivel_dificuldade"
+            formControlName="nivel_dificuldade">
             <ion-select-option *ngFor="let d of [1,2,3]">{{d}}</ion-select-option>
           </ion-select>
           <ion-select label="Parte do Corpo:" labelPlacement="floating" [formControlName]="'parte_do_corpo_id'">
@@ -62,7 +69,8 @@
           <ion-select label="Grupo Muscular:" labelPlacement="floating" [formControlName]="'grupo_muscular_id'">
             <ion-select-option *ngFor="let g of gruposMusculares" [value]="g.id">{{g.nome}}</ion-select-option>
           </ion-select>
-          <ion-checkbox label="Público" labelPlacement="end" [value]="f.value.fl_publico" [formControlName]="'fl_publico'">
+          <ion-checkbox label="Público" labelPlacement="end" [value]="f.value.fl_publico"
+            [formControlName]="'fl_publico'">
             Público
           </ion-checkbox>
           <!-- <ion-input label="Nome:" labelPlacement="floating" />
@@ -72,8 +80,8 @@
         <ion-list formArrayName="exercicios">
           <ion-row class="ion-justify-content-between">
             <h4>Exercícios</h4>
-            <ion-buttons *ngIf="!user.flagAdmin">
-              <ion-button fill="solid" color="primary" (click)="openTreinoForm()">
+            <ion-buttons *ngIf="user.flagAdmin">
+              <ion-button fill="outlined" color="primary" (click)="openTreinoForm()">
                 <ion-icon name="add"></ion-icon>
               </ion-button>
             </ion-buttons>
@@ -85,7 +93,8 @@
             </ion-row> -->
               <ion-item class="ion-text-capitalize">
                 <ion-label [formGroupName]="i">
-                  {{ex.exercicio?.nome || ex.exercicios?.nome}} <span *ngIf="ex.equipamento || ex.equipamentos"> - {{ex.equipamento?.nome || ex.equipamentos?.nome }}</span>
+                  {{ex.exercicio?.nome || ex.exercicios?.nome}} <span *ngIf="ex.equipamento || ex.equipamentos"> -
+                    {{ex.equipamento?.nome || ex.equipamentos?.nome }}</span>
                 </ion-label>
                 <ion-button slot="end" color="danger" (click)="removeExercicio(i)">
                   <ion-icon name="trash"></ion-icon>

@@ -1,8 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import Constants from 'src/core/Constants';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
+import { TreinosListPage } from '../treino-list/treino-list.page';
+import { Treino } from 'src/core/models/Treino';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UsuarioService } from 'src/core/services/usuario/usuario.service';
+import { FichaAlunoService } from 'src/core/services/ficha-aluno/ficha-aluno.service';
+import { FichaAluno } from 'src/core/models/FichaAluno';
+import { forkJoin } from 'rxjs';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ToastrService } from 'src/core/services/toastr/toastr.service';
 
 @Component({
   selector: 'app-ficha-treino-aluno',
@@ -10,55 +20,308 @@ import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercic
   styleUrls: ['./ficha-treino-aluno.page.scss'],
 })
 export class FichaTreinoAlunoPage implements OnInit {
-user!: Usuario;
-selectedTreino: any;
-interval: number = 15;
-openModal: boolean = false;
+  Constants = Constants;
+  /** Esse atributo refere-se ao Usuario Logado no app */
+  user!: Usuario;
+  selectedTreino: any;
+  interval: number = 15;
+  openModal: boolean = false;
+  // treinos: Treino[] = [];
+  /** Esse atributo refere-se ao Aluno que tera sua ficha gerenciada pelo adm ou instrutor  */
+  // aluno!: Partial<Usuario> | Usuario;
+  instrutores: Usuario[] = [];
+  fichaAtual!: FichaAluno;
+  loading: boolean = false;
+  form: FormGroup = new FormGroup({});
+  enableEdit: boolean = false;
 
-constructor(private auth: AuthService, private modalController: ModalController ) {}
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private modalController: ModalController,
+    private aRoute: ActivatedRoute,
+    private router: Router,
+    private usuarioService: UsuarioService,
+    private fichaService: FichaAlunoService,
+    private toastr: ToastrService
+  ) {}
 
-ngOnInit() {
-  this.user = this.auth.getUser;
-  console.log(this.user);
-  // this.selectedTreino = this.user.treinos && this.user.treinos[0];
+  ngOnInit() {
+    this.createForm();
+    if (this.aRoute.snapshot.queryParamMap.get('userId')) {
+      this.loadFichaData(
+        Number(this.aRoute.snapshot.queryParamMap.get('userId'))
+      );
+
+      console.log('pathFromRoot', this.aRoute.snapshot.pathFromRoot);
+    }
+    this.loadData();
+    this.user = this.auth.getUser;
+    // this.selectedTreino = this.user.treinos && this.user.treinos[0];
+  }
+
+  onTreinoSelected(event: any) {
+    this.selectedTreino = event;
+    console.log(this.selectedTreino);
+    this.router.navigate([
+      'treinar/treino'],
+      {
+        queryParams: {
+          userId: this.user.id,
+          treinoId: this.selectedTreino.id
+         },
+      },
+    );
+  }
+
+  /**
+   * The function `loadFichaData` in TypeScript uses `forkJoin` to make parallel requests to `getAluno`
+   * and `getFichaInfo`.
+   */
+  loadFichaData(userId: number) {
+    this.getAluno(userId);
+    this.getFichaInfo();
+  }
+
+  loadData() {
+    this.getInstrutores();
+  }
+
+  getInstrutores() {
+    this.usuarioService
+      .findByFilters({ tipo_usuario: Constants.INSTRUTOR_ID, fl_ativo: true })
+      .subscribe({
+        next: (instrutores) => {
+          this.instrutores = instrutores;
+        },
+      });
+  }
+
+  getFichaInfo() {
+    this.fichaService
+      .getByUser(Number(this.aRoute.snapshot.queryParamMap.get('userId')), {
+        fl_ativo: true,
+      })
+      .subscribe({
+        next: (data: FichaAluno[]) => {
+          if (data.length) {
+            this.fichaAtual = data[0];
+            this.completeForm(this.fichaAtual);
+          }
+        },
+      });
+  }
+
+  handleReorder(ev: CustomEvent<ItemReorderEventDetail>) {
+    console.log(ev);
+    ev.detail.complete();
+  }
+
+  get f() {
+    return this.form;
+  }
+  get treinos() {
+    return this.f.get('treinos') as FormArray;
+  }
+  get aluno() {
+    return this.f.get('aluno');
+  }
+  get instrutor() {
+    return this.f.get('instrutor');
+  }
+  get cadastrado_por() {
+    return this.f.get('cadastrado_por');
+  }
+
+  createForm() {
+    this.form = this.fb.group({
+      id: [null, [Validators.nullValidator]],
+      created_at: [new Date().toLocaleDateString(), [Validators.nullValidator]],
+      usuario_id: [null, [Validators.nullValidator]],
+      descricao: [null, [Validators.nullValidator]],
+      ficha_data_inicio: [null, [Validators.nullValidator]],
+      ficha_data_fim: [null, [Validators.nullValidator]],
+      objetivo: [null, [Validators.nullValidator]],
+      instrutor_id: [null, [Validators.nullValidator]],
+      fl_ativo: [true, [Validators.nullValidator]],
+      peso_inicial: [null, [Validators.nullValidator]],
+      peso_meta: [null, [Validators.nullValidator]],
+      cadastrado_por: this.fb.group({
+        id: [null, [Validators.nullValidator]],
+        nome: [null, [Validators.nullValidator]],
+      }),
+      instrutor: this.fb.group({
+        id: [null, [Validators.nullValidator]],
+        nome: [null, [Validators.nullValidator]],
+      }),
+      aluno: this.fb.group({
+        id: [null, [Validators.nullValidator]],
+        nome: [null, [Validators.nullValidator]],
+      }),
+      treinos: this.fb.array([]),
+    });
+  }
+
+  getAluno(id: number) {
+    this.usuarioService.findByFilters({ id: id }).subscribe({
+      next: (_usuario) => {
+        this.aluno?.patchValue({
+          id: _usuario[0].id,
+          nome: _usuario[0].nome,
+        });
+      },
+    });
+  }
+
+  completeForm(ficha: FichaAluno) {
+    this.aluno?.patchValue({
+      id: ficha.aluno.id,
+      nome: ficha.aluno.nome,
+    });
+
+    this.instrutor?.patchValue({
+      id: (ficha.instrutor as Partial<Usuario>).id,
+      nome: (ficha.instrutor as Partial<Usuario>).nome,
+    });
+
+    this.cadastrado_por?.patchValue({
+      id: (ficha.cadastrado_por as Partial<Usuario>).id,
+      nome: (ficha.cadastrado_por as Partial<Usuario>).nome,
+    });
+
+    this.f.patchValue({
+      id: ficha.id,
+      descricao: ficha.descricao,
+      ficha_data_inicio: ficha.ficha_data_inicio,
+      ficha_data_fim: ficha.ficha_data_fim,
+      objetivo: ficha.objetivo,
+      peso_inicial: ficha.peso_inicial,
+      peso_meta: ficha.peso_meta,
+    });
+
+    ficha.treinos_cadastrados?.forEach((tr) => {
+      this.treinos.setControl(this.treinos.value.length, this.fb.group(tr));
+    });
+
+    console.log('this.f: ', this.f);
+  }
+
+  openTreinoList() {
+    console.log('enviando treinos...', this.treinos.value);
+
+    this.modalController
+      .create({
+        component: TreinosListPage,
+        componentProps: {
+          enableEdit: false,
+          selectedTreinos: this.treinos.value,
+        },
+      })
+      .then((m) => {
+        m.present();
+        m.onDidDismiss().then((res) => {
+          if (res.data) {
+            console.log('ADICIONAR OS TREINOS AO FORM ARRAY !!!!!!', res.data);
+            this.treinos.clear();
+            for (let _t of res.data?.treinos) {
+              const treino = {
+                treino: { ..._t },
+              };
+              console.log(treino);
+              this.treinos.setControl(
+                this.treinos.value.length || 0,
+                this.fb.group(treino)
+              );
+            }
+          }
+        });
+      });
+  }
+
+  setInterval(e: any) {
+    this.interval = e.value;
+    console.log(this.interval);
+    console.log(this.interval);
+  }
+
+  enableRotation(el: any) {
+    el.target.style.setProperty('--rotation-duration', `${this.interval}s`);
+    el.target.style.setProperty('--color', `warning`);
+    el.target.classList.toggle('clock-animated');
+
+    setTimeout(() => {}, this.interval);
+  }
+
+  openClock() {
+    alert('vai abrir o cronometro!');
+  }
+
+  closeClock() {}
+
+  openTreinoForm() {
+    this.modalController
+      .create({
+        component: TreinoExercicioFormPage,
+      })
+      .then((modal) => {
+        modal.present();
+      });
+  }
+
+  stringfy(_t99: any) {
+    return JSON.stringify(_t99);
+  }
+
+  submitForm() {
+    console.log('submitting ficha', this.f.value);
+    this.loading = true;
+
+    const body = {
+      ...this.f.value,
+      cadastrado_por: this.user.id,
+      instrutor_id: this.instrutor?.value.id,
+      usuario_id: this.aluno?.value.id,
+      treinos: this.treinos.value.map((t: any) => {
+        return {
+          id: t.treino.id,
+        };
+      }),
+    };
+
+    delete body.aluno;
+    delete body.instrutor;
+
+    const req = !body.id
+      ? this.fichaService.create(body)
+      : this.fichaService.update(body);
+
+    req.subscribe({
+      next: (res) => {
+        this.toastr.success('Operação bem sucedida');
+        history.back();
+      },
+      error: (err) => {
+        console.error('erro', err);
+      },
+    });
+  }
+
+  removeTreino(id: number) {
+    this.treinos.removeAt(
+      this.treinos.value.indexOf(
+        this.treinos.value.find(
+          (tr: { treino: { id: number } }) => tr.treino.id == id
+        )
+      )
+    );
+  }
+
+  ngOnDestroy() {
+    console.log('destruindo ficha-treino-aluno...');
+    this.form.reset();
+    this.aluno?.reset();
+    this.instrutor?.reset();
+    this.treinos.reset();
+    this.cadastrado_por?.reset();
+  }
 }
-
-onTreinoSelected(event: any) {
-  // this.selectedTreino = this.user.treinos.find(
-  //   (t: any) => t.id === event.detail.value
-  // );
-  // console.log(this.selectedTreino);
-}
-
-setInterval(e: any) {
-  this.interval = e.value;
-  console.log(this.interval);
-  console.log(this.interval);
-}
-
-enableRotation(el: any) {
-  el.target.style.setProperty('--rotation-duration', `${this.interval}s`);
-  el.target.style.setProperty('--color', `warning`);
-  el.target.classList.toggle('clock-animated');
-
-  setTimeout(() => {}, this.interval);
-}
-
-
-
-openClock() {
-  alert("vai abrir o cronometro!")
-}
-
-closeClock() {}
-
-openTreinoForm() {
-  this.modalController.create({
-    component: TreinoExercicioFormPage
-  }).then(modal => {
-    modal.present();
-  })
-
-}
-}
-

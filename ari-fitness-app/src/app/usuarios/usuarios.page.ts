@@ -49,11 +49,7 @@ selectedUsuario: any;
 
   navigate(path: string, user: Usuario){
     this.isOpen = false;
-    console.log('this.isOpen: ', this.isOpen);
-
-
     setTimeout(() => {
-      console.log("dentro do timeout")
       this.router.navigate([path], {queryParams: {userId: user.id}})
     },80)
   }

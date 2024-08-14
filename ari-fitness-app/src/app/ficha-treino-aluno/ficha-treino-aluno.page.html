@@ -5,67 +5,126 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-row class="ion-justify-content-center ion-align-items-center">
+  <!-- <ion-row class="ion-justify-content-center ion-align-items-center">
     <h3>{{selectedTreino?.descricao}}</h3>
-    <ion-button id="open-modal" fill="outlined" (click)="openModal = !openModal;">
-      <ion-icon name="list" size="large" ></ion-icon>
-    </ion-button>
-  </ion-row>
-  <div class="ion-padding">
-    <ion-row class="ion-align-items-center">
-      <ion-input type="number" label="Defina o descanso (s)" labelPlacement="floating" [(ngModel)]="interval" />
-    </ion-row>
-  </div>
+  </ion-row> -->
+  <ion-fab *ngIf="user?.flagAdmin && aluno" slot="fixed" vertical="bottom" horizontal="end" [edge]="false"
+    (click)="openTreinoList()">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 
   <ion-grid>
-    <ion-list *ngIf="selectedTreino" [inset]="true">
-      <ion-item *ngFor="let exercicio of selectedTreino?.exercicios">
-        <div class="div w-90">
-          <h5>{{ exercicio.exercicio.descricao.toUpperCase() }} ({{ exercicio.equipamento}})</h5>
-          <ion-row class="w-100 ion-align-items-center ion-justify-content-around">
-            <ion-col size="1">
-              <ion-label>
-                <ion-checkbox style="--size: 35px" [(ngModel)]="exercicio.concluido"></ion-checkbox>
-              </ion-label>
-            </ion-col>
-            <ion-col size="8">
-              <ion-label>
-                <p>Carga: {{ exercicio.carga }} kg</p>
-                <p>{{ exercicio.series }} séries x {{ exercicio.repeticao }} repetições</p>
-                <p>15 s de intervalo</p>
-              </ion-label>
-            </ion-col>
-          </ion-row>
+    <ion-card class="ion-padding">
+      <form [formGroup]="form">
+        <div formGroupName="aluno">
+          <ion-input readonly labelPlacement="floating" formControlName="nome" label="Nome do Aluno"></ion-input>
         </div>
-        <div class="w-10">
-          <ion-icon name="time" size="large" [id]="'timer_'+exercicio.exercicio.id" (click)="enableRotation($event)">
-          </ion-icon>
+        <ion-textarea [readonly]="!user?.flagAdmin" labelPlacement="floating" formControlName="descricao"
+          label="Descrição da Ficha"></ion-textarea>
+        <ion-row>
+          <ion-col>
+            <ion-input labelPlacement="floating" [readonly]="!user?.flagAdmin" formControlName="ficha_data_inicio"
+              type="date" label="Inicio da Ficha"></ion-input>
+          </ion-col>
+          <ion-col>
+            <ion-input labelPlacement="floating" [readonly]="!user?.flagAdmin" formControlName="ficha_data_fim"
+              type="date" label="Validade da Ficha">
+            </ion-input>
+          </ion-col>
 
+        </ion-row>
+        <ion-input labelPlacement="floating" [readonly]="!user?.flagAdmin" formControlName="objetivo" label="Objetivo">
+        </ion-input>
+        <ion-input labelPlacement="floating" [readonly]="!user?.flagAdmin" formControlName="peso_inicial" type="number"
+          min="0" step="0.2" maxlength="5" label="Peso Atual"></ion-input>
+        <ion-input labelPlacement="floating" [readonly]="!user?.flagAdmin" formControlName="peso_meta" type="number"
+          min="0" step="0.2" maxlength="5" label="Meta de Peso"></ion-input>
+        <div formGroupName="instrutor">
+          <ion-select formControlName="id" [disabled]="!user?.flagAdmin" labelPlacement="floating"
+            label="Instrutor(a):">
+            <ion-select-option *ngFor="let instrutor of instrutores" [value]="instrutor.id">{{instrutor.nome}}
+            </ion-select-option>
+          </ion-select>
         </div>
-      </ion-item>
-    </ion-list>
+      </form>
+      <ion-list>
+        <ion-row class="ion-justify-content-around ion-align-items-center">
+          <h5>Treinos: </h5>
+          <ion-button fill="clear" *ngIf="user?.flagAdmin && aluno" (click)="openTreinoList()">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-row>
+        <ion-reorder-group [disabled]="user?.flagAdmin" (ionItemReorder)="handleReorder($any($event))">
+          <ion-item *ngFor="let tr of treinos.value; let i = index" [attr.data-item]="stringfy(tr)">
+            <ion-reorder slot="start" [id]="'reorder_tr_'+tr.id">
+            </ion-reorder>
 
-    <ion-button class="success" size="block" color="primary">FINALIZAR</ion-button>
+            <ion-label class="d-flex w-100 ion-justify-content-between ion-align-items-center">
+              <span>
+                {{tr.treino.nome}}
+              </span>
+              <div class="icons">
+                <ion-icon size="large" name="play-outline" color="primary" *ngIf="user.id == aluno?.value.id"
+                  (click)="onTreinoSelected(tr.treino)"></ion-icon>
+                <ion-icon size="large" name="close" color="danger" *ngIf="user.flagAdmin"
+                  (click)="removeTreino(tr.treino.id)"></ion-icon>
+              </div>
+            </ion-label>
+
+          </ion-item>
+        </ion-reorder-group>
+      </ion-list>
+
+      <ion-button class="success" size="block" color="primary" *ngIf="user.flagAdmin" (click)="submitForm()">SALVAR
+      </ion-button>
+    </ion-card>
+
+
   </ion-grid>
+
+
 </ion-content>
 
+<router-outlet></router-outlet>
+
+<ion-modal #modal  [isOpen]="openModal" (didDismiss)="openModal = false">
+  <!-- <ion-grid *ngIf="user.tipo_usuario == Constants.ALUNO_ID"> -->
+  <!-- <ion-list *ngIf="selectedTreino" [inset]="true">
+    <ion-item *ngFor="let ex of selectedTreino?.exercicios">
+      <div class="div w-90">
+        <h5>{{ ex.exercicio.nome.toUpperCase() }}
+          <span *ngIf="ex.exercicio.equipamentos|| ex.equipamentos">
+            ({{ ex.exercicio.equipamentos?.nome.toUpperCase() || ex.equipamentos?.nome.toUpperCase()}})</span>
+        </h5>
+        <ion-row class="w-100 ion-align-items-center ion-justify-content-around">
+          <ion-col size="1">
+            <ion-label>
+              <ion-checkbox style="--size: 35px" [(ngModel)]="ex.exercicio.concluido"></ion-checkbox>
+            </ion-label>
+          </ion-col>
+          <ion-col size="8">
+            <ion-label>
+              <p>Carga: {{ ex.carga }} kg</p>
+              <p>{{ ex.series }} séries x {{ ex.repeticoes }} repetições</p>
+              <p>15 s de intervalo</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </div>
+      <div class="w-10">
+        <ion-icon name="time" size="large" [id]="'timer_'+ex.id" (click)="enableRotation($event)">
+        </ion-icon>
+      </div>
+    </ion-item>
 
 
-<ion-modal #modal trigger="open-modal" [isOpen]="openModal" (didDismiss)="openModal = false">
-  <ng-template>
-    <ion-row class="ion-padding ion-justify-content-center ion-align-items-center">
-      <ion-label>
-        Selecione o seu treino:
-      </ion-label>
-      <ion-buttons *ngIf="!user.flagAdmin" >
-        <ion-button (click)="openTreinoForm()"><ion-icon name="add"></ion-icon></ion-button>
-      </ion-buttons>
-    </ion-row>
-    <ion-picker>
-      <ion-picker-column [value]="selectedTreino?.id" (ionChange)="onTreinoSelected($event)">
-        <!-- <ion-picker-column-option *ngFor="let treino of user?.treinos" [value]="treino.id">{{treino.descricao}}
-        </ion-picker-column-option> -->
-      </ion-picker-column>
-    </ion-picker>
-  </ng-template>
+      <ion-button class="success" size="block" color="primary">FINALIZAR</ion-button>
+
+
+  </ion-list> -->
+
+  <!-- </ion-grid> -->
 </ion-modal>

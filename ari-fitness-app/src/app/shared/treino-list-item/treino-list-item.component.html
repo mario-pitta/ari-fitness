@@ -1,0 +1,11 @@
+<ion-item  class="ion-justify-content-between ion-align-items-center">
+  <ion-checkbox *ngIf="user.flagAdmin && !enableEdit" slot="start" [(ngModel)]="treino.checked" (ionChange)="output.emit({action: 'check', value: treino})"></ion-checkbox>
+  <ion-label>
+    <h2>{{ treino.nome }}</h2>
+    <p>Nível: {{ treino.nivel_dificuldade }}</p>
+    <p *ngIf="treino.parte_do_corpo">Parte do Corpo: {{ treino.parte_do_corpo?.nome }}</p>
+    <p *ngIf="treino.grupo_muscular">Grupo Muscular: {{ treino.grupo_muscular?.nome }}</p>
+  </ion-label>
+  <ion-icon *ngIf="user.flagAdmin && enableEdit" name="create" slot="end" (click)="output.emit({action: 'edit', value: treino})"></ion-icon>
+  <ion-icon *ngIf="user.flagAdmin && enableEdit" name="trash" slot="end" (click)="output.emit({action: 'delete', value: treino.id})"></ion-icon>
+</ion-item>

@@ -14,7 +14,7 @@ export class PlanoService {
     return this.http.get<Plano[]>(environment.apiUrl + '/planos').pipe(take(1));
   }
   findByFilters(filters: Partial<Plano> | Plano): Observable<Plano[]>  {
-    const query = Object.keys(filters).map((k: string) => `${k}=${filters[k as keyof Plano]}`);
+    const query = Object.keys(filters).map((k: string) => `${k}=${filters[k as keyof Plano]}`).join('&');;
     return this.http.get<Plano[]>(environment.apiUrl + '/planos?'+query).pipe(take(1));
   }
 }

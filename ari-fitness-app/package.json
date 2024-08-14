@@ -6,7 +6,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && npm run copy:assets",
+    "copy:assets": "robocopy ./public ../ari-fitness-api/src/public /E",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -31,6 +32,7 @@
     "@maskito/core": "^3.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "canvas-confetti": "^1.9.3",
     "ionicons": "^7.0.0",
     "jquery": "^3.7.1",
     "rxjs": "~7.8.0",
@@ -52,6 +54,7 @@
     "@capacitor/cli": "6.1.0",
     "@ionic/angular-toolkit": "^11.0.1",
     "@types/jasmine": "~5.1.0",
+    "@types/node": "^22.2.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.57.0",

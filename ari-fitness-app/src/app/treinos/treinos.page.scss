@@ -5,6 +5,28 @@
   animation: rotate var(--rotation-duration) forwards linear, rotate-fill var(--rotation-duration) forwards linear;
 }
 
+.counter{
+  // position: fixed;
+  // top: 25px;
+  font-size: 35px;
+  display: flex;
+}
+
+.block {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.d-flex{
+  display: flex !important;
+}
+ion-modal {
+  --height: auto;
+}
+
 @keyframes rotate {
   0%  {
     --color: --color

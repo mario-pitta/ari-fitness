@@ -16,7 +16,7 @@ findAll() : Observable<Horario[]> {
   return  this.http.get<Horario[]>(environment.apiUrl + '/horarios').pipe(take(1))
 }
 findByFilters(filters: Partial<Horario> | Horario) : Observable<Horario[]> {
-  const query = Object.keys(filters).map((k: string) => `${k}=${filters[k as keyof Horario]}`);
+  const query = Object.keys(filters).map((k: string) => `${k}=${filters[k as keyof Horario]}`).join('&');
   console.log("query")
   return  this.http.get<Horario[]>(environment.apiUrl + '/horarios?'+query).pipe(take(1));
 }

@@ -12,7 +12,7 @@
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button [tab]="user.flagAdmin ?  'ficha-treino' : 'treinos'" [routerLink]="user.flagAdmin ?  ['ficha-treino'] : ['treinos'] ">
+    <ion-tab-button [tab]="'treinar'" (click)="navigate('treinar')">
       <!-- <ion-icon aria-hidden="true" name="people"></ion-icon> -->
       <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512" >
         <path fill="currentColor"

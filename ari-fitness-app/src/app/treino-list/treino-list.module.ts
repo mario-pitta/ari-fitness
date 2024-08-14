@@ -6,17 +6,18 @@ import { IonicModule } from '@ionic/angular';
 
 import { TreinoListPageRoutingModule } from './treino-list-routing.module';
 import { TreinosListPage } from './treino-list.page';
-
+import { TreinoListItemModule } from '../shared/treino-list-item/treino-list-item.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    ReactiveFormsModule,
     TreinoListPageRoutingModule,
-    ReactiveFormsModule
+    TreinoListItemModule,
   ],
   declarations: [TreinosListPage],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [],
 })
 export class TreinoListPageModule {}

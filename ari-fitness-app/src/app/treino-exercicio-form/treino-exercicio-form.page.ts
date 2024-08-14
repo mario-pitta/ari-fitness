@@ -28,6 +28,7 @@ export class TreinoExercicioFormPage implements OnInit {
   @Input() gruposMusculares: GrupoMuscular[] = [];
   @Input() treino!: Treino;
 
+
   constructor(
     private fb: FormBuilder,
     private modalController: ModalController,
@@ -53,6 +54,9 @@ export class TreinoExercicioFormPage implements OnInit {
     this.loadData();
     if(this.treino) this.f.patchValue(this.treino)
       console.log(this.f)
+
+
+
   }
 
   async onSaveButtonClick() {

@@ -290,4 +290,10 @@ export class PessoaFormPage implements OnInit {
       },
     });
   }
+
+
+  ngOnDestroy(){
+    console.log('destruindo pessoa-form...')
+    this.form.reset();
+  }
 }

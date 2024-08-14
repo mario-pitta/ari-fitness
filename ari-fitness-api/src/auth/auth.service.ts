@@ -14,7 +14,26 @@ export class AuthService {
     console.log('logando...', cpf, dataNascimento);
     return this.supabase.supabase
       .from('usuario')
-      .select('*')
+      .select(
+        `
+          *, 
+          ficha_aluno: ficha_aluno!ficha_aluno_usuario_id_fkey(
+            *, 
+            treinos: ficha_aluno_treino!ficha_aluno_treino_ficha_id_fkey(
+              *, 
+              treino(
+                *, 
+                treino_exercicio(
+                  *, 
+                  exercicio: exercicios(
+                    *
+                  )
+                )
+              )
+            )
+          )
+        `,
+      )
       .eq('cpf', cpf)
       .eq('data_nascimento', dataNascimento);
   }

@@ -6,7 +6,14 @@ import { FichaTreinoAlunoPage } from './ficha-treino-aluno.page';
 const routes: Routes = [
   {
     path: '',
-    component: FichaTreinoAlunoPage
+    component: FichaTreinoAlunoPage,
+    children: [
+      {
+        path: 'treino',
+        loadChildren: () => import('../treinos/treinos.module').then(m => m.TreinosPageModule),
+
+      }
+    ]
   }
 ];
 

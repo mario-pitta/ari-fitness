@@ -4,7 +4,8 @@ import { GrupoMuscular } from './GrupoMuscular';
 import { ParteDoCorpo } from './ParteDoCorpo';
 
 export interface Treino {
-  treino_exercicio?: any //TreinoExercicioRelation;
+  checked?: boolean;
+  treino_exercicio?: any; //TreinoExercicioRelation;
   id: number;
   nome: string;
   exercicios: Exercicio[] | Partial<Exercicio>[];

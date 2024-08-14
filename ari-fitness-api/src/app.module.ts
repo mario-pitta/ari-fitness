@@ -1,3 +1,4 @@
+import { FichaAlunoModule } from './ficha-usuario/ficha-aluno.module';
 import { GrupoMuscularModule } from './grupoMuscular/grupo-muscular.module';
 /* eslint-disable prettier/prettier */
 import { TipoUsuarioModule } from './tipoUsuario/tipo-usuario.module';
@@ -19,6 +20,7 @@ import { ExercicioModule } from './exercicio/exercicio.module';
 import { ParteDoCorpoModule } from './parte-do-corpo/parte-do-corpo.module';
 @Module({
   imports: [
+    FichaAlunoModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client'),
       serveRoot: join(__dirname, '..', 'client'),
@@ -36,7 +38,7 @@ import { ParteDoCorpoModule } from './parte-do-corpo/parte-do-corpo.module';
     TreinoModule,
     ExercicioModule,
     GrupoMuscularModule,
-    ParteDoCorpoModule
+    ParteDoCorpoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

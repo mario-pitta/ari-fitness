@@ -10,60 +10,97 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+        loadChildren: () =>
+          import('../tab1/tab1.module').then((m) => m.Tab1PageModule),
       },
       {
         path: 'profile',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        loadChildren: () =>
+          import('../tab2/tab2.module').then((m) => m.Tab2PageModule),
       },
       {
         path: 'cadastro-usuario',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        loadChildren: () =>
+          import('../tab3/tab3.module').then((m) => m.Tab3PageModule),
       },
       {
         path: 'cadastro-usuario/:id',
-        loadChildren: () => import('../tab3/tab3.module').then(m => m.Tab3PageModule)
+        loadChildren: () =>
+          import('../tab3/tab3.module').then((m) => m.Tab3PageModule),
       },
       {
         path: 'pessoa-form',
-        loadChildren: () => import('../pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule)
+        loadChildren: () =>
+          import('../pessoa-form/pessoa-form.module').then(
+            (m) => m.PessoaFormPageModule
+          ),
       },
       {
         path: 'usuarios',
-        loadChildren: () => import('../usuarios/usuarios.module').then( m => m.UsuariosPageModule)
+        loadChildren: () =>
+          import('../usuarios/usuarios.module').then(
+            (m) => m.UsuariosPageModule
+          ),
+      },
+      {
+        path: 'treinar',
+        loadChildren: () =>
+          import('../ficha-treino-aluno/ficha-treino-aluno.module').then(
+            (m) => m.FichaTreinoAlunoPageModule
+          ),
       },
       {
         path: 'ficha-treino',
-        loadChildren: () => import('../ficha-treino-aluno/ficha-treino-aluno.module').then(m => m.FichaTreinoAlunoPageModule)
+        loadChildren: () =>
+          import('../ficha-treino-aluno/ficha-treino-aluno.module').then(
+            (m) => m.FichaTreinoAlunoPageModule
+          ),
       },
       {
         path: 'treinos',
-        loadChildren: () => import('../treinos/treinos.module').then( m => m.TreinosPageModule)
+        loadChildren: () =>
+          import('../treinos/treinos.module').then((m) => m.TreinosPageModule),
       },
       {
         path: 'treino-form',
-        loadChildren: () => import('../treino-exercicio-form/treino-exercicio-form.module').then( m => m.TreinoFormPageModule)
+        loadChildren: () =>
+          import('../treino-exercicio-form/treino-exercicio-form.module').then(
+            (m) => m.TreinoFormPageModule
+          ),
+      },
+      {
+        path: 'treino-form',
+        loadChildren: () =>
+          import('../treino-exercicio-form/treino-exercicio-form.module').then(
+            (m) => m.TreinoFormPageModule
+          ),
       },
       {
         path: 'treino-list',
-        loadChildren: () => import('../treino-list/treino-list.module').then(m => m.TreinoListPageModule)
+        loadChildren: () =>
+          import('../treino-list/treino-list.module').then(
+            (m) => m.TreinoListPageModule
+          ),
       },
       {
         path: 'treino-form/:id',
-        loadChildren: () => import('../treino-exercicio-form/treino-exercicio-form.module').then( m => m.TreinoFormPageModule)
+        loadChildren: () =>
+          import('../treino-exercicio-form/treino-exercicio-form.module').then(
+            (m) => m.TreinoFormPageModule
+          ),
       },
       {
         path: '',
         redirectTo: 'home',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: '',
     redirectTo: 'home',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

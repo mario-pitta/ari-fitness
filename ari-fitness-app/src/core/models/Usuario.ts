@@ -1,5 +1,7 @@
+import { FichaAluno } from "./FichaAluno";
 import { Horario } from "./Horario";
 import { Plano } from "./Plano";
+import { Treino } from "./Treino";
 
 export interface IUsuario {
   idade?: any;
@@ -35,8 +37,9 @@ export interface IUsuario {
   objetivo: string | number;
   data_nascimento: Date | string;
   flagAdmin: boolean;
+  ficha_aluno?: FichaAluno[];
 }
-export class Usuario {
+export class Usuario implements IUsuario{
   idade?: any;
   id?: number;
   created_at?: Date | string;
@@ -70,6 +73,7 @@ export class Usuario {
   objetivo!: string | number;
   data_nascimento!: Date | string;
   flagAdmin!: boolean;
+  ficha_aluno?: FichaAluno[];
 
 
   constructor({...obj}: IUsuario) {

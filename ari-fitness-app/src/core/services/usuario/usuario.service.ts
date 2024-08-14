@@ -28,7 +28,7 @@ export class UsuarioService {
   findByFilters(filters: Partial<Usuario> | Usuario) {
     const query = Object.keys(filters).map(
       (k: string) => `${k}=${filters[k as keyof Usuario]}`
-    );
+    ).join('&');
 
     return this.http
       .get<Usuario[]>(environment.apiUrl + '/usuario/search?' + query)
