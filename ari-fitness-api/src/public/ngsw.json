@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1729042517588,
+  "timestamp": 1729043942452,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -41,7 +41,7 @@
         "/4699.01733b3942afbe92.js",
         "/4813.aa8c9ec9f9ccd053.js",
         "/4863.25f54903f3b0cb52.js",
-        "/4944.3712be6155be576d.js",
+        "/4944.667bbcb89b6b911e.js",
         "/5100.7325a2fea8c9ca68.js",
         "/5113.750a6c4801f77631.js",
         "/5197.16dd961bd3a1ccf3.js",
@@ -92,7 +92,7 @@
         "/polyfills-core-js.c76198334f717402.js",
         "/polyfills-dom.bf542500b6fca113.js",
         "/polyfills.a945b0249cb630b5.js",
-        "/runtime.803d4eaf2054cb16.js",
+        "/runtime.9d54f3f8ec68722e.js",
         "/styles.cf27dfd6047a0b7a.css"
       ],
       "patterns": []
@@ -1504,7 +1504,7 @@
     "/4699.01733b3942afbe92.js": "4903163f2e1577a6aa0a36723a244fe67eafb840",
     "/4813.aa8c9ec9f9ccd053.js": "eaecfb394fea1b427555ee1fb934ed2b67837f91",
     "/4863.25f54903f3b0cb52.js": "c18f608d8f6dee35b6c33e029182bae6a13ef471",
-    "/4944.3712be6155be576d.js": "36eb04e1cbbff2a092295ac3debe167fdd40cf9b",
+    "/4944.667bbcb89b6b911e.js": "96d310e5dffe50ab6c7af6a4260737d0ccfc4fdf",
     "/5100.7325a2fea8c9ca68.js": "43bd263c7d854ba754a64330f71d4c5503d28ccc",
     "/5113.750a6c4801f77631.js": "8d3ed26f1dbc3878b8f534ded84560ee0ea29b24",
     "/5197.16dd961bd3a1ccf3.js": "80997a8cea3adf50a0997468f44395763f52fdf2",
@@ -1557,12 +1557,12 @@
     "/assets/images/treino-toalha-agua-01.png": "cc6034164139c2bc8f64dc8652b6604261a23d09",
     "/assets/shapes.svg": "5413e95adabcb2cb639970051f55e0ddb64ace53",
     "/common.60fd0e180b955657.js": "f9bee5f5ce0af0117b0b807c42be9666668eab3f",
-    "/index.html": "1bcc92e683d477715d7332665a241aee984dae92",
+    "/index.html": "5b216a6b702d4f6d9c96c376d7b3e9159b86b40c",
     "/main.1e5aaeef190131d9.js": "41e723117752a4bfc5d5b6e83ccf76589a190dd7",
     "/polyfills-core-js.c76198334f717402.js": "d6e270a2944b6a95a9b97dafd25599ba825e8d7f",
     "/polyfills-dom.bf542500b6fca113.js": "3fa333db66c8050f12e99d977f5098a6de8dd593",
     "/polyfills.a945b0249cb630b5.js": "800750908237e114ab16371b555a0f41f3ea7da2",
-    "/runtime.803d4eaf2054cb16.js": "65d8fc0a11aeddf0c90d9c2028198e2e9061902a",
+    "/runtime.9d54f3f8ec68722e.js": "316d1e2a8e5e62f77a6bbeb6075380a1b86ec776",
     "/styles.cf27dfd6047a0b7a.css": "0b365a1e3e42ae1e410a6ddf35af545e427409cd",
     "/svg/accessibility-outline.svg": "92bc5fbc69bc5b55f75c5d29686d6f3b949857bd",
     "/svg/accessibility-sharp.svg": "0c6447c380f04b29bef7413d50d088dd4a5fd61c",
