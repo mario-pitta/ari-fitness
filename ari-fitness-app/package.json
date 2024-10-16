@@ -10,6 +10,7 @@
     "build": "ng build && npm run copy:assets",
     "copy:assets": "robocopy ./public ../ari-fitness-api/src/public /E",
     "watch": "ng build --watch --configuration development",
+    "deploy": "npm run build && --prefix ../ari-fitness-api deploy",
     "start:full": "npm-run-all --parallel  start  start:server",
     "test": "ng test",
     "lint": "ng lint"

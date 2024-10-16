@@ -153,7 +153,7 @@ export class FichaTreinoAlunoPage implements OnInit {
   createForm() {
     this.form = this.fb.group({
       id: [null, [Validators.nullValidator]],
-      created_at: [new Date().toLocaleDateString(), [Validators.nullValidator]],
+      created_at: [new Date().toDateString(), [Validators.nullValidator]],
       usuario_id: [null, [Validators.nullValidator]],
       descricao: [null, [Validators.nullValidator]],
       ficha_data_inicio: [null, [Validators.nullValidator]],
@@ -197,13 +197,13 @@ export class FichaTreinoAlunoPage implements OnInit {
     });
 
     this.instrutor?.patchValue({
-      id: (ficha.instrutor as Partial<Usuario>).id,
-      nome: (ficha.instrutor as Partial<Usuario>).nome,
+      id: (ficha.instrutor as Partial<Usuario>)?.id,
+      nome: (ficha.instrutor as Partial<Usuario>)?.nome,
     });
 
     this.cadastrado_por?.patchValue({
-      id: (ficha.cadastrado_por as Partial<Usuario>).id,
-      nome: (ficha.cadastrado_por as Partial<Usuario>).nome,
+      id: (ficha.cadastrado_por as Partial<Usuario>)?.id,
+      nome: (ficha.cadastrado_por as Partial<Usuario>)?.nome,
     });
 
     this.f.patchValue({
