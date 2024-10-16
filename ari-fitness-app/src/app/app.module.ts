@@ -1,5 +1,5 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgModule, isDevMode } from '@angular/core';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { NgModule, importProvidersFrom, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy, RouterModule } from '@angular/router';
 
@@ -14,8 +14,12 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpInterceptors } from 'src/core/interceptors/http.interceptor';
 import { ErrorInterceptor } from 'src/core/interceptors/error.interceptor';
 
-import { ExercicioFormModule } from './exercicio-form/exercicio-form.module';
+import { ExercicioFormModule } from './adm-page/exercicios/exercicio-form/exercicio-form.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+
+
+const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -24,7 +28,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     AppRoutingModule,
     RouterModule,
     MaskitoDirective,
-    HttpClientModule,
     ExercicioFormModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
@@ -34,6 +37,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     }),
   ],
   providers: [
+    httpProviders(),
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptors, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

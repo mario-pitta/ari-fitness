@@ -7,9 +7,9 @@ export class HttpInterceptors implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const headers = new Headers()
     headers.set("Accept", "*/*")
-    console.log("interceptando requeest....", headers)
+    // console.log("interceptando requeest....", headers)
 
-    console.log("request after intercept....", req)
+    // console.log("request after intercept....", req)
     return next.handle(req);
   }
 }

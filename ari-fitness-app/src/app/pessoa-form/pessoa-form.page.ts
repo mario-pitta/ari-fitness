@@ -21,6 +21,7 @@ import { HorarioService } from 'src/core/services/horario/horario.service';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/core/services/auth/auth.service';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -29,7 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PessoaFormPage implements OnInit {
   loading: boolean = false;
-
+  Constants = Constants
   phoneMask: MaskitoOptions = Constants.phoneMask
   cpfMask: MaskitoOptions = Constants.cpfMask
   alturaMask: MaskitoOptions = Constants.alturaMask
@@ -42,8 +43,8 @@ export class PessoaFormPage implements OnInit {
   tiposUsuario: TipoUsuario[] = [];
 
   onFormChange($event: Event) {
-    console.log($event);
-    console.log(this.form);
+    // console.log($event);
+    // console.log(this.form);
   }
   form: FormGroup = new FormGroup({});
   // temDoenca: boolean = false;
@@ -56,13 +57,15 @@ export class PessoaFormPage implements OnInit {
     private horarioService: HorarioService,
     private aRoute: ActivatedRoute,
     private router: Router,
+    private auth: AuthService
   ) {}
-
+  user!: Usuario
   ngOnInit() {
-    console.log(
-      'this.aRoute.snapshot.params["userId"] : ',
-      this.aRoute.snapshot.queryParams['userId']
-    );
+    this.user = this.auth.getUser;
+    // console.log(
+    //   'this.aRoute.snapshot.params["userId"] : ',
+    //   this.aRoute.snapshot.queryParams['userId']
+    // );
     this.createForm();
     this.loadData();
     if (this.aRoute.snapshot.queryParams['userId']) {
@@ -74,7 +77,8 @@ export class PessoaFormPage implements OnInit {
     this.usuarioService.findByFilters({ id: id }).subscribe({
       next: (data: Usuario[]) => {
         this.form.patchValue(data[0]);
-        console.log(this.form.value);
+        this.calcIMC()
+        // console.log(this.form.value);
       },
     });
   }
@@ -86,7 +90,7 @@ export class PessoaFormPage implements OnInit {
       this.getActivePlans(),
     ]).subscribe({
       next: (result) => {
-        console.log('tipoUsuario, horarios, planos: ', result);
+        // console.log('tipoUsuario, horarios, planos: ', result);
       },
       error: (err) => {
         this.loading = false;
@@ -144,23 +148,23 @@ export class PessoaFormPage implements OnInit {
   imcIdeal = 0;
   rcqIdeal: number = 0;
   calcIMC() {
-    console.log(
-      'calculando imc ideal',
-      Number(this.form.value.peso),
-      Number(this.form.value.altura)
-    );
+    // console.log(
+    //   'calculando imc ideal',
+    //   Number(this.form.value.peso),
+    //   Number(this.form.value.altura)
+    // );
     this.imcIdeal =
       Number(this.form.value.peso) /
       Math.pow(Number(this.form.value.altura), 2);
     this.imcIdeal = Number(this.imcIdeal.toFixed(2));
-    console.log(this.imcIdeal);
+    // console.log(this.imcIdeal);
   }
   calcRCQ() {
-    console.log('calculando rcq ideal');
+    // console.log('calculando rcq ideal');
     this.imcIdeal = Number(
       (this.form.value.peso / Math.pow(this.form.value.peso, 2)).toFixed(2)
     );
-    console.log(this.imcIdeal);
+    // console.log(this.imcIdeal);
   }
 
   createForm() {
@@ -259,7 +263,7 @@ export class PessoaFormPage implements OnInit {
   }
 
   submitForm() {
-    console.log('this.form: ', this.form);
+    // console.log('this.form: ', this.form);
 
     this.loading = true;
 
@@ -271,7 +275,7 @@ export class PessoaFormPage implements OnInit {
     this.form.disable();
     req.subscribe({
       next: (res: any) => {
-        console.log('ok');
+        // console.log('ok');
         this.toastr.success(`Usuário ${msg} com sucesso!`);
         this.form.enable();
         if (!this.form.value.id) {
@@ -283,7 +287,7 @@ export class PessoaFormPage implements OnInit {
       error: (err: any) => {
         this.loading = false;
         this.form.enable();
-        console.log(err);
+        console.error(err);
       },
       complete: () => {
         this.loading = false;

@@ -104,9 +104,23 @@ svg {
   width: 10% !important  ;
 }
 
+.text-break{
+  word-break: break-word !important;
+}
+
+.icons{
+  display: flex;
+  gap: 2px;
+  margin-right: -0.5em;
+}
 
 
 .swal2-container {
   z-index: 99999999999;
   height: 100vh;
+}
+
+
+.wrap {
+  white-space: normal;
 }

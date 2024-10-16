@@ -71,17 +71,18 @@ export class TreinosListPage implements OnInit {
       next: (treinos: Treino[]) => {
         this.filteredTreinos = this.treinos = treinos;
 
-        console.log('treinos selecionados...', this.selectedTreinos, this.filteredTreinos);
+        console.log(
+          'treinos selecionados...',
+          this.selectedTreinos,
+          this.filteredTreinos
+        );
 
         this.filteredTreinos = this.filteredTreinos.map((ftr: Treino) => {
-
           if (
-            this.selectedTreinos.find(
-              (str: any) => str.treino.id === ftr.id
-            )
+            this.selectedTreinos.find((str: any) => str.treino.id === ftr.id)
           ) {
             ftr.checked = true;
-            console.log('TEM QUE PRINTAR ISSO !!!')
+            console.log('TEM QUE PRINTAR ISSO !!!');
           }
           return ftr;
         });
@@ -149,7 +150,9 @@ export class TreinosListPage implements OnInit {
         });
         this.filterList();
         break;
-
+      case 'edit':
+          this.openTreinoEditor(event.value)
+        break;
       default:
         break;
     }

@@ -50,11 +50,12 @@ export class TreinosPage implements OnInit {
   onTreinoSelected(event: any) {
     console.log(event);
     this.selectedTreino =
-      this.user.ficha_aluno &&
-      this.user.ficha_aluno[0].treinos.find((t: any) => t.treino.id == event)
+      this.user?.ficha_aluno &&
+      this.user?.ficha_aluno.filter(f => f.fl_ativo)[0].treinos.find((t: any) => t.treino.id == event)
         .treino;
-    console.log(this.selectedTreino);
+    console.log('selectedTreino ============ ',this.selectedTreino);
   }
+  serieArr: any[] = []
 
   toggleClock(time: number) {
     console.log(this.interval);
@@ -82,6 +83,10 @@ export class TreinosPage implements OnInit {
         }
       }, 1000);
     }
+  }
+
+  buildSerieArr(ex: any){
+    this.serieArr = Array(ex.series).fill(1).map((i, index) => index+1)
   }
 
   playSound(sound: string) {
@@ -128,7 +133,9 @@ export class TreinosPage implements OnInit {
       carga: this.selectedExercicio.carga,
       repeticoes:  this.selectedExercicio.repeticoes,
       series: this.selectedExercicio.series,
+      intervalo: this.selectedExercicio.intervalo,
     }
+    this.buildSerieArr(this.selectedExercicio)
   }
 
   openTreinoForm() {

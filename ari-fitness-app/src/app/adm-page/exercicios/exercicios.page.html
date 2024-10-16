@@ -1,0 +1,76 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>equipamentos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">equipamentos</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-button [routerLink]="['form']" class="text-center d-flex">
+      <ion-icon name="add"></ion-icon>
+      <span> Cadastrar Novo</span>
+    </ion-button>
+    <ion-searchbar show-cancel-button="always" cancel-button-text="Custom Cancel" cancel-button-icon="filter"
+      placeholder="Pesquisar..." [(ngModel)]="searchText" (click)="searchText = ''"></ion-searchbar>
+
+    <ion-grid>
+      <ion-card class="ion-padding">
+        <ion-list *ngIf="!loading; else spinner">
+          @if((exercicios| filterByName: searchText).length){
+          <ion-item *ngFor="let eqp of exercicios | filterByName: searchText ">
+            <!-- <ion-title class="text-capitalize">
+            {{eqp.nome }}
+
+          </ion-title> -->
+            <ion-label class="d-flex w-100 ion-justify-content-between ion-align-items-center text-capitalize">
+              <span class="ion-text-capitalize">
+                {{eqp.nome}}
+              </span>
+              <div class="icons">
+                <a>
+                  <ion-icon size="large" name="create" color="primary" (click)="navigate(eqp.id)"></ion-icon>
+                </a>
+                <a>
+                  <ion-icon size="large" name="close" color="danger" (click)="delete(eqp.id)"></ion-icon>
+                </a>
+              </div>
+            </ion-label>
+          </ion-item>}@else{
+          <ng-content *ngTemplateOutlet="emptyMessage"></ng-content>
+          }
+          <ion-item [routerLink]="['form']" *ngIf="(exercicios | filterByName: searchText).length" class="text-center">
+            <ion-icon name="add"></ion-icon>
+            <ion-title> Cadastrar Novo</ion-title>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+    </ion-grid>
+    <br>
+    <br>
+  </ion-content>
+
+
+
+  <ion-modal [isOpen]="false"></ion-modal>
+
+
+
+  <ng-template #spinner>
+    @for(item of [0,2,3,4,50]; track item){
+    <ion-item class="text-center">
+      ...
+    </ion-item>
+    }
+
+  </ng-template>
+  <ng-template #emptyMessage>
+    <ion-item>
+      Nenhum item encontrado...
+    </ion-item>
+  </ng-template>
+</ion-content>

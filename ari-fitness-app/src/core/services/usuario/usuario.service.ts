@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { take } from 'rxjs';
 import { Usuario } from 'src/core/models/Usuario';
 import { environment } from 'src/environments/environment';
-console.log(environment.apiUrl)
+// console.log(environment.apiUrl)
 @Injectable({
   providedIn: 'root',
 })

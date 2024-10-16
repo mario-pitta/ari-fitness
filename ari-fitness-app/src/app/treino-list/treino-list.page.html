@@ -1,24 +1,5 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title class="ion-align-items-center ion-justify-content-between">
-      <ion-button fill="clear">
-        <ion-icon name="close"></ion-icon>
-      </ion-button>
-      Lista de Treinos
-    </ion-title>
-
-  </ion-toolbar>
-</ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- <ion-row class="ion-justify-content-center ion-align-items-center">
-    <h3>{{selectedTreino?.descricao}}</h3>
-  </ion-row>
-  <div class="ion-padding">
-    <ion-row class="ion-align-items-center">
-      <ion-input type="number" label="Defina o descanso (s)" labelPlacement="floating" [(ngModel)]="interval" />
-    </ion-row>
-  </div> -->
   <ion-fab *ngIf="user.flagAdmin && enableEdit" slot="fixed" vertical="bottom" horizontal="end" [edge]="false">
     <ion-fab-button id="open-treino-modal" fill="outlined" (click)="openModal = !openModal">
       <ion-icon name="add" size="large"></ion-icon>
@@ -39,7 +20,7 @@
       </ion-item>
     </ion-list>
   </ion-grid>
-  <ion-button *ngIf="user.flagAdmin && !enableEdit" class="success" size="block" color="primary"
+  <ion-button  class="success" size="block" color="primary"
     (click)="associateToUser()">CONFIRMAR</ion-button>
 </ion-content>
 
@@ -80,7 +61,7 @@
         <ion-list formArrayName="exercicios">
           <ion-row class="ion-justify-content-between">
             <h4>Exercícios</h4>
-            <ion-buttons *ngIf="user.flagAdmin">
+            <ion-buttons >
               <ion-button fill="outlined" color="primary" (click)="openTreinoForm()">
                 <ion-icon name="add"></ion-icon>
               </ion-button>

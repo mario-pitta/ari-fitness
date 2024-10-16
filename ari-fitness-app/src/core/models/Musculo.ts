@@ -11,4 +11,5 @@ export interface Musculo {
   grupo_muscular_id: 1;
   parte_do_corpo_id: 1;
   principais_exercicios: string;
+  fl_ativo: boolean;
 }

@@ -22,7 +22,7 @@ export class LoginPage implements OnInit {
   constructor(private fb: FormBuilder, private auth: AuthService) { }
 
   ngOnInit() {
-    localStorage.clear();
+
     this.form = this.fb.group({
       cpf: ['', [Validators.required]],
       dataNascimento: ['', [Validators.required]],
@@ -32,8 +32,10 @@ export class LoginPage implements OnInit {
   logar(){
     this.auth.login(this.form.value.cpf, this.form.value.dataNascimento).subscribe({
       next: user => {
-        localStorage.setItem('user', JSON.stringify(user));
+
         location.href = "/#/home";
+        location.replace("/#/home");
+        location.reload();
       }
     })
   }

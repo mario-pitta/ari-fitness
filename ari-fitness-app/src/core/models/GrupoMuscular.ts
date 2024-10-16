@@ -6,4 +6,5 @@ export interface GrupoMuscular {
   created_at: string | Date;
   parte_do_corpo: ParteDoCorpo;
   parte_do_corpo_id: number;
+  fl_ativo: boolean;
 }

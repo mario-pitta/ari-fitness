@@ -4,7 +4,7 @@ import { GrupoMuscular } from './GrupoMuscular';
 import { Musculo } from './Musculo';
 
 export interface Exercicio {
-  id: 9;
+  id?: number;
   created_at: string | Date;
   nome: string;
   fl_ativo: true;

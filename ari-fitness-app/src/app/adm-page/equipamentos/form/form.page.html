@@ -1,0 +1,41 @@
+
+<ion-content [fullscreen]="true">
+
+  <ion-card class="ion-padding">
+    <form [formGroup]="form">
+      <div class="form-group">
+
+        <ion-input required label="Nome" formControlName="nome" labelPlacement="floating" />
+
+        <ion-select label="Categoria" formControlName="categoria_id" labelPlacement="floating">
+          <ion-select-option *ngFor="let cat of categorias$ | async" [value]="cat.id">
+            {{cat.nome}}
+          </ion-select-option>
+        </ion-select>
+
+        <ion-input label="Mídia URL" formControlName="foto_url" labelPlacement="floating" />
+
+        @if(form.value.foto_url){
+          <img [src]="form.value.foto_url" [alt]="'foto do equipamento '+form.value.nome" srcset="">
+        }
+
+
+        <ion-item>
+          <ion-checkbox formControlName="fl_ativo" justify="end" label="Ativo">Ativo</ion-checkbox>
+        </ion-item>
+      </div>
+
+    </form>
+    <!-- <div class="d-flex justify-items-center"> -->
+    <ion-button class="ion-margin-top" shape="round" expand="block" [disabled]="form.invalid" (click)="save()">
+      @if(loading){
+        <ion-spinner></ion-spinner>
+      }@else {
+        <span>
+          SALVAR
+        </span>
+        }
+    </ion-button>
+    <!-- </div> -->
+  </ion-card>
+</ion-content>

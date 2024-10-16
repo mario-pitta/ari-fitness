@@ -44,12 +44,14 @@
 
 
 
-<ion-modal [isOpen]="openModal" [initialBreakpoint]="1" [breakpoints]="[0, 1]" (didDismiss)="resetCounter(); openModal=false"
-  (didPresent)="buildExercicioPresets()">
-  <ng-template>
+<!-- <ion-modal >
+  <ng-template class="ion-ali">
     <ion-title class="ion-margin-top ion-margin-bottom-0 ">
       {{selectedExercicio.exercicio.nome.toUpperCase()}}
       <hr>
+      @if(selectedExercicio.exercicio.midia_url){
+        <img [src]="selectedExercicio.exercicio.midia_url" alt="" srcset="">
+      }
 
     </ion-title>
     <ion-row class="ion-padding ion-justify-content-center">
@@ -114,5 +116,92 @@
 
 
   </ng-template>
+</ion-modal> -->
+
+<!-- @if(selectedExercicio){ -->
+<ion-modal [isOpen]="openModal" [initialBreakpoint]="1" [breakpoints]="[0, 1]"
+  (didDismiss)="resetCounter(); openModal=false" (didPresent)="buildExercicioPresets()">
+  <ng-template>
+    <ion-row>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title class="ion-text-capitalize">Exercício: {{ selectedExercicio.exercicio.nome}}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)=" openModal=false">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <!-- <ion-content>   -->
+
+      @if(selectedExercicio.exercicio.midia_url){
+      <img [src]="selectedExercicio.exercicio.midia_url" alt="" srcset="">
+      }
+      <ion-row>
+        <ion-col size="6">
+          <ion-item>
+            <ion-input label="Séries:" labelPlacement="floating" type="number" disabled="true"
+              [(ngModel)]="exercicioPresets.series"></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-input label="Repetições:" labelPlacement="floating" type="number" disabled="true"
+              [(ngModel)]="exercicioPresets.repeticoes"></ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-input label="Carga (kg):" labelPlacement="floating" type="number" [(ngModel)]="exercicioPresets.carga">
+            </ion-input>
+          </ion-item>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-item>
+            <ion-input label="Descanso:" labelPlacement="floating" type="number" disabled="true"
+              [(ngModel)]="exercicioPresets.intervalo"></ion-input>
+          </ion-item>
+        </ion-col>
+
+
+        <ng-container  *ngIf="selectedExercicio.intervalo">
+        <ion-col size="6" class="ion-align-items-center">
+          <h5 class="ion-padding-start">Descanso</h5>
+          <ion-col size="6">
+            <ion-button fill="icon-only" (click)="toggleClock(selectedExercicio.intervalo)"><ion-icon [name]="icon" ></ion-icon> </ion-button>
+          </ion-col>
+        </ion-col>
+        <ion-col size="6">
+          <div class="ion-align-items-center">
+            <h1  style="font-size: 50px;">
+
+                {{ counter < 10 ? '0'+counter : counter }}s
+
+            </h1>
+          </div>
+        </ion-col>
+
+      </ng-container>
+        <br>
+        <ion-col size="12">
+          <h5 class="ion-padding-start">Series Concluídas</h5>
+          <div class="d-flex ion-justify-content-around ion-align-items-center ion-ma">
+            @for(serie of serieArr; track serie){
+
+              <ion-checkbox></ion-checkbox>
+
+            }
+          </div>
+        </ion-col>
+
+        <ion-button expand="block" class="w-100">Finalizar</ion-button>
+
+        <!-- </ion-content> -->
+      </ion-row>
+    </ion-row>
+  </ng-template>
 </ion-modal>
-<!-- [buttons]="actionSheetButtons" -->

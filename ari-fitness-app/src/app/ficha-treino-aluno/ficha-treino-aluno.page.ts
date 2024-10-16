@@ -6,11 +6,11 @@ import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
 import { TreinosListPage } from '../treino-list/treino-list.page';
 import { Treino } from 'src/core/models/Treino';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { FichaAlunoService } from 'src/core/services/ficha-aluno/ficha-aluno.service';
 import { FichaAluno } from 'src/core/models/FichaAluno';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
 
@@ -34,7 +34,7 @@ export class FichaTreinoAlunoPage implements OnInit {
   loading: boolean = false;
   form: FormGroup = new FormGroup({});
   enableEdit: boolean = false;
-
+  subs$: Subscription = new Subscription();
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
@@ -44,17 +44,36 @@ export class FichaTreinoAlunoPage implements OnInit {
     private usuarioService: UsuarioService,
     private fichaService: FichaAlunoService,
     private toastr: ToastrService
-  ) {}
+  ) {
+    this.subs$.add(
+      this.router.events.subscribe({
+        next: (ev) => {
+          if (ev instanceof NavigationEnd) {
+            console.log('entrou no navigationEnd');
+            this.checkUserParams();
+          }
+        },
+      })
+    );
+  }
 
-  ngOnInit() {
-    this.createForm();
-    if (this.aRoute.snapshot.queryParamMap.get('userId')) {
+  checkUserParams() {
+    const param = this.aRoute.snapshot.queryParams['userId'];
+
+    console.log('qual param', param);
+    if (param) {
       this.loadFichaData(
         Number(this.aRoute.snapshot.queryParamMap.get('userId'))
       );
 
       console.log('pathFromRoot', this.aRoute.snapshot.pathFromRoot);
     }
+  }
+
+  ngOnInit() {
+    console.log('init do ficha aluno!!!', this.aRoute.snapshot);
+    this.createForm();
+    this.checkUserParams();
     this.loadData();
     this.user = this.auth.getUser;
     // this.selectedTreino = this.user.treinos && this.user.treinos[0];
@@ -63,15 +82,12 @@ export class FichaTreinoAlunoPage implements OnInit {
   onTreinoSelected(event: any) {
     this.selectedTreino = event;
     console.log(this.selectedTreino);
-    this.router.navigate([
-      'treinar/treino'],
-      {
-        queryParams: {
-          userId: this.user.id,
-          treinoId: this.selectedTreino.id
-         },
+    this.router.navigate(['treinar/treino'], {
+      queryParams: {
+        userId: this.user.id,
+        treinoId: this.selectedTreino.id,
       },
-    );
+    });
   }
 
   /**
@@ -79,6 +95,7 @@ export class FichaTreinoAlunoPage implements OnInit {
    * and `getFichaInfo`.
    */
   loadFichaData(userId: number) {
+    console.log('vai carregar a ficha do aluno', userId);
     this.getAluno(userId);
     this.getFichaInfo();
   }
@@ -199,6 +216,7 @@ export class FichaTreinoAlunoPage implements OnInit {
       peso_meta: ficha.peso_meta,
     });
 
+    this.treinos.clear();
     ficha.treinos_cadastrados?.forEach((tr) => {
       this.treinos.setControl(this.treinos.value.length, this.fb.group(tr));
     });
@@ -213,7 +231,7 @@ export class FichaTreinoAlunoPage implements OnInit {
       .create({
         component: TreinosListPage,
         componentProps: {
-          enableEdit: false,
+          enableEdit: true,
           selectedTreinos: this.treinos.value,
         },
       })
@@ -298,7 +316,11 @@ export class FichaTreinoAlunoPage implements OnInit {
     req.subscribe({
       next: (res) => {
         this.toastr.success('Operação bem sucedida');
-        history.back();
+        if(this.aluno?.value.id == this.user.id){
+          this.auth.login(this.user.cpf, this.user.data_nascimento).subscribe();
+        }
+
+        this.ngOnInit();
       },
       error: (err) => {
         console.error('erro', err);
@@ -323,5 +345,6 @@ export class FichaTreinoAlunoPage implements OnInit {
     this.instrutor?.reset();
     this.treinos.reset();
     this.cadastrado_por?.reset();
+    this.subs$.unsubscribe();
   }
 }

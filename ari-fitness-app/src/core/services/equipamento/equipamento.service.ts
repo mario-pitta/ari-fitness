@@ -10,7 +10,9 @@ import { environment } from 'src/environments/environment';
 export class EquipamentoService {
   constructor(private http: HttpClient) {}
 
-  find(filters?: Equipamento): Observable<Equipamento[]> {
+  find(
+    filters?: Equipamento | Partial<Equipamento>
+  ): Observable<Equipamento[]> {
     const query =
       (filters &&
         Object.keys(filters).map(
@@ -20,5 +22,12 @@ export class EquipamentoService {
     return this.http
       .get<Equipamento[]>(environment.apiUrl + '/equipamentos?' + query)
       .pipe(take(1));
+  }
+
+  save(eqp: Equipamento) {
+    return this.http[eqp.id ? 'put' : 'post'](
+      environment.apiUrl + '/equipamentos',
+      eqp
+    ).pipe(take(1));
   }
 }

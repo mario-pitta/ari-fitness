@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import Constants from 'src/core/Constants';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
@@ -10,225 +11,34 @@ import { PagetitleService } from 'src/core/services/pagetitle.service';
   styleUrls: ['tabs.page.scss'],
 })
 export class TabsPage implements OnInit, OnDestroy {
-  user: any
-      // = {
-      //   nome: 'Mario',
-      //   flagAdmin: true,
-      //   treinos: [
-      //     {
-      //       id: 1,
-      //       descricao: 'Treino ABC1',
-      //       exercicios: [
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       id: 2,
-      //       descricao: 'Treino ABC2',
-      //       exercicios: [
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       id: 3,
-      //       descricao: 'Treino ABC3',
-      //       exercicios: [
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //       ],
-      //     },
-      //     {
-      //       id: 4,
-      //       descricao: 'Treino ABC4',
-      //       exercicios: [
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //         {
-      //           exercicio: {id: 1, descricao: 'agachamento'},
-      //           repeticao: '12',
-      //           series: '3',
-      //           carga: null,
-      //           equipamento: 'halteres',
-      //         },
-      //       ],
-      //     }
-      //   ],
-      // };
-
+  user: any;
+  route: string = '/home'
+  Constants = Constants;
   pageTitle = 'Home';
   constructor(
     private titleService: PagetitleService,
-    private auth: AuthService, private router: Router
+    private auth: AuthService,
+    private router: Router
   ) {
-    console.log('TabsComponent Initing....');
-
-    this.user = JSON.parse(localStorage.getItem('user') as string);
+    // this.user = JSON.parse(localStorage.getItem('user') as string);
     this.titleService.title.asObservable().subscribe({
       next: (title) => {
-        console.log('TabsComponent getting page title');
         this.pageTitle = title;
+        // this.route = this.aRoute.snapshot.url
       },
     });
   }
 
   ngOnInit() {
-    console.log('iniciando tabsPage')
-    this.user = JSON.parse(localStorage.getItem('user') as string);
+    this.router.events.subscribe(ev => {
+      if(ev instanceof NavigationEnd){
+        console.log('selected: ',ev);
+        this.route = ev.url
+      }
+    })
+    this.user = this.auth.getUser;
+    console.log('this.user: ', this.user);
+
     if (this.user) {
       // this.updateLoggedUserData();
     } else {
@@ -239,19 +49,18 @@ export class TabsPage implements OnInit, OnDestroy {
   updateLoggedUserData() {
     this.auth.login(this.user.cpf, this.user.data_nascimento).subscribe({
       next: (user) => {
-        console.log('user: ', user);
+        // console.log('user: ', user);
       },
     });
   }
 
-  navigate(path: string){
+  navigate(path: string) {
     setTimeout(() => {
-      console.log("dentro do timeout")
-      this.router.navigate([path], {queryParams: {userId: this.user.id}})
-    },80)
+      this.router.navigate([path], { queryParams: { userId: this.user.id } });
+    }, 80);
   }
 
-  ngOnDestroy(){
-    console.log("destroying tabs page")
+  ngOnDestroy() {
+    console.log('destroying tabs page');
   }
 }

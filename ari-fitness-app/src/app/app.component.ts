@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationStart, Router, RouterEvent } from '@angular/router';
+import {
+  NavigationEnd,
+  NavigationStart,
+  Router,
+  RouterEvent,
+} from '@angular/router';
 import { OverlayControllerService } from 'src/core/services/overlay-controller.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
 
@@ -9,6 +14,7 @@ import { PagetitleService } from 'src/core/services/pagetitle.service';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  route: string = '';
   showToastr: any;
   user: any;
   pageTitle: string = 'Ari Fitness Studio';
@@ -20,22 +26,29 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('AppComponent Initing....');
+    // console.log('AppComponent Initing....');
 
     this.router.events.subscribe((ev: any) => {
-      if(ev instanceof NavigationStart){
-        if(ev.navigationTrigger == 'popstate'){
-          this.overlayService.closeAll(ev)
+      if (ev instanceof NavigationStart) {
+        if (ev.navigationTrigger == 'popstate') {
+          this.overlayService.closeAll(ev);
         }
       }
-    })
+      if (ev instanceof NavigationEnd) {
+        this.route = ev.url;
+      }
+    });
 
     this.user = JSON.parse(localStorage.getItem('user') as string);
     this.titleService.title.asObservable().subscribe({
       next: (title) => {
-        console.log('AppComponent getting page title', title);
+        // console.log('AppComponent getting page title', title);
         this.pageTitle = title;
       },
     });
+  }
+
+  navigateBack() {
+    history.back()
   }
 }

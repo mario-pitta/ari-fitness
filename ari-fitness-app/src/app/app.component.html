@@ -1,7 +1,14 @@
 <ion-app>
   <ion-header [translucent]="true">
     <ion-toolbar>
-      <ion-title>{{pageTitle}}</ion-title>
+      <ion-icon *ngIf="(route !== '/home' && route !== '/login')" slot="start"   size="large" class="ion-padding-start"  (click)="navigateBack()" name="arrow-back"></ion-icon>
+      <ion-title  class="d-flex ion-align-items-center ion-justify-content-between">
+        <div class="ion-align-items-center ion-justify-content-between">
+          {{pageTitle}}
+        </div>
+
+      </ion-title>
+      <ion-icon *ngIf="route !== '/login'" name="power-sharp" slot="end" size="large" class="ion-padding-end" [routerLink]="['/login']"></ion-icon>
     </ion-toolbar>
   </ion-header>
   <ion-router-outlet></ion-router-outlet>

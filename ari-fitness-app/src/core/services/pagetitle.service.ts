@@ -10,9 +10,15 @@ export class PagetitleService {
   constructor(private router: Router) {
     this.router.events.subscribe({
       next: (ev) => {
-        if(ev instanceof NavigationEnd){
-          console.log('ev', ev)
-          this.setTitle(ev.url.split('/')[1].split('?')[0].replace(/[^a-zA-Z0-9]/g, ' ').toUpperCase())
+        if (ev instanceof NavigationEnd) {
+          // console.log('ev', ev)
+          this.setTitle(
+            ev.url
+              .split('/')
+              [ev.url.split('/').length - 1].split('?')[0]
+              .replace(/[^a-zA-Z0-9]/g, ' ')
+              .toUpperCase()
+          );
         }
       },
     });
@@ -23,7 +29,6 @@ export class PagetitleService {
   }
 
   setTitle(title: string) {
-    console.log('setting title: ', title);
     this.title.next(title);
   }
 }

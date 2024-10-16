@@ -6,71 +6,216 @@
 
 <ion-content [fullscreen]="true">
   <!-- <div class="container d-flex ion-justify-content-center"> -->
-<ion-row>
-  <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
-    <a routerLink="/usuarios">
+  <ion-row *ngIf="user.flagAdmin; else alunoHome">
+    <ion-col size="12" size-sm="12" size-md="6" size-lg="4" *ngIf="user.flagAdmin">
+      <a routerLink="/admin">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Área de Administrador</ion-card-title>
+            <ion-card-subtitle>Restrito aos administradores</ion-card-subtitle>
+          </ion-card-header>
+          <img alt="ADM Computer" src="/assets/images/adm-computer-01.png" />
+
+          <ion-card-content>
+            Cadastro e acomponhamento de equipamentos, exercicios, treinos usuários.
+          </ion-card-content>
+        </ion-card>
+      </a>
+    </ion-col>
+    <ion-col size="12" size-sm="12" size-md="6" size-lg="4" *ngIf="user.flagAdmin">
+      <a routerLink="/usuarios">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Cadastro de Usuário</ion-card-title>
+            <ion-card-subtitle>Alunos e Funcionários</ion-card-subtitle>
+          </ion-card-header>
+          <img alt="people training"
+            src="https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+
+          <ion-card-content>
+            Cadastro e acomponhamento de usuários.
+          </ion-card-content>
+        </ion-card>
+      </a>
+
+    </ion-col>
+    <ion-col size="12" size-sm="12" size-md="6" size-lg="4" *ngIf="user.flagAdmin">
+      <a (click)="navigate('treinar')">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Treinos</ion-card-title>
+            <ion-card-subtitle>Aqui estão seus treinos</ion-card-subtitle>
+          </ion-card-header>
+          <img alt="people training"
+            src="https://hubconteudo.dasa.com.br/wp-content/uploads/2022/08/abre_musculacao_saude.jpg" />
+
+          <ion-card-content>
+            Treinos preparados sob medida pensando no seu bem estar e saúde!
+          </ion-card-content>
+        </ion-card>
+      </a>
+
+    </ion-col>
+
+    <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
+
       <ion-card>
-      <ion-card-header>
-        <ion-card-title>Cadastro de Usuário</ion-card-title>
-        <ion-card-subtitle>Alunos e Funcionários</ion-card-subtitle>
-      </ion-card-header>
-      <img alt="people training" src="https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+        <ion-card-header>
+          <ion-card-title>Dicas</ion-card-title>
+          <ion-card-subtitle>Informação de qualidade</ion-card-subtitle>
+        </ion-card-header>
+        <img alt="people training"
+          src="
+      https://piracanjuba-institucional-prd.s3.sa-east-1.amazonaws.com/posts/banner_image/banner-6-dicas-para-estipular-rotina-de-treino-1920-x776-px-1115.png" />
 
-      <ion-card-content>
-        Cadastro e acomponhamento de usuários.
-      </ion-card-content>
-    </ion-card>
-    </a>
+        <ion-card-content>
+          Em breve !
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+    <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
 
-  </ion-col>
-  <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
-    <a routerLink="/treino-list">
       <ion-card>
-      <ion-card-header>
-        <ion-card-title>Treinos</ion-card-title>
-        <ion-card-subtitle>Aqui estão seus treinos</ion-card-subtitle>
-      </ion-card-header>
-      <img alt="people training" src="https://hubconteudo.dasa.com.br/wp-content/uploads/2022/08/abre_musculacao_saude.jpg" />
+        <ion-card-header>
+          <ion-card-title>Evolução</ion-card-title>
+          <ion-card-subtitle>Monitore sua evolução</ion-card-subtitle>
+        </ion-card-header>
+        <img alt="people training"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsxdA29bpIBe1Xa95XSTTaw3a89zIqIPIvtQ&s" />
 
-      <ion-card-content>
-        Treinos preparados sob medida pensando no seu bem estar e saúde!
-      </ion-card-content>
-    </ion-card>
-    </a>
-
-  </ion-col>
-
-  <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Dicas</ion-card-title>
-        <ion-card-subtitle>Informação de qualidade</ion-card-subtitle>
-      </ion-card-header>
-      <img alt="people training" src="
-      https://piracanjuba-institucional-prd.s3.sa-east-1.amazonaws.com/posts/banner_image/banner-6-dicas-para-estipular-rotina-de-treino-1920-x776-px-1115.png"
-       />
-
-      <ion-card-content>
-        Em breve !
-      </ion-card-content>
-    </ion-card>
-  </ion-col>
-  <ion-col size="12" size-sm="12" size-md="6" size-lg="4">
-
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Evolução</ion-card-title>
-        <ion-card-subtitle>Monitore sua evolução</ion-card-subtitle>
-      </ion-card-header>
-      <img alt="people training" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSsxdA29bpIBe1Xa95XSTTaw3a89zIqIPIvtQ&s" />
-
-      <ion-card-content>
-        Em breve !
-      </ion-card-content>
-    </ion-card>
-  </ion-col>
-</ion-row>
+        <ion-card-content>
+          Em breve !
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
   <!-- </div> -->
 
 </ion-content>
+
+
+
+
+<ng-template #alunoHome>
+  <ion-row>
+    <ion-content>
+      <ion-item-group>
+        <ion-item-divider color="primary">
+          Meus Treinos
+        </ion-item-divider>
+
+        <ion-list>
+          <ion-item>
+            <ion-label class="border-5">
+              <swiper-container [controls]="true" class="border-5" slides-per-view="1" grid-rows="1" [effect]="'cube'"
+                [grabCursor]="'rue'" loop="true" pagination="true" pagination-clickable="true" [cubeEffect]="{
+                shadow: false,
+                slideShadows: false,
+
+                shadowOffset: 0,
+                shadowScale:0.5,
+              }" mousewheel-force-to-axis="true">
+                <swiper-slide *ngFor="let treino of treinos;let i = index" (click)="navigate('treinar/treino',{userId:user.id,treinoId:treino.treino.id})" class="position-relative border-primary">
+                  <!-- <img [src]="'https://picsum.photos/id/105'+i+'/600/400'" alt=""> -->
+                  <div style="height: 150px; background-repeat: no-repeat;background-size: cover; ;"
+                    [style]="'background-image: url('+treino.banner_img+');'">
+                    <div class="overlay border-5 position-relative">
+
+                    </div>
+                    <ion-label class="ion-padding ion-text-capitalize position-absolute z-1">
+                      {{treino.treino.nome}}
+                    </ion-label>
+                  </div>
+
+
+                </swiper-slide>
+              </swiper-container>
+            </ion-label>
+
+
+          </ion-item>
+        </ion-list>
+
+
+      </ion-item-group>
+
+      <ion-item-group>
+        <ion-item-divider color="secondary">
+          Feed
+        </ion-item-divider>
+
+        <ion-list>
+          <ion-item *ngFor="let post of [
+          {
+            usuario: {
+              avatar: '',
+              nome: 'ABC'
+            },
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, in excepturi officiis cupiditate deserunt fugiat laudantium rem mollitia. Et consequuntur rem iure incidunt ut dignissimos culpa eos officiis impedit sequi.',
+            data: '01/01/2024'
+          },
+          {
+            usuario: {
+              avatar: '',
+              nome: 'ABC'
+            },
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, in excepturi officiis cupiditate deserunt fugiat laudantium rem mollitia. Et consequuntur rem iure incidunt ut dignissimos culpa eos officiis impedit sequi.',
+            data: '01/01/2024'
+          },
+          {
+            usuario: {
+              avatar: '',
+              nome: 'ABC'
+            },
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, in excepturi officiis cupiditate deserunt fugiat laudantium rem mollitia. Et consequuntur rem iure incidunt ut dignissimos culpa eos officiis impedit sequi.',
+            data: '01/01/2024'
+          },
+          {
+            usuario: {
+              avatar: '',
+              nome: 'ABC'
+            },
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, in excepturi officiis cupiditate deserunt fugiat laudantium rem mollitia. Et consequuntur rem iure incidunt ut dignissimos culpa eos officiis impedit sequi.',
+            data: '01/01/2024'
+          },
+          {
+            usuario: {
+              avatar: '',
+              nome: 'ABC'
+            },
+            texto: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad, in excepturi officiis cupiditate deserunt fugiat laudantium rem mollitia. Et consequuntur rem iure incidunt ut dignissimos culpa eos officiis impedit sequi.',
+            data: '01/01/2024'
+          },
+        ]; let i = index">
+            <ion-avatar slot="start">
+              <img
+                [src]="i % 2 ? 'https://cdn-icons-png.flaticon.com/128/4140/4140048.png': 'https://cdn-icons-png.flaticon.com/128/4140/4140047.png'"
+                alt="">
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ i % 2 ? 'Joe' : 'Dana' }}</h2>
+              <p><i>{{ post.data }}</i></p>
+              <p>{{ post.texto }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-item-group>
+
+      <ion-item-group>
+        <ion-item-divider color="tertiary">
+          Histórico
+        </ion-item-divider>
+
+        <ion-list>
+          <ion-item *ngFor="let treino of treinos">
+            <ion-label>
+              <h2>{{ treino.treino.nome }}</h2>
+              <p>{{ treino.treino.data }}</p>
+            </ion-label>
+            <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-item-group>
+    </ion-content>
+  </ion-row>
+</ng-template>

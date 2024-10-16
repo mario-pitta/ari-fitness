@@ -18,6 +18,7 @@ import { TreinoListItemModule } from '../shared/treino-list-item/treino-list-ite
     TreinoListItemModule,
   ],
   declarations: [TreinosListPage],
+  exports: [TreinosListPage],
   schemas: [],
 })
 export class TreinoListPageModule {}

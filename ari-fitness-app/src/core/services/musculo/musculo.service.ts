@@ -14,8 +14,8 @@ export class MusculoService {
       filters &&
       Object.keys(filters).map(
         (k: string) => `${k}=${filters[k as keyof Musculo]}`
-      ) || '';
-    console.log('query');
+      ).join('&') || '';
+    // console.log('query');
     return this.http.get<Musculo[]>(environment.apiUrl + '/musculos?' + query);
   }
 }

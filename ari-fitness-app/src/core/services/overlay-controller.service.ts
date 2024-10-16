@@ -19,7 +19,7 @@ export class OverlayControllerService {
 
   closeAll(e: any) {
 
-    console.log('vai fechar a porra toda !!');
+    // console.log('vai fechar a porra toda !!');
 
    this.closeModal(e);
    this.closeActionSheet(e);
@@ -28,7 +28,7 @@ export class OverlayControllerService {
 
   closeModal(e: any){
     const el = this.modalController.getTop();
-    console.log(e);
+    // console.log(e);
     if (el) {
       this.modalController.dismiss(el);
       return
@@ -37,7 +37,6 @@ export class OverlayControllerService {
 
   closeActionSheet(e: any){
     const el = this.actionSheetController.getTop();
-    console.log(e);
     if (el) {
       this.actionSheetController.dismiss(el);
       return
@@ -45,7 +44,6 @@ export class OverlayControllerService {
   }
   closeToastr(e: any){
     const el = this.toastr.getTop();
-    console.log(e);
     if (el) {
       this.toastr.dismiss(el);
       return

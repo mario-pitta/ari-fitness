@@ -90,6 +90,10 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'admin',
+        loadChildren: () => import('../adm-page/adm-page.module').then( m => m.AdmPagePageModule)
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
