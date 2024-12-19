@@ -5,10 +5,9 @@ import { Treino } from 'src/core/models/Treino';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
-import { register } from 'swiper/element/bundle';
-register();
 
-enum MALE_BG_URLS {
+
+export enum MALE_BG_URLS {
   PEITO = 'https://img.freepik.com/free-photo/front-view-fit-shirtless-man-showing-pecs_23-2148700660.jpg?t=st=1725675231~exp=1725678831~hmac=11fb88009a9440986491177152c0a157dc42d2ad396c8bfd5a0c346c29c260d3&w=1380',
   COSTAS = 'https://img.freepik.com/free-photo/person-standing-dark-room_140725-7924.jpg?t=st=1725659536~exp=1725663136~hmac=033c7d84d0dc21ab498123d4e0997f5974b3dc8bac3c01a01cf5b913431419e4&w=740',
   BRACOS = 'https://img.freepik.com/free-photo/young-bodybuilder-with-muscular-arms_1163-3563.jpg?t=st=1725674890~exp=1725678490~hmac=1ca104c92ced2d8d6081c4830da092d4338774a54a318417f8e2504d89cfc9ae&w=1380',
@@ -16,6 +15,7 @@ enum MALE_BG_URLS {
   GLUTEOS = 'https://img.freepik.com/free-photo/close-up-sexy-incognito-female-model-wearing-sports-black-underwear-standing-isolated-black-studio-background-back-view-fit-caucasian-woman-with-perfect-buttocks-posing_7502-9007.jpg?t=st=1725675494~exp=1725679094~hmac=8d0612a30b5a2410dfb86014c775dad776532e33d9c35a4b1c967262e5a23e66&w=1380',
   ABDOMINAL = 'https://img.freepik.com/free-photo/full-shot-man-doing-exercise-gym_23-2149734698.jpg?t=st=1725675295~exp=1725678895~hmac=65dd0e964d352b5825861065b3a583860cceb08b56cb72a4e89e6ee33bd7b3ef&w=1380',
 }
+
 
 @Component({
   selector: 'app-home',
@@ -33,6 +33,10 @@ export class HomePage implements OnInit {
     });
   }
   user!: Usuario;
+  treinoUrlImage: string = MALE_BG_URLS.PERNAS;
+
+
+
   constructor(private auth: AuthService, private router: Router) {}
 
   ngOnInit() {
@@ -89,4 +93,6 @@ export class HomePage implements OnInit {
             })
         : [];
   }
+
+
 }

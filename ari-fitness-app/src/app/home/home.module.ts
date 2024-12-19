@@ -7,6 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
+import { AlunoHomeModule } from './aluno-home/aluno-home.module';
+import { AdminHomeModule } from './admin-home/admin-home.module';
 
 @NgModule({
   imports: [
@@ -14,8 +16,11 @@ import { HomePage } from './home.page';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
+    AlunoHomeModule,
+    AdminHomeModule,
   ],
   declarations: [HomePage],
-  exports: [HomePage],schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  exports: [HomePage],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomePageModule {}

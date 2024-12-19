@@ -1,4 +1,5 @@
 import { FichaAluno } from "./FichaAluno";
+import { Historico } from "./Historico";
 import { Horario } from "./Horario";
 import { Plano } from "./Plano";
 import { Treino } from "./Treino";
@@ -38,6 +39,7 @@ export interface IUsuario {
   data_nascimento: Date | string;
   flagAdmin: boolean;
   ficha_aluno?: FichaAluno[];
+  historico?: Historico[]
 }
 export class Usuario implements IUsuario{
   idade?: any;
@@ -74,6 +76,7 @@ export class Usuario implements IUsuario{
   data_nascimento!: Date | string;
   flagAdmin!: boolean;
   ficha_aluno?: FichaAluno[];
+  historico?: Historico[];
 
 
   constructor({...obj}: IUsuario) {

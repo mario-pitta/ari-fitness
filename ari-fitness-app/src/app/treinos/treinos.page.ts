@@ -1,28 +1,34 @@
+
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { delay } from 'rxjs';
+import { ConfettiService } from 'src/core/services/confetti/confetti.service';
+
 import { Exercicio } from 'src/core/models/Exercicio';
-const confetti = require('canvas-confetti');
+import { Historico } from 'src/core/models/Historico';
+
 @Component({
   selector: 'app-treinos',
   templateUrl: './treinos.page.html',
   styleUrls: ['./treinos.page.scss'],
 })
 export class TreinosPage implements OnInit {
+
   user!: Usuario;
   selectedTreino: any;
   interval: any;
   openModal: boolean = false;
   selectedExercicio: any | Exercicio;
+  historico: Historico[] = [];
   constructor(
     private auth: AuthService,
     private modalController: ModalController,
     private router: Router,
-    private aRoute: ActivatedRoute
+    private aRoute: ActivatedRoute,
+    private confettiService: ConfettiService
   ) {
     this.router.events.subscribe((e: any) => {
       if (e instanceof NavigationEnd) {
@@ -51,11 +57,12 @@ export class TreinosPage implements OnInit {
     console.log(event);
     this.selectedTreino =
       this.user?.ficha_aluno &&
-      this.user?.ficha_aluno.filter(f => f.fl_ativo)[0].treinos.find((t: any) => t.treino.id == event)
-        .treino;
-    console.log('selectedTreino ============ ',this.selectedTreino);
+      this.user?.ficha_aluno
+        .filter((f) => f.fl_ativo)[0]
+        .treinos.find((t: any) => t.treino.id == event).treino;
+    console.log('selectedTreino ============ ', this.selectedTreino);
   }
-  serieArr: any[] = []
+  serieArr: any[] = [];
 
   toggleClock(time: number) {
     console.log(this.interval);
@@ -85,8 +92,15 @@ export class TreinosPage implements OnInit {
     }
   }
 
-  buildSerieArr(ex: any){
-    this.serieArr = Array(ex.series).fill(1).map((i, index) => index+1)
+  buildSerieArr(ex: any) {
+    this.serieArr = Array(ex.series)
+      .fill(1)
+      .map((i, index) => {
+        return {
+          concluido: false,
+          index: index + 1,
+        };
+      });
   }
 
   playSound(sound: string) {
@@ -125,26 +139,76 @@ export class TreinosPage implements OnInit {
     }
   }
 
-
-  exercicioPresets: any = {}
-  buildExercicioPresets(){
-    console.log('this.selectedExercicio', this.selectedExercicio)
+  exercicioPresets: any = {};
+  buildExercicioPresets() {
+    console.log('this.selectedExercicio', this.selectedExercicio);
     this.exercicioPresets = {
       carga: this.selectedExercicio.carga,
-      repeticoes:  this.selectedExercicio.repeticoes,
+      repeticoes: this.selectedExercicio.repeticoes,
       series: this.selectedExercicio.series,
       intervalo: this.selectedExercicio.intervalo,
-    }
-    this.buildSerieArr(this.selectedExercicio)
+    };
+    this.buildSerieArr(this.selectedExercicio);
   }
 
-  openTreinoForm() {
-    this.modalController
-      .create({
-        component: TreinoExercicioFormPage,
-      })
-      .then((modal) => {
-        modal.present();
-      });
+  selectExercicio(ex: any) {
+    this.confettiService.clearConfetti();
+    ex.exercicio.concluido = false;
+    this.selectedExercicio = ex;
+    this.counter = ex.intervalo;
+    this.openModal = true;
+  }
+
+  // openTreinoForm() {
+  //   this.confettiService.clearConfetti();
+  //   this.modalController
+  //     .create({
+  //       component: TreinoExercicioFormPage,
+  //     })
+  //     .then((modal) => {
+  //       modal.present();
+  //     });
+  // }
+
+  checkAllExercicios(): boolean {
+    return this.selectedTreino?.treino_exercicio?.every(
+      (ex: any) => ex.exercicio.concluido
+    );
+  }
+
+  checkAllSeries() {
+    return this.serieArr.some((serie) => !serie.concluido);
+  }
+
+  finishExercicio() {
+    const historico: Historico = {
+      aluno: this.user,
+      treino: this.selectedTreino,
+      exercicio: this.selectedExercicio.exercicio,
+      series: this.exercicioPresets.series,
+      repeticao: this.exercicioPresets.repeticoes,
+      carga: this.exercicioPresets.carga || 0,
+      intervalo: this.exercicioPresets.intervalo,
+      nivel_dificuldade: this.selectedExercicio.nivel_dificuldade,
+      data: new Date().toLocaleString()
+    };
+
+    console.log('historico: ', historico);
+
+    this.historico.push(historico)
+
+    this.selectedExercicio.exercicio.concluido = true;
+    this.modalController.dismiss();
+    this.confettiService.showConfetti()
+  }
+
+  finishTreino() {
+    console.log('finishTreino');
+    this.auth.updateUser({
+      ...this.user,
+      historico: this.user.historico?.concat(this.historico) || this.historico
+    });
+    this.confettiService.showConfetti();
+    history.back();
   }
 }

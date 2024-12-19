@@ -1,0 +1,23 @@
+.date{
+  font-size: 16px;
+  text-align: center;
+}
+
+.date-card{
+  width:75px !important;
+  height:75px !important;
+  margin: 5px !important;
+}
+
+.date-card.active {
+  background-color: #007bff !important;
+  color: #fff !important;
+  font-weight: bold;
+  box-shadow: 0px 9px 14px 7px #464647 !important;
+}
+
+
+
+section#chart{
+  height: 400px;
+}

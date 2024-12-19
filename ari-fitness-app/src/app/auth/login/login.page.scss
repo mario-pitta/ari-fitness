@@ -1,0 +1,19 @@
+.login-card {
+  width: 400px;
+  padding: 20px 20px;
+  margin: auto;
+  box-shadow: 0px 0px 50px 0 #464647;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 93vh;
+  background-image: url("../../../assets/images/gym-bagckground.jpg");
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
+  background-blend-mode: color-burn;
+
+  //   overflow: hidden;
+}

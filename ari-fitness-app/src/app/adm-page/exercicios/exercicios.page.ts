@@ -3,7 +3,7 @@ import { ExercicioService } from 'src/core/services/exercicio/exercicio.service'
 import { Component, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Exercicio } from 'src/core/models/Exercicio';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-exercicios',
@@ -17,18 +17,22 @@ export class ExerciciosPage implements OnInit {
 
   constructor(
     private exercicioService: ExercicioService,
+    private router: Router,
+    private aRoute: ActivatedRoute
 
-    private router: Router
   ) {}
 
   ngOnInit() {
-    this.getExercicios();
+    const queryParams = this.aRoute.snapshot.queryParams;
+    console.log('queryParams: ', queryParams);
+
+    this.getExercicios(queryParams);
   }
 
-  getExercicios() {
+  getExercicios(filters?: Partial<Exercicio> | Exercicio) {
     this.loading = true;
 
-    this.exercicioService.find({ fl_ativo: true }).subscribe({
+    this.exercicioService.find({...filters }).subscribe({
       next: (ex) => (this.exercicios = ex),
       complete: () => (this.loading = false),
     });
@@ -44,5 +48,9 @@ export class ExerciciosPage implements OnInit {
         exId: id,
       },
     });
+  }
+
+  ngOnDestroy(): void {
+    console.log('destruindo exercicios...');
   }
 }

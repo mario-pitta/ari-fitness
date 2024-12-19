@@ -7,12 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { AdmPagePageRoutingModule } from './adm-page-routing.module';
 
 import { AdmPagePage } from './adm-page.page';
+import { AdminHomeModule } from '../home/admin-home/admin-home.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    AdminHomeModule,
     AdmPagePageRoutingModule
   ],
   declarations: [AdmPagePage]

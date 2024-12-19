@@ -1,21 +1,25 @@
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { NgModule, importProvidersFrom, isDevMode } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy, RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import here
 
-import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+
+import { IonicModule } from '@ionic/angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { MaskitoDirective } from '@maskito/angular';
-import { HttpClientModule } from '@angular/common/http';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpInterceptors } from 'src/core/interceptors/http.interceptor';
 import { ErrorInterceptor } from 'src/core/interceptors/error.interceptor';
 
 import { ExercicioFormModule } from './adm-page/exercicios/exercicio-form/exercicio-form.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { register } from 'swiper/element/bundle';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+register();
 
 
 const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
@@ -24,6 +28,8 @@ const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    NgxChartsModule,
     IonicModule.forRoot(),
     AppRoutingModule,
     RouterModule,

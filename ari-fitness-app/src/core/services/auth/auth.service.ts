@@ -38,7 +38,11 @@ export class AuthService {
           `/auth/login?cpf=${cpf}&dataNascimento=${dataNascimento}`
       )
       .pipe(
-        map((u: any) => {
+        map((u: Usuario | any) => {
+          u = {
+            ...u,
+            historico: u.historico || [],
+          } as Usuario
           this.setUser(u);
           return u;
         }),
@@ -51,4 +55,7 @@ export class AuthService {
     this.userValue.next(null);
     location.href = '#/login';
   }
+
+
+
 }

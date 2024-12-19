@@ -10,7 +10,7 @@
     <ion-searchbar show-cancel-button="always" cancel-button-text="Custom Cancel" cancel-button-icon="filter"
       placeholder="Pesquisar..." [(ngModel)]="searchText" (click)="searchText = ''" (keyup)="filterList()"
       (ionClear)="filteredTreinos = treinos"></ion-searchbar>
-    <ion-list [inset]="true">
+    <!-- <ion-list [inset]="true"> -->
       <app-treino-list-item *ngFor="let treino of filteredTreinos" [treino]="treino" [user]="user"
         [enableEdit]="enableEdit" (output)="listenItemEvents($event)"></app-treino-list-item>
       <ion-item class="ion-align-items-center">
@@ -18,7 +18,7 @@
           <ion-icon name="add"></ion-icon> Cadastrar novo treino...
         </label>
       </ion-item>
-    </ion-list>
+    <!-- </ion-list> -->
   </ion-grid>
   <ion-button  class="success" size="block" color="primary"
     (click)="associateToUser()">CONFIRMAR</ion-button>

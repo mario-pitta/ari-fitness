@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import {
   NavigationEnd,
@@ -22,12 +23,16 @@ export class AppComponent implements OnInit {
   constructor(
     private titleService: PagetitleService,
     private overlayService: OverlayControllerService,
-    private router: Router
+    private router: Router,
+
   ) {}
 
   ngOnInit() {
     // console.log('AppComponent Initing....');
+    // setTimeout(() => {
 
+    //   this.confetti.clearConfetti();
+    // }, 250);
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationStart) {
         if (ev.navigationTrigger == 'popstate') {
@@ -46,6 +51,7 @@ export class AppComponent implements OnInit {
         this.pageTitle = title;
       },
     });
+
   }
 
   navigateBack() {

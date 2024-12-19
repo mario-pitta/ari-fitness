@@ -36,6 +36,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'exercicios',
+        loadChildren: () =>
+          import('../adm-page/exercicios/exercicios.module').then(
+            (m) => m.ExerciciosPageModule
+          ),
+      },
+      {
         path: 'usuarios',
         loadChildren: () =>
           import('../usuarios/usuarios.module').then(
@@ -88,6 +95,10 @@ const routes: Routes = [
           import('../treino-exercicio-form/treino-exercicio-form.module').then(
             (m) => m.TreinoFormPageModule
           ),
+      },
+      {
+        path: 'stats',
+        loadChildren: () => import('../stats/stats.module').then( m => m.StatsPageModule)
       },
       {
         path: 'admin',

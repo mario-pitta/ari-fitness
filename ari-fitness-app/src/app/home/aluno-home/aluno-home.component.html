@@ -1,0 +1,109 @@
+<ion-row>
+  <ion-content>
+    <ion-item-group>
+      <ion-list>
+        <div class="ion-margin-start">
+          <h4>
+            <p id="title_line1">
+              Faça a sua
+            </p>
+            <strong>
+              Melhor Versão!
+            </strong>
+          </h4>
+        </div>
+        <ion-item>
+          <ion-card color="medium" style="width: 100vw !important;margin: 0; height: 150px;"
+            [ngStyle]="{'background-image': 'url('+  treinoUrlImage + ')'}" (click)="goToTreino(treino?.id)">
+            <ion-card-header>
+              <ion-card-title><strong>
+                  Atividade de Hoje
+                </strong>
+              </ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-row>
+                <ion-col>
+                  <h1>{{ treino?.nome }}</h1>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+    </ion-item-group>
+    <ion-item-group>
+      <ion-list>
+        <ion-list-header>
+          <h4>Exercícios Recomendados</h4>
+        </ion-list-header>
+
+        <!-- <ion-item> -->
+          <!-- <ion-row > -->
+            <swiper-container  init="true" class="border-5 gap-2" slides-per-view="1" effect="card" pagination="false"
+              grabCursor="true" loop="false">
+              <swiper-slide *ngFor="let ex of exRecomendados">
+                <!-- TODO CRIAR ROTA DIRETA PARA EXECUCAO DE EXERCICIO -->
+              <ion-card class="card-recommended-activity" (click)="goToExercicio(ex.id)">
+                <ion-grid>
+                  <ion-row >
+                    <ion-col size="3" size-md="2" size-sm="4" class="ion-text-left ion-align-self-center">
+                      <!-- TODO colocar uma imagem default caso o exercicio nao tenha imagem -->
+                      <img class="card-item-img"
+                        [src]="ex.midia_url || 'https://images.unsplash.com/photo-1527933053326-89d1746b76b9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
+                        alt="imagem-do-exercico" [width]="50" [height]="50">
+                    </ion-col>
+                    <ion-col size="6" size-md="8" size-sm="6" class="ion-align-self-center">
+                      <h5>
+                        {{ex.nome | titlecase}}
+                      </h5>
+                      <span >Grupo Muscular: {{ex.grupo_muscular?.nome}}</span>
+                    </ion-col>
+                    <ion-col size="3" size-md="2" size-sm="4" class="ion-text-right ion-align-self-center">
+                      <ion-icon size="large" name="heart" [color]="'primary'"></ion-icon>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-card>
+              </swiper-slide>
+            </swiper-container>
+          <!-- </ion-row> -->
+        <!-- </ion-item> -->
+      </ion-list>
+    </ion-item-group>
+
+
+
+    <ion-item-group>
+      <ion-list>
+        <ion-list-header>
+
+          <h4>
+            Categorias
+          </h4>
+
+        </ion-list-header>
+
+        <swiper-container [controls]="true" class="border-5" slides-per-view="2" grid-rows="1" effect="coverflow"
+          init="true" [grabCursor]="'true'" loop="true">
+          <swiper-slide *ngFor="let categoria of categories;let i = index" class="position-relative border-primary" (click)="goToExercicios(categoria.id)">
+            <!-- <img [src]="'https://picsum.photos/id/105'+i+'/600/400'" alt=""> -->
+            <div
+              style="height: 300px; background-repeat: no-repeat; background-size: cover; background-position: center;"
+              [style]="'background-image: url('+categoria.url+');'">
+              <div class="border-5 position-relative">
+
+              </div>
+              <ion-label class="ion-padding ion-text-capitalize position-absolute z-1">
+                {{categoria.name}}
+              </ion-label>
+            </div>
+
+
+          </swiper-slide>
+        </swiper-container>
+      </ion-list>
+    </ion-item-group>
+
+  </ion-content>
+</ion-row>

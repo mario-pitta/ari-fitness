@@ -57,7 +57,7 @@
             <ion-icon name="add"></ion-icon>
           </ion-button>
         </ion-row>
-        <ion-reorder-group [disabled]="user.flagAdmin" (ionItemReorder)="handleReorder($any($event))">
+        <ion-reorder-group [disabled]="!user.flagAdmin" (ionItemReorder)="handleReorder($any($event))">
           <ion-item *ngFor="let tr of treinos.value; let i = index" [attr.data-item]="stringfy(tr)">
             <ion-reorder slot="start" [id]="'reorder_tr_'+tr.id">
             </ion-reorder>

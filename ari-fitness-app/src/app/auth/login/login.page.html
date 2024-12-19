@@ -5,18 +5,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
- <div class="container">
-  <ion-card>
-    <ion-card-title>
-      Login
-    </ion-card-title>
-    <ion-card-content>
-      <form [formGroup]="form">
-        <ion-input type="text" formControlName="cpf" label="CPF:" labelPlacement="floating" [maskito]="cpfMask" [maskitoElement]="maskPredicate"></ion-input>
-        <ion-input type="date" formControlName="dataNascimento" label="Data de Nascimento" labelPlacement="floating"></ion-input>
-      </form>
-      <ion-button expand="block" color="primary" [disabled]="form.invalid" (click)="logar()">Logar</ion-button>
-    </ion-card-content>
-  </ion-card>
- </div>
+  <div class="container">
+  <div class="overlay"></div>
+
+    <ion-card class="login-card">
+      <ion-card-title>
+        Login
+      </ion-card-title>
+      <ion-card-content>
+        <form [formGroup]="form">
+          <ion-input type="text" formControlName="cpf" label="CPF:" labelPlacement="floating" [maskito]="cpfMask"
+            [maskitoElement]="maskPredicate"></ion-input>
+          <ion-input type="date" formControlName="dataNascimento" label="Data de Nascimento" labelPlacement="floating">
+          </ion-input>
+        </form>
+        <ion-button expand="block" color="primary" [disabled]="form.invalid" (click)="logar()">Logar</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
