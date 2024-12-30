@@ -4,7 +4,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<!-- <ion-content > -->
   <ion-row>
     <ion-col size="12">
       <div class="text-break">
@@ -33,14 +33,14 @@
               </div>
 
               <div class="form-group">
-                <ion-select formControlName="genero" [value]="null" label="Gênero" placeholder="--SELECIONE--">
+                <ion-select formControlName="genero" [value]="null" label="Gênero" interface="popover"  placeholder="--SELECIONE--">
                   <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
                   <ion-select-option value="M">Masculino</ion-select-option>
                   <ion-select-option value="F">Feminino</ion-select-option>
                 </ion-select>
               </div>
               <div class="form-group">
-                <ion-select formControlName="tipo_usuario" class="ion-color-danger" [value]="null"
+                <ion-select formControlName="tipo_usuario" class="ion-color-danger" interface="popover" [value]="null"
                   label="Tipo de usuário" placeholder="--SELECIONE--" (ionChange)="onChangeTipoUser()">
                   <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
                   <ion-select-option *ngFor="let tipoUser of tiposUsuario" [value]="tipoUser.id">{{tipoUser.nome}}
@@ -60,7 +60,7 @@
                 <br>
                 <ion-row>
                   <ion-col size="6">
-                    <ion-select formControlName="horario_id" class="ion-color-danger" [value]="null" label="Horário"
+                    <ion-select formControlName="horario_id" class="ion-color-danger" [value]="null" label="Horário" interface="popover"
                       placeholder="--SELECIONE--">
                       <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
                       <ion-select-option *ngFor="let horario of horarios" [value]="horario.id">
@@ -69,7 +69,7 @@
                     </ion-select>
                   </ion-col>
                   <ion-col size="6">
-                    <ion-select formControlName="plano" class="ion-color-danger" [value]="null" label="Plano"
+                    <ion-select formControlName="plano" class="ion-color-danger" [value]="null" label="Plano" interface="popover"
                       placeholder="--SELECIONE--">
                       <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
                       <ion-select-option *ngFor="let plano of planos" [value]="plano.id">{{plano.descricao}}
@@ -79,7 +79,7 @@
                   </ion-col>
                 </ion-row>
                 <ion-row>
-                  <ion-select formControlName="data_vencimento" class="ion-color-danger" [value]="null"
+                  <ion-select formControlName="data_vencimento" class="ion-color-danger" [value]="null" interface="popover"
                     label="Dia de Vencimento" placeholder="--SELECIONE--">
                     <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
                     <ion-select-option *ngFor="let dia of [5, 10, 15, 20, 25, 30]" [value]="dia">{{dia}}
@@ -221,7 +221,7 @@
                 </div>
 
                 <div class="form-group">
-                  <ion-select formControlName="classificacao_risco" id="classificacao_risco" [value]="null"
+                  <ion-select formControlName="classificacao_risco" id="classificacao_risco" [value]="null" interface="popover"
                     [ngClass]="form.value.classificacao_risco === 1 ? 'ion-text-success' : form.value.classificacao_risco === 2 ? 'ion-text-warning' : 'ion-text-danger'"
                     label="Classificação de Risco" placeholder="--SELECIONE--">
                     <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
@@ -255,7 +255,7 @@
       </div>
     </ion-col>
   </ion-row>
-</ion-content>
+<!-- </ion-content> -->
 
 
 <ng-template #spinner>

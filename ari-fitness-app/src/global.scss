@@ -66,11 +66,51 @@ $prefix: "mo-";
 @import "../node_modules/bootstrap/scss/helpers";
 @import "../node_modules/bootstrap/scss/utilities/api";
 
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Molle&family=PT+Serif:ital,wght@0,700;1,400;1,700&family=Playwrite+PE+Guides&display=swap");
 
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Molle&family=PT+Serif:ital,wght@0,700;1,400;1,700&family=Playwrite+PE+Guides&display=swap');
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/** SCROLLBAR */
+ion-content {
+  // –offset-bottom: auto !important;
+  // –overflow: auto;
+  // background: var(–ion-toolbar-background, var(–ion-background-color, #f4f5f8)) !important;
+  // overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 15px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #fff;
+  }
+
+  &::-webkit-scrollbar-track:hover {
+    background: #f7f7f7;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ccc;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #94173a;
+  }
+
+  .inner-scroll {
+    scrollbar-width: thin;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 a {
   text-decoration: none;
@@ -159,4 +199,51 @@ svg {
 
 .overlay {
   box-shadow: 0px 0px 150px 150px #0b0b0bde;
+}
+
+/* Estilo básico */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Responsividade com media queries */
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Para dispositivos móveis */
+  }
+
+  th,
+  td {
+    width: 50%;
+    display: block;
+  }
+
+  th {
+    text-align: left;
+  }
+}
+
+ion-card {
+  cursor: pointer;
+}
+
+ion-card:hover {
+  animation: zoomIn 0.15s ease-in forwards;
+  box-shadow: 5px 6px 7px 0px #464647;
+}
+
+.zoomIn {
+  animation: zoomIn 0.15s ease-in forwards;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.02);
+  }
 }

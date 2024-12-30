@@ -8,6 +8,7 @@ import {
 import { Maskito } from '@maskito/core';
 import Constants from 'src/core/Constants';
 import { AuthService } from 'src/core/services/auth/auth.service';
+const md5 = require('md5');
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -25,12 +26,14 @@ export class LoginPage implements OnInit {
 
     this.form = this.fb.group({
       cpf: ['', [Validators.required]],
-      dataNascimento: ['', [Validators.required]],
+      senha: ['', [Validators.required]],
     })
   }
 
   logar(){
-    this.auth.login(this.form.value.cpf, this.form.value.dataNascimento).subscribe({
+    console.log('this.form.value.senha: ', this.form.value.senha);
+
+    this.auth.login(this.form.value.cpf, md5(this.form.value.senha)).subscribe({
       next: user => {
 
         location.href = "/#/home";

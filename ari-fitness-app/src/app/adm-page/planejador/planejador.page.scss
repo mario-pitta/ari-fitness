@@ -1,0 +1,143 @@
+
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.board {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.column {
+  background: #252424;
+  border-radius: 3px;
+  min-width: 300px;
+  padding: 10px;
+}
+
+.column-header {
+  padding: 10px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-list {
+  min-height: 100px;
+}
+
+.task {
+  // background: white;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 1px 0 rgba(9,30,66,.25);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.task:hover {
+  transform: translateY(-2px);
+}
+
+.add-task {
+  padding: 10px;
+  // color: #5e6c84;
+  cursor: pointer;
+
+}
+
+.add-task:hover {
+  animation: zoomIn 0.25s ease-in forwards;
+  background: rgba(101, 103, 107, 0.315);
+  border-radius: 3px;
+}
+
+.task-form {
+  // display: none;
+  padding: 10px;
+}
+
+.task-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #0079bf;
+  border-radius: 3px;
+  margin-bottom: 8px;
+}
+
+
+// .dragging {
+//   opacity: 0.5;
+// }
+
+
+
+.medium-priority {
+  border:#f2d6007e solid 1px;
+}
+
+.high-priority {
+  border:#d73a4a6e solid 1px;
+}
+
+.gu-transit{
+  opacity: 0.5;
+  position: absolute;
+  transform: rotate(15deg);
+}
+
+.gu-mirror {
+  display: none;
+}
+
+.NgxEditor__Wrapper {
+  ngx-editor {
+    background: #6e6e6e;
+  }
+  ngx-editor-menu {
+    background: #6e6e6e;
+
+  }
+}
+
+
+//make it responsible
+@media screen and (max-width: 768px) {
+  .board {
+    flex-direction: column;
+  }
+
+  .column {
+    width: 100%;
+  }
+
+  .column-header {
+    justify-content: center;
+  }
+
+  .column-count {
+    display: none;
+  }
+
+  .add-task {
+    text-align: center;
+  }
+
+  .task-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+}

@@ -1,7 +1,7 @@
+/* eslint-disable prettier/prettier */
 /*
 https://docs.nestjs.com/providers#services
 */
-/* eslint-disable prettier/prettier */
 
 import { Injectable } from '@nestjs/common';
 import { DataBaseService } from 'src/datasource/database.service';
@@ -10,13 +10,14 @@ import { DataBaseService } from 'src/datasource/database.service';
 export class AuthService {
   constructor(private supabase: DataBaseService) {}
 
-  login(cpf: string, dataNascimento: string) {
-    console.log('logando...', cpf, dataNascimento);
+  login(cpf: string, senha: string) {
+    console.log('logando...', cpf, senha);
     return this.supabase.supabase
       .from('usuario')
       .select(
         `
           *, 
+          empresa: empresa(*)
           ficha_aluno: ficha_aluno!ficha_aluno_usuario_id_fkey(
             *, 
             treinos: ficha_aluno_treino!ficha_aluno_treino_ficha_id_fkey(
@@ -35,6 +36,9 @@ export class AuthService {
         `,
       )
       .eq('cpf', cpf)
-      .eq('data_nascimento', dataNascimento);
+      .eq('senha', senha);
   }
+
+
+
 }

@@ -31,11 +31,11 @@ export class AuthService {
     this.user.set(user);
   }
 
-  login(cpf: string, dataNascimento: string | Date) {
+  login(cpf: string, senha: string | Date) {
     return this.http
       .get(
         environment.apiUrl +
-          `/auth/login?cpf=${cpf}&dataNascimento=${dataNascimento}`
+          `/auth/login?cpf=${cpf}&senha=${senha}`
       )
       .pipe(
         map((u: Usuario | any) => {

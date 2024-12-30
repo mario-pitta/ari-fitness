@@ -1,0 +1,37 @@
+// .sidebar {
+//   height: 100%; /* Altura total da tela */
+//   width: 200px; /* Largura do sidebar */
+//   position: fixed; /* Fixa o sidebar na tela */
+//   z-index: 1; /* Garante que o sidebar fique sobre o conteúdo */
+
+//   left: 0;
+//   // background-color: #f1f1f1; /* Cor de fundo */
+//   overflow-x: hidden; /* Esconde a barra de rolagem horizontal */
+//   padding-top: 20px;
+// }
+
+// .sidebar a {
+//   padding: 10px;
+//   text-decoration: none;
+//   font-size: 18px;
+//   color: var(--ion-text-color);
+//   display: block;
+
+//   :active {
+//     background-color: #555;
+//   }
+// }
+
+// .sidebar a:hover {
+//   background-color: #555;
+// }
+
+// .content {
+//   margin-left: 200px; /* Espaço para o conteúdo não ficar atrás do sidebar */
+//   padding: 20px;
+// }
+
+
+ion-menu {
+  width: min-content  !important;
+}

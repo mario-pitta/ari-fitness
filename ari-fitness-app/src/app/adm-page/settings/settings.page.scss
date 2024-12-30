@@ -1,0 +1,17 @@
+.mega-icon {
+  font-size: 100px;
+}
+
+@media screen and (max-width: 768px) {
+  .mega-icon {
+    font-size: 75px;
+  }
+
+}
+
+@media screen and (max-width: 576px) {
+  .mega-icon {
+    font-size: 70px;
+  }
+
+}

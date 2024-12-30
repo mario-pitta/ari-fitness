@@ -6,7 +6,18 @@ import { UsuariosPage } from './usuarios.page';
 const routes: Routes = [
   {
     path: '',
-    component: UsuariosPage
+    component: UsuariosPage,
+    children: [
+      {
+        path: '',
+        redirectTo: '',
+        pathMatch: 'full'
+      },
+      {
+        path: 'form',
+        loadChildren: () => import('../pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule)
+      }
+    ]
   }
 ];
 

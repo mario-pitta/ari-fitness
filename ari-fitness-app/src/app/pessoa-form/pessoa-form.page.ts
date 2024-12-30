@@ -62,6 +62,8 @@ export class PessoaFormPage implements OnInit {
   user!: Usuario
   ngOnInit() {
     this.user = this.auth.getUser;
+    console.log('this.user: ', this.user);
+
     // console.log(
     //   'this.aRoute.snapshot.params["userId"] : ',
     //   this.aRoute.snapshot.queryParams['userId']
@@ -236,6 +238,7 @@ export class PessoaFormPage implements OnInit {
       created_at: [null, [Validators.nullValidator]],
       classificacao_risco: [1, [Validators.nullValidator]],
       observacoes: ['', [Validators.nullValidator]],
+      empresa_id: [this.user.empresa_id, [Validators.nullValidator]],
     });
   }
 

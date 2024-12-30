@@ -1,6 +1,6 @@
 import { FichaAlunoService } from './../../core/services/ficha-aluno/ficha-aluno.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ModalController, ToastController } from '@ionic/angular';
+import { AlertController, ModalController, ToastController } from '@ionic/angular';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
@@ -14,7 +14,7 @@ import { ParteDoCorpo } from 'src/core/models/ParteDoCorpo';
 import { GrupoMuscular } from 'src/core/models/GrupoMuscular';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
-import Swal from 'sweetalert2';
+
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -46,7 +46,8 @@ export class TreinosListPage implements OnInit {
     private parteDoCorpoService: ParteDoCorpoService,
     private grupoMuscularService: GrupoMuscularService,
     private fichaAlunoService: FichaAlunoService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -260,26 +261,35 @@ export class TreinosListPage implements OnInit {
     });
   }
 
-  excluirTreino(id: number) {
-    Swal.fire({
-      title: 'Atenção',
-      text: 'Tem certeza que deseja excluir esse item? Essa ação não poderá ser desfeita.',
-      icon: 'warning',
-      cancelButtonText: 'Não',
-      showCancelButton: true,
-      reverseButtons: true,
-    }).then((res) => {
-      if (res.isConfirmed) {
-        this.treinoService.delete(id).subscribe({
-          next: (res) => {
-            if (res) {
-              this.toastr.success('Treino deletado.');
-              this.getTreinos();
-            }
+
+  async excluirTreino(id: number) {
+    const alert = await this.alertController.create({
+      header: 'Excluir Treino',
+      message: 'Tem certeza que deseja excluir esse treino?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
           },
-        });
-      }
+        },
+        {
+          text: 'Excluir',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.treinoService.delete(id).subscribe({
+              next: () => {
+                this.getTreinos();
+              },
+            });
+          },
+        },
+      ],
     });
+
+    await alert.present();
   }
 
   filterList() {

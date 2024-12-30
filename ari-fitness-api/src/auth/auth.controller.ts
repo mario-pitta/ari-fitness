@@ -10,12 +10,12 @@ export class AuthController {
 
   @Get('login')
   async login(
-    @Query() query: { cpf: string; dataNascimento: string },
+    @Query() query: { cpf: string; senha: string },
     @Res() res: Response,
   ) {
     console.log(query);
     return await this.auth
-      .login(query.cpf, query.dataNascimento)
+      .login(query.cpf, query.senha)
       .then((_res) => {
         if (_res.error)
           return res.status(400).send({ status: 500, ..._res.error }); //throw new Error(_res.error.message);

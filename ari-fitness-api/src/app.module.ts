@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { DashboardModule } from './dashboard/dashboard.module';
 import { FichaAlunoModule } from './ficha-usuario/ficha-aluno.module';
 import { GrupoMuscularModule } from './grupoMuscular/grupo-muscular.module';
 import { TipoUsuarioModule } from './tipoUsuario/tipo-usuario.module';
@@ -19,13 +20,15 @@ import { TreinoModule } from './treino/treino.module';
 import { ExercicioModule } from './exercicio/exercicio.module';
 import { ParteDoCorpoModule } from './parte-do-corpo/parte-do-corpo.module';
 import { CategoriaModule } from './categoria/categoria.module';
+import { TarefaModule } from './tarefas/tarefas.module';
 @Module({
   imports: [
+    DashboardModule,
     FichaAlunoModule,
     ServeStaticModule.forRoot({
       // rootPath: join(__dirname, '..', 'client'),
       // serveRoot: join(__dirname, '..', 'client'),
-      
+
       rootPath: join(__dirname),
       serveRoot: join(__dirname),
 
@@ -44,7 +47,8 @@ import { CategoriaModule } from './categoria/categoria.module';
     ExercicioModule,
     GrupoMuscularModule,
     ParteDoCorpoModule,
-    CategoriaModule 
+    CategoriaModule,
+    TarefaModule
   ],
   controllers: [AppController],
   providers: [AppService],

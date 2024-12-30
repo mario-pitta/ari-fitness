@@ -20,8 +20,8 @@ export class ToastrService {
     await toast.present();
   }
 
-  success(message: string) {
-    this.open({ message, color: 'success', position: 'top', duration: 5000 });
+  success(message: string, position: "top" | "bottom" | "middle" = 'top') {
+    this.open({ message, color: 'success', position: position, duration: 5000 });
   }
 
   error(message: string) {

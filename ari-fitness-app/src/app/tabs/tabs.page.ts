@@ -15,6 +15,7 @@ export class TabsPage implements OnInit, OnDestroy {
   route: string = '/home'
   Constants = Constants;
   pageTitle = 'Home';
+  isMobile = false;
   constructor(
     private titleService: PagetitleService,
     private auth: AuthService,

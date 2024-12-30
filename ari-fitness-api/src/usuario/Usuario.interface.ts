@@ -7,6 +7,8 @@ export interface Usuario {
   altura: number;
   cpf: string;
   whatsapp: string;
+  horario_id: number;
+  horario: any;
   plano: number;
   data_vencimento: Date | string;
   senha: string;

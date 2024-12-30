@@ -8,7 +8,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 
 import { HomePage } from './home.page';
 import { AlunoHomeModule } from './aluno-home/aluno-home.module';
-import { AdminHomeModule } from './admin-home/admin-home.module';
+import { AdminHomeModule } from '../adm-page/admin-home/admin-home.module';
 
 @NgModule({
   imports: [

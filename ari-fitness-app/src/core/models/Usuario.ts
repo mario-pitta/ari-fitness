@@ -1,3 +1,4 @@
+import { IEmpresa } from "./Empresa";
 import { FichaAluno } from "./FichaAluno";
 import { Historico } from "./Historico";
 import { Horario } from "./Horario";
@@ -40,6 +41,8 @@ export interface IUsuario {
   flagAdmin: boolean;
   ficha_aluno?: FichaAluno[];
   historico?: Historico[]
+  empresa_id?: string;
+  empresa?: Partial<IEmpresa>
 }
 export class Usuario implements IUsuario{
   idade?: any;
@@ -77,10 +80,11 @@ export class Usuario implements IUsuario{
   flagAdmin!: boolean;
   ficha_aluno?: FichaAluno[];
   historico?: Historico[];
+  empresa_id?: string;
+  empresa?: Partial<IEmpresa> | undefined;
 
 
-  constructor({...obj}: IUsuario) {
-    let that = this
+  constructor(obj: IUsuario) {
     Object.assign(this, obj);
   }
 }

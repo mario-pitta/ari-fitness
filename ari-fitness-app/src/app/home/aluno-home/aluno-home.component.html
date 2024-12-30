@@ -14,7 +14,9 @@
         </div>
         <ion-item>
           <ion-card color="medium" style="width: 100vw !important;margin: 0; height: 150px;"
-            [ngStyle]="{'background-image': 'url('+  treinoUrlImage + ')'}" (click)="goToTreino(treino?.id)">
+
+          [ngStyle]="{'background-image': 'url('+  treinoUrlImage + ')'}" (click)="goToTreino(treino?.id)"
+          >
             <ion-card-header>
               <ion-card-title><strong>
                   Atividade de Hoje

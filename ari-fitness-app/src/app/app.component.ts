@@ -18,7 +18,8 @@ export class AppComponent implements OnInit {
   route: string = '';
   showToastr: any;
   user: any;
-  pageTitle: string = 'Ari Fitness Studio';
+  pageTitle: string = 'MvK Gym App';
+  showOptions: boolean = false;
 
   constructor(
     private titleService: PagetitleService,

@@ -1,0 +1,98 @@
+
+
+.weekDays{
+  height: 3rem !important;
+  font-size: 1rem;
+}
+
+.monthControls ion-col{
+  height: 2.5rem !important;
+}
+
+ion-col:not(.week):not(.weekDays) {
+  border: 1px solid #2b2a2a;
+  padding: 8px;
+  text-align: center;
+  height: 8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+ion-col.week {
+  border: 1px solid #2b2a2a;
+  padding: 8px;
+  text-align: center;
+  height: 3rem;
+}
+.disabled {
+  background-color: #494848;
+}
+
+.day:hover {
+  cursor: pointer;
+  animation: zoomIn 0.15s ease-in forwards;
+  background-color: #3b3b3b;
+  box-shadow: 0px 9px 14px 7px #3f3b3b ;
+}
+
+
+ion-col {
+  position: relative;
+  font-size: 20px;
+  text-align: center;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+ion-col:after {
+  content: "";
+  background: #acacac4f;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px!important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.45s
+}
+
+ion-col:not(.disabled):not(.weekDays):active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+
+
+
+@media screen and (max-width: 768px) {
+  ion-col {
+    font-size: 18px;
+    height: 2.8rem !important;
+  }
+
+}
+
+
+@media screen and (max-width: 600px) {
+  ion-col {
+    font-size: 16px;
+    height: 2rem !important;
+  }
+
+}
+
+
+@media screen and (max-width: 400px) {
+  ion-col {
+    font-size: 14px;
+    height: 1.8rem !important;
+  }
+
+}

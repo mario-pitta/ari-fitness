@@ -1,16 +1,54 @@
 <ion-app>
   <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-icon *ngIf="(route !== '/home' && route !== '/login')" slot="start"   size="large" class="ion-padding-start"  (click)="navigateBack()" name="arrow-back"></ion-icon>
-      <ion-title  class="d-flex ion-align-items-center ion-justify-content-between">
-        <div class="ion-align-items-center ion-justify-content-between">
-          {{pageTitle}}
-        </div>
+    <ion-toolbar class="d-flex">
+      <!-- <ion-icon *ngIf="(route !== '/home' && route !== '/login')" slot="start"   size="large" class="ion-padding-start"  (click)="navigateBack()" name="arrow-back"></ion-icon> -->
+      <div class="d-flex">
+        <div class="ion-padding logo-img"></div>
 
-      </ion-title>
-      <ion-icon *ngIf="route !== '/login'" name="power-sharp" slot="end" size="large" class="ion-padding-end" [routerLink]="['/login']"></ion-icon>
+        <ion-title class="d-flex ion-align-items-center ion-justify-content-between">
+          <div class="ion-align-items-center ion-justify-content-between">
+            MvK Gym Manager
+          </div>
+
+        </ion-title>
+      </div>
+      <!-- <ion-icon *ngIf="route !== '/login'" name="power-sharp" slot="end" size="large" class="ion-padding-end" [routerLink]="['/login']"></ion-icon> -->
+      <ion-icon *ngIf="route !== '/login'" name="person" slot="end" size="large" class="ion-padding-end"
+        id="options-trigger"></ion-icon>
     </ion-toolbar>
   </ion-header>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-content>
+
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
 
 </ion-app>
+
+
+
+
+<ion-popover trigger="options-trigger" [dismissOnSelect]="true" (didDismiss)="showOptions = false">
+  <ng-template>
+    <ion-content>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label>Olá, {{user?.nome}}</ion-label>
+        </ion-list-header>
+
+        <ion-item [button]="true" (click)="showOptions = false">
+          <ion-icon name="notifications" slot="start"></ion-icon>
+          Notificações
+        </ion-item>
+        <ion-item [button]="true" (click)="showOptions = false">
+          <ion-icon name="person" slot="start"></ion-icon>
+          Meu Perfil
+        </ion-item>
+        <ion-item [button]="true" (click)="showOptions = false">
+          <ion-icon name="exit" slot="start"></ion-icon>
+          Sair
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-popover>

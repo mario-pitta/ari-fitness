@@ -41,6 +41,10 @@ export class HomePage implements OnInit {
 
   ngOnInit() {
     this.user = this.auth.getUser;
+    // if(this.user.flagAdmin){
+    //   this.router.navigate(['/admin']);
+    //   // return
+    // }
     this.treinos =
       this.user.tipo_usuario == Constants.ALUNO_ID
         ? this.user.ficha_aluno

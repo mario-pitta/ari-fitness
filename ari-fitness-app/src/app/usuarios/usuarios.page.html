@@ -1,103 +1,570 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <!-- <ion-title>Usuários</ion-title> -->
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-segment value="5" (ionChange)="changeTipoUsuario($event)">
-    <ion-segment-button [value]="Constants.ALUNO_ID">
-      <ion-label>Alunos</ion-label>
-    </ion-segment-button>
-    <ion-segment-button [value]="Constants.INSTRUTOR_ID">
-      <ion-label>Instrutores</ion-label>
-    </ion-segment-button>
-    <ion-segment-button [value]="Constants.GERENCIA_ID">
-      <ion-label>Gerentes</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end" [edge]="false" [routerLink]="['/cadastro-usuario']">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-
-  <ion-list *ngIf="usuarioList.length" [inset]="true">
-    <!-- <ion-item *ngFor="let usuario of usuarioList">
-
-
-      <div class="w-100">
-        <ion-row class="ion-align-items-center">
-          <div class="w-90">
-            <span class="d-flex ion-align-items-center ion-margin">
-              <ion-avatar slot="start">
-                <img alt="Silhouette of a person's head"src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-              </ion-avatar>
-              <ion-label style="margin: 15px; font-weight: bold; font-size: large;">{{usuario?.nome}}</ion-label>
-
-            </span>
-            <ion-row>
-              <ion-col size="6">
-                <ion-label>Genero: </ion-label>{{ usuario?.genero }}
-                <ion-label>Idade: </ion-label>{{ usuario?.idade }}
-              </ion-col>
-              <ion-col size="6">
-                <ion-label>Plano: </ion-label>{{ usuario?.planos.descricao }}
-                <ion-label>Horario: </ion-label>{{ usuario?.horarios.hora_inicio }} - {{ usuario?.horarios.hora_fim}}
-              </ion-col>
-
-            </ion-row>
-          </div>
-          <div class="w-10">
-            <ion-col size="1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 512 512" style="cursor: pointer;" tooltip="Treinos">
-                <path fill="currentColor"
-                  d="M165.906 18.688C15.593 59.28-42.187 198.55 92.72 245.375h-1.095c.635.086 1.274.186 1.906.28c8.985 3.077 18.83 5.733 29.532 7.94C173.36 273.35 209.74 321.22 212.69 368c-33.514 23.096-59.47 62.844-59.47 62.844l26.28 38.686L138.28 493h81.97c-40.425-40.435-11.76-85.906 36.125-85.906c48.54 0 73.945 48.112 36.156 85.906h81.126l-40.375-23.47l26.283-38.686s-26.376-40.4-60.282-63.406c3.204-46.602 39.5-94.167 89.595-113.844c10.706-2.207 20.546-4.86 29.53-7.938c.633-.095 1.273-.195 1.908-.28h-1.125c134.927-46.82 77.163-186.094-73.157-226.69c-40.722 39.37 6.54 101.683 43.626 56.877c36.9 69.08 8.603 127.587-72.28 83.406c-11.88 24.492-34.213 41.374-60.688 41.374c-26.703 0-49.168-17.167-60.97-42c-81.774 45.38-110.512-13.372-73.437-82.78c37.09 44.805 84.35-17.508 43.626-56.876zm90.79 35.92c-27.388 0-51.33 27.556-51.33 63.61c0 36.056 23.942 62.995 51.33 62.995s51.327-26.94 51.327-62.994c0-36.058-23.94-63.61-51.328-63.61z" />
-              </svg>
+<ion-grid *ngIf="!onlyList">
+  <ion-row>
+    <ion-col size="6">
+      <h6 class="ms-3">Estatísticas:</h6>
+      <ion-row></ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col *ngFor="let card of memberDataCard" size-xs="12" size-md="6" size-lg="3">
+      <ion-card class="member-data-card" [ngClass]="card.chartType ? 'chart-card' : ''">
+        <ion-card-content>
+          @if(!card.value && card.chartType){
+          <ion-row>
+            <ion-col>
+              <ion-icon name="{{card.cardIconName}}"></ion-icon>
             </ion-col>
-          </div>
-        </ion-row>
+            <ion-col>
+              <ion-card-subtitle>{{card.title}}</ion-card-subtitle>
+              <ion-card-subtitle>{{card.subtitle}}</ion-card-subtitle>
+            </ion-col>
 
-      </div>
+            <ion-col size="12">
+              <ng-content *ngTemplateOutlet="cardTemplate; context: {$implicit: card}"></ng-content>
+            </ion-col>
+          </ion-row>
+          }@else{
+          <ion-row>
+            <ion-col size="auto">
+              <ion-icon name="{{card.cardIconName}}"></ion-icon>
+              @if(card.chartType){
+              <ng-content *ngTemplateOutlet="cardTemplate; context: {$implicit: card}"></ng-content>
+              }
+            </ion-col>
+            <ion-col>
+              <ion-card-subtitle>{{card.title}}</ion-card-subtitle>
+              <ion-card-title>{{card.value}} <ion-chip *ngIf="card.tendency"
+                  color="{{card.tendency === 'up'? 'success' : 'danger'}}">{{card.tendencyValue}}%</ion-chip>
+              </ion-card-title>
+              <ion-card-subtitle>{{card.subtitle}}</ion-card-subtitle>
+            </ion-col>
 
-    </ion-item> -->
-    <ion-item *ngFor="let
-    usuario of usuarioList">
-      <ion-avatar slot="start">
-        <img
-          [src]="usuario?.genero === 'M' ? 'https://cdn-icons-png.flaticon.com/128/4140/4140048.png': 'https://cdn-icons-png.flaticon.com/128/4140/4140047.png'" />
-      </ion-avatar>
-      <ion-row class="w-75 ion-align-items-center ion-margin">
-        <ion-col>
-          <ion-label>
-            <h2>{{ usuario?.nome }}</h2>
-            <!-- <p>Sexo: {{ usuario?.genero }}</p> -->
-            <p>Idade: {{ usuario?.idade }}</p>
-            <p *ngIf="usuario?.planos">Plano: {{ usuario?.planos?.descricao }}</p>
-            <p *ngIf="usuario?.horarios">Horário: {{ usuario?.horarios?.hora_inicio?.slice(0, 5)}}</p>
-          </ion-label>
+          </ion-row>
+          }
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+<ion-grid>
+  <ion-row>
+    <ion-col size="6">
+      <h6 class="ms-3 d-flex gap-2 ion-align-items-center">Membros: <ion-button size="small" fill="clear" shape="round"
+          color="success  " [routerLink]="['/admin/membros/cadastro-usuario']">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+      </h6>
+      <ion-row></ion-row>
+    </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-grid>
+      <ion-row class="ion-align-items-center">
+        <ion-col size="6">
+          <ion-searchbar></ion-searchbar>
         </ion-col>
-        <ion-col size="1">
-          <ion-button [id]="'poppover-router-options-trigger_'+usuario?.id" (click)="showNavigationOptions(usuario)" fill="clear">
-            <ion-icon name="ellipsis-vertical"></ion-icon>
-          </ion-button>
 
-
+        <ion-col size="3" class="d-flex gap-2 ion-align-items-center ion-justify-content-around">
+          <ion-card-subtitle for="orderMemberSelector" style="width: inherit !important;"
+            class="d-flex gap-1 ion-text-center fw-light">
+            <ion-icon name="swap-vertical-sharp" size="small"></ion-icon>
+            <ion-label>Ordernar:</ion-label>
+          </ion-card-subtitle>
+          <ion-select name="orderMemberSelector" id="orderMemberSelector" interface="popover">
+            <ion-select-option selected [value]="'dateExpiracao'">Data de Expiração</ion-select-option>
+            <ion-select-option [value]="'idade'">Idade</ion-select-option>
+            <ion-select-option [value]="'plano'">Plano</ion-select-option>
+            <ion-select-option [value]="'status'">Status</ion-select-option>
+            <ion-select-option [value]="'horario'">Horário</ion-select-option>
+            <ion-select-option [value]="'ultimaAtividade'">Última Atividade</ion-select-option>
+          </ion-select>
+        </ion-col>
+        <ion-col size="3" class="w-50 d-flex gap-2 ion-align-items-center ion-justify-content-around">
+          <ion-card-subtitle for="filterMemberSelector" style="width: inherit !important;"
+            class="d-flex gap-1 ion-text-center fw-light">
+            <ion-icon name="funnel" size="small"></ion-icon>
+            <ion-label>Filtrar:</ion-label>
+          </ion-card-subtitle>
+          <ion-select name="filterMemberSelector" id="filterMemberSelector" interface="popover">
+            <ion-select-option [value]="'status'">Todos</ion-select-option>
+            <ion-select-option [value]="'idade'">Inadiplentes</ion-select-option>
+            <ion-select-option [value]="'status'">Inativo</ion-select-option>
+          </ion-select>
         </ion-col>
       </ion-row>
-    </ion-item>
-  </ion-list>
 
-</ion-content>
+      @for(member of usuarioList ; track $index){
+      <ion-row>
+        <ion-col size="12">
+          <ion-card class="position-relative">
+            <ion-card-content>
+              <ion-row class="d-flex ion-align-items-center w-100">
+                <ion-col sizeMd="4" sizeXs="auto">
+                  <ion-card-subtitle>
+                    <div class="d-flex gap-3 ion-align-items-center">
+                      <ion-avatar slot="start" class="me-2" size="small">
+                        <img
+                          [src]="member.genero === 'M' ? 'https://randomuser.me/api/portraits/men/'+member.id +'.jpg' : 'https://randomuser.me/api/portraits/women/'+member.id +'.jpg'"
+                          alt="">
+                      </ion-avatar>
+
+                      <div>
+                        <ion-card-title>
+                          {{member.nome}}
+                        </ion-card-title>
+                        <ion-label size="small">{{'member@email.com'}}</ion-label>
+                      </div>
+                    </div>
+                  </ion-card-subtitle>
+                </ion-col>
+                <ion-col sizeMd="2" sizeXs="auto">
+                  <sub>Data de Vencimento</sub>
+                  <ion-card-subtitle>
+                    {{member.data_vencimento }}
+                  </ion-card-subtitle>
+                </ion-col>
+
+                <ion-col sizeMd="1" sizeXs="auto">
+                  <sub>Plano</sub>
+                  <ion-card-subtitle>
+                    {{member.planos.descricao}}
+                  </ion-card-subtitle>
+                </ion-col>
+                <ion-col sizeMd="1" sizeXs="auto" (click)="openCobrancaModal(member)">
+                  <sub>Mensalidade</sub>
+                  <ion-chip [color]="member.fl_ativo  ? 'success' : 'warning'">
+                    {{member.fl_ativo  ? 'Paga' : 'Pendente'}}
+                  </ion-chip>
+                </ion-col>
+                <ion-col sizeMd="2" sizeXs="auto">
+                  <sub>Horario</sub>
+                  <ion-card-subtitle>
+                    {{member.horarios.hora_inicio.slice(0, 5) + ' - ' +  member.horarios.hora_fim.slice(0, 5)}}
+                  </ion-card-subtitle>
+                </ion-col>
+                <ion-col sizeMd="1" sizeXs="auto" offset-sm="2" class="position-absolute top-0 end-0">
+                  <ion-button fill="clear" size="small" shape="round" color="dark"
+                    [id]="member.id + '_memberOptionsBtn'" (click)="showNavigationOptions(member)">
+                    <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+
+      }
+    </ion-grid>
+  </ion-row>
+
+</ion-grid>
 
 
-<ion-popover  [isOpen]="isOpen" (didDismiss)="isOpen = false" reference="trigger" [trigger]="'poppover-router-options-trigger_'+selectedUsuario?.id">
+<!-- <ng-template #optionPopover > -->
+<ion-popover [isOpen]="isOpen" (didDismiss)="isOpen = false" reference="trigger"
+  [trigger]="selectedUsuario?.id + '_memberOptionsBtn'">
   <ng-template>
-    <!-- <ion-content class="ion-padding"> -->
-      <ion-list>
-        <ion-item (click)="navigate('/cadastro-usuario', selectedUsuario)">Ficha de Inscrição</ion-item>
-        <ion-item (click)="navigate('/ficha-treino', selectedUsuario)">Ficha de Treino</ion-item>
-      </ion-list>
-    <!-- </ion-content> -->
+    <ion-list [inset]="true">
+      <!-- <ion-list-header class=" mt-1">
+        Ações
+      </ion-list-header>
+      <hr> -->
+      <ion-item [button]="true"  lines="full" (click)="navigate('/admin/membros/cadastro-usuario', selectedUsuario)">
+        <ion-icon aria-hidden="true"  size="small" name="document-text-outline" slot="start"></ion-icon>
+        <ion-text size="small">Det. do Membro</ion-text>
+      </ion-item>
+      <ion-item [button]="true"  lines="full" (click)="navigate('/admin/membros/ficha-de-treino/', selectedUsuario)">
+        <ion-icon aria-hidden="true"  size="small" name="fitness" slot="start"></ion-icon>
+        <ion-text size="small">Treinos</ion-text>
+      </ion-item>
+      <ion-item [button]="true"  lines="full" (click)="openFormReciboModal(selectedUsuario)">
+        <ion-icon aria-hidden="true"  size="small" name="receipt" slot="start"></ion-icon>
+        <ion-text size="small">Registrar Pagamento</ion-text>
+      </ion-item>
+      <ion-item [button]="true"  lines="full" (click)="showCobrancaModal = true">
+        <ion-icon aria-hidden="true"  size="small" name="logo-whatsapp" slot="start"></ion-icon>
+        <ion-text size="small">Enviar Cobrança</ion-text>
+      </ion-item>
+
+      <ion-item [button]="true"  lines="full">
+        <ion-icon aria-hidden="true"  size="small"
+          [name]=" selectedUsuario?.fl_ativo ? 'lock-closed' : 'lock-open'" slot="start"></ion-icon>
+        <ion-text size="small">{{selectedUsuario?.fl_ativo ?  'Bloquear' : 'Desbloquear'}}</ion-text>
+      </ion-item>
+    </ion-list>
   </ng-template>
 </ion-popover>
+<!-- </ng-template> -->
+
+
+
+
+<ng-template #cardTemplate let-card>
+
+  @switch (card.chartType) {
+  @case('pie') {
+  <ngx-charts-pie-chart [view]="[!card.value ? 100 : 100, !card.value ? 100 : 100]" [results]="card.data"
+    [gradient]="true"></ngx-charts-pie-chart>
+  }
+  @case('bar') {
+  <ngx-charts-bar-vertical [view]="[!card.value ? 300 : 100, !card.value ? 90 : 100]" [results]="card.data"
+    [noBarWhenZero]="true" [gradient]="true"></ngx-charts-bar-vertical>
+  }
+  @case('line') {
+  <ngx-charts-line-chart [view]="[!card.value ? 100 : 100, !card.value ? 100 : 100]" [results]="card.data"
+    [gradient]="true" [timeline]="true" [xAxis]="true" [showGridLines]="false"></ngx-charts-line-chart>
+  }
+  }
+
+</ng-template>
+
+
+
+<ion-modal [isOpen]="showCobrancaModal"
+  (didDismiss)="showCobrancaModal = false; selectedUsuario = null; cobrancaForm.reset()"
+  (ionModalWillPresent)="isOpen = false">
+  <ng-template>
+    <!-- TODO transformar em component -->
+
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Enviar Cobrança</ion-title>
+        <ion-buttons slot="end">
+          <ion-icon name="close" (click)="showCobrancaModal = false; selectedUsuario = null"></ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <div class="ion-padding">
+
+      <form [formGroup]="cobrancaForm">
+        <ion-row>
+          <ion-col>
+            <ion-input type="text" label="Nome" labelPlacement="floating" [value]="selectedUsuario?.nome"
+              readonly="true" />
+          </ion-col>
+          <ion-col>
+            <ion-input type="text" label="Nome" labelPlacement="floating" [value]="selectedUsuario?.whatsapp"
+              readonly="true" />
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: cobrancaForm};"></ng-content>
+            </ion-item>
+
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: cobrancaForm};"></ng-content>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+
+
+
+
+      </form>
+
+      <div class="ion-padding" id="message">
+
+        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é Ari, da <strong>Ari Fitness</strong>. Tudo bem?</p>
+
+        <p>Ainda não foi identificado o pagamento da sua mensalidade do mês de <strong>{{ mes?.value }}</strong> de
+          <strong>{{ ano?.value }}</strong>.</p>
+        <p>Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. Caso ainda não tenha
+          realizado o pagamento, segue os dados de transferência:</p>
+        <p><strong>Chave Pix: </strong> {{'minha@chave.pix'}} </p>
+
+        <p>Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. Será
+          um prazer te atender!</p>
+      </div>
+    </div>
+
+
+
+
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="auto">
+        <ion-button color="primary" fill="clear" shape="round" (click)="copyMessage()" [disabled]="!cobrancaForm.valid">
+          <ion-icon slot="icon-only" name="copy"></ion-icon>
+        </ion-button>
+        <ion-button color="success" fill="clear" shape="round" (click)="sendMessage()" [disabled]="!cobrancaForm.valid">
+          <ion-icon slot="icon-only" name="logo-whatsapp"></ion-icon>
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+  </ng-template>
+</ion-modal>
+
+
+
+<ion-modal [isOpen]="showReciboModal" (didDismiss)="showReciboModal = false; selectedUsuario = null"
+  (ionModalWillPresent)="isOpen = false">
+  <ng-template>
+    <ng-container *ngIf="recibo">
+
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Recibo de Pagamento</ion-title>
+          <ion-buttons slot="end" class="d-flex gap-2">
+            <ion-icon class="me-2" (click)="downloadRecibo()" id="downloadHeaderBtn" name="download-outline"></ion-icon>
+            <ion-icon name="close" (click)="showReciboModal  = false; recibo = null;"></ion-icon>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+
+      <!-- <ion-content class="ion-padding"> -->
+      <div id="recibo-container" class="ion-padding">
+        <ion-card-header>
+          <ion-card-title>Recibo de Pagamento - {{recibo.mes}}/{{recibo.ano}}</ion-card-title>
+          <ion-card-subtitle>Academia Ari Fitness Studio</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-grid>
+          <form>
+            <ion-row>
+              <ion-col size="6">
+
+                <p class="fw-bold mb-0" position="stacked">Nome do Aluno:</p>
+                <ion-text> {{recibo.member.nome}}</ion-text>
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Plano Contratado:</p>
+                <ion-text> {{recibo.plano.descricao}}</ion-text>
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Valor do Plano:</p>
+                <ion-text> R$ {{recibo.plano.valor}}</ion-text>
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Data de Pagamento:</p>
+                <ion-text> {{recibo.dataPagamento | date: 'dd/MM/yyyy'}}</ion-text>
+
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Desconto:</p>
+                @if(recibo.desconto > 0){
+                <ion-text>
+                  <span>{{recibo.discountType === 'R$' ? recibo.discountType : ''}} {{recibo.desconto}}
+                    {{recibo.discountType === '%' ? recibo.discountType : ''}}</span>
+                </ion-text>
+                }@else{
+                <ion-text>
+                  Nenhum desconto aplicado.
+                </ion-text>
+                }
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Mês/Ano Referência:</p>
+                <ion-text>{{recibo.mes}}/{{recibo.ano}} </ion-text>
+
+              </ion-col>
+              <ion-col size="6">
+
+
+                <p class="fw-bold mb-0" position="stacked">Valor Final:</p>
+                <ion-text>R$ {{recibo.valorPago}} </ion-text>
+
+              </ion-col>
+
+              <ion-col size="6">
+
+                <p class="fw-bold mb-0" position="stacked">Forma de Pagamento:</p>
+                <ion-text> {{recibo.formaPagamento | titlecase}}</ion-text>
+
+              </ion-col>
+
+              <ion-col size="12" class="mt-5 ion-text-center">
+
+                <ion-text>_______________________________________________________________</ion-text><br>
+
+              </ion-col>
+              <ion-col size="12" class="ion-text-center">
+
+                <ion-text>Ari Fitness Studio</ion-text>
+
+              </ion-col>
+            </ion-row>
+          </form>
+        </ion-grid>
+        <ion-row class="ion-padding ion-align-items-center ion-text-end">
+          <sub>Cód: {{recibo.id}}</sub>
+        </ion-row>
+      </div>
+
+      <ion-row class="ion-justify-content-center ion-margin-bottom ion-padding">
+        <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
+          [disabled]="!reciboForm.valid" (click)="downloadRecibo()">
+          Baixar
+          <ion-icon class="ms-2" name="download-outline"></ion-icon>
+        </ion-button>
+      </ion-row>
+
+      <!-- </ion-content> -->
+
+
+    </ng-container>
+  </ng-template>
+</ion-modal>
+
+
+<ion-modal [isOpen]="showFormReciboModal"
+  (didDismiss)="showFormReciboModal = false; selectedUsuario = null;  reciboForm.reset()"
+  (ionModalWillPresent)="isOpen = false">
+  <ng-template>
+    <!-- TODO transformar em component -->
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Registrar Pagamento</ion-title>
+        <ion-buttons slot="end">
+          <ion-icon name="close" (click)="showFormReciboModal  = false; selectedUsuario = null;">
+          </ion-icon>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+
+      <form [formGroup]="reciboForm">
+        <ion-row>
+          <ion-col size="6">
+            <ion-item formGroupName="member">
+              <ion-label position="floating">Membro</ion-label>
+              <ion-input type="text" readonly="true" formControlName="nome"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item formGroupName="plano">
+              <ion-label position="floating">Plano</ion-label>
+              <ion-input type="text" readonly="true" formControlName="descricao"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item formGroupName="plano">
+              <ion-label position="floating">Valor Padrão (R$):</ion-label>
+              <ion-input type="number" readonly="true" formControlName="valor"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="floating">Data de Pagmto</ion-label>
+              <ion-input type="date" formControlName="dataPagamento"></ion-input>
+            </ion-item>
+          </ion-col>
+
+          <ion-col size="3">
+            <ion-item class="w-100">
+              <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: reciboForm, control: 'mes'};">
+              </ng-content>
+            </ion-item>
+          </ion-col>
+          <ion-col size="3">
+            <ion-item class="w-100">
+
+              <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: reciboForm};"></ng-content>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-row>
+              <ion-col sizeXs="9" sizeSm="10">
+                <ion-item>
+                  <ion-label position="floating">Desconto:</ion-label>
+                  <ion-input type="number" formControlName="desconto" (ionChange)="calculaValorFinal()"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col sizeXs="3" sizeSm="2">
+                <ion-radio-group value="%">
+                  <ion-item *ngFor="let discountType of ['R$', '%']" (click)="setDiscountType(discountType)"
+                    [ngClass]="discountType === reciboForm.get('discountType')?.value ? 'item-checked' : ''">
+                    <ion-label>{{discountType}}</ion-label>
+                    <ion-radio slot="start" id="{{discountType}}" [value]="discountType" [hidden]="true"></ion-radio>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+          <ion-col size="4">
+            <ion-item>
+              <ion-label position="floating">Valor Pago (R$):</ion-label>
+              <ion-input type="text" formControlName="valorPago" readonly="true"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="8">
+            <ion-item>
+              <ion-select interface="popover" label="Forma de Pagamento" formControlName="formaPagamento"
+                labelPlacement="floating">
+                <ion-select-option [value]="'pix'">Pix</ion-select-option>
+                <ion-select-option [value]="'dinheiro'">Dinheiro</ion-select-option>
+                <ion-select-option [value]="'debito'">Cartão de Débito</ion-select-option>
+                <ion-select-option [value]="'credito'">Cartão de Crédito</ion-select-option>
+                <ion-select-option [value]="'boleto'">Boleto</ion-select-option>
+              </ion-select>
+            </ion-item>
+          </ion-col>
+          <ion-col size="12">
+            <ion-item>
+              <ion-label>Comprovante</ion-label>
+              <ion-item>
+                <ion-input type="file"></ion-input>
+              </ion-item>
+            </ion-item>
+          </ion-col>
+
+
+
+        </ion-row>
+      </form>
+
+    </ion-content>
+    <ion-row class="ion-justify-content-center ion-margin-bottom ion-padding">
+
+
+      <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
+        (click)="gerarRecibo(reciboForm.value)" [disabled]="!reciboForm.valid">
+        Gerar Recibo
+        <ion-icon class="ms-2" name="receipt-outline"></ion-icon>
+      </ion-button>
+
+    </ion-row>
+  </ng-template>
+</ion-modal>
+
+
+
+
+
+
+<ng-template #mesesSelector let-form let-control="control">
+  <div [formGroup]="form">
+    <ion-label position="floating" *ngIf="form.get('mes').value">Mês</ion-label>
+    <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
+      <ion-select-option *ngFor="let mes of Constants.meses" [value]="mes.label">{{mes.label}}</ion-select-option>
+    </ion-select>
+  </div>
+</ng-template>
+<ng-template #anosSelector let-form>
+  <div [formGroup]="form">
+    <ion-label position="floating" *ngIf="form.get('ano').value">Ano</ion-label>
+    <ion-select interface="popover" placeholder="Ano" formControlName="ano">
+      <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
+    </ion-select>
+  </div>
+</ng-template>

@@ -2,6 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { DataBaseService } from 'src/datasource/database.service';
 import { Usuario } from './Usuario.interface';
+import md5 = require('md5');
+
 
 const tableName = 'usuario';
 
@@ -49,9 +51,13 @@ export class UsuarioService {
    */
   create(body: Usuario) {
     console.log('creating new user: ', body);
+    console.log(md5('message'));
     return this.database.supabase
       .from(tableName)
-      .insert(body, {})
+      .insert({
+        ...body, 
+        senha: md5('123456')
+      }, {})
       .then((res) => {
         console.log('RES: ', res);
 

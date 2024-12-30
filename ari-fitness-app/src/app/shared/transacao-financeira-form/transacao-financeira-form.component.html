@@ -1,0 +1,46 @@
+<ion-content class="ion-padding">
+  <h4>{{action | titlecase}} Transação - {{tipo | titlecase}}</h4>
+  <form [formGroup]="transacaoForm">
+
+
+    <ion-select formControlName="tipo" interface="popover" class="ion-text-capitalize" label="Tipo"
+      labelPlacement="floating">
+      <ion-select-option class="ion-text-capitalize" *ngFor="let tipo of ['receita', 'despesa']" [value]="tipo">
+        {{tipo | titlecase}}</ion-select-option>
+    </ion-select>
+
+
+
+    <ion-select formControlName="categoria" interface="popover" class="ion-text-capitalize" label="Categoria"
+      labelPlacement="floating">
+      <ion-select-option class="ion-text-capitalize"
+        *ngFor="let categoria of categorias | filterCategoriaPorTipo: transacaoForm.value.tipo"
+        [value]="categoria.descricao">
+        {{categoria.descricao | titlecase}}</ion-select-option>
+    </ion-select>
+
+
+
+
+
+    <ion-input type="text" formControlName="descricao" label="Descrição*: " labelPlacement="floating"></ion-input>
+
+
+    <ion-row>
+      <ion-col>
+        <ion-input type="date" formControlName="data" label="Data*" labelPlacement="floating"></ion-input>
+
+      </ion-col>
+
+      <ion-col>
+
+        <ion-input type="number" min="0" formControlName="valor" label="Valor*" labelPlacement="floating"></ion-input>
+      </ion-col>
+    </ion-row>
+
+    <ion-button class="ion-margin-top" shape="round" expand="block" [disabled]="transacaoForm.invalid" (click)="save()">
+      {{action}} Transação</ion-button>
+
+
+  </form>
+</ion-content>

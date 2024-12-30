@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { AdmPagePageRoutingModule } from './adm-page-routing.module';
 
 import { AdmPagePage } from './adm-page.page';
-import { AdminHomeModule } from '../home/admin-home/admin-home.module';
+import { AdminHomeModule } from './admin-home/admin-home.module';
 
 @NgModule({
   imports: [

@@ -41,8 +41,9 @@ export class AlunoHomeComponent implements OnInit {
   @Input() user!: Usuario;
   ngOnInit() {
     this.categories.forEach((c) => this.imageSet.set(c.id, c.url));
-    console.log('iniciando aluno-home');
-    console.log('user: ', this.user);
+
+    if(this.user.flagAdmin) this.router.navigate(['admin']);
+
     if (this.user && this.user.ficha_aluno) {
       this.ficha = this.user.ficha_aluno[this.user.ficha_aluno.length - 1];
       console.log('this.ficha: ', this.ficha);

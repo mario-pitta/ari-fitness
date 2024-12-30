@@ -9,11 +9,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 93vh;
+  height: 144vh;
+  width: 150vw;
   background-image: url("../../../assets/images/gym-bagckground.jpg");
   background-repeat: no-repeat;
-  background-size: 100vw 100vh;
-  background-blend-mode: color-burn;
-
+  background-size: cover;
+  border: #464647 solid 1px;
   //   overflow: hidden;
 }
