@@ -6,7 +6,7 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col *ngFor="let card of memberDataCard" size-xs="12" size-md="6" size-lg="3">
+    <ion-col *ngFor="let card of memberDataCard" size-xs="12" size-md="6" size-lg="3" [size]="card.size">
       <ion-card class="member-data-card" [ngClass]="card.chartType ? 'chart-card' : ''">
         <ion-card-content>
           @if(!card.value && card.chartType){
@@ -20,7 +20,7 @@
             </ion-col>
 
             <ion-col size="12">
-              <ng-content *ngTemplateOutlet="cardTemplate; context: {$implicit: card}"></ng-content>
+              <ng-content *ngTemplateOutlet="cardChartTemplate; context: {$implicit: card}"></ng-content>
             </ion-col>
           </ion-row>
           }@else{
@@ -28,7 +28,7 @@
             <ion-col size="auto">
               <ion-icon name="{{card.cardIconName}}"></ion-icon>
               @if(card.chartType){
-              <ng-content *ngTemplateOutlet="cardTemplate; context: {$implicit: card}"></ng-content>
+              <ng-content *ngTemplateOutlet="cardChartTemplate; context: {$implicit: card}"></ng-content>
               }
             </ion-col>
             <ion-col>
@@ -104,7 +104,7 @@
                     <div class="d-flex gap-3 ion-align-items-center">
                       <ion-avatar slot="start" class="me-2" size="small">
                         <img
-                          [src]="member.genero === 'M' ? 'https://randomuser.me/api/portraits/men/'+member.id +'.jpg' : 'https://randomuser.me/api/portraits/women/'+member.id +'.jpg'"
+                          [src]="member.genero === 'M' ? 'https://avatar.iran.liara.run/public/5': 'https://avatar.iran.liara.run/public/60'"
                           alt="">
                       </ion-avatar>
 
@@ -132,8 +132,8 @@
                 </ion-col>
                 <ion-col sizeMd="1" sizeXs="auto" (click)="openCobrancaModal(member)">
                   <sub>Mensalidade</sub>
-                  <ion-chip [color]="member.fl_ativo  ? 'success' : 'warning'">
-                    {{member.fl_ativo  ? 'Paga' : 'Pendente'}}
+                  <ion-chip [color]="member.fl_pago  ? 'success' : 'warning'">
+                    {{member.fl_pago  ? 'Paga' : 'Pendente'}}
                   </ion-chip>
                 </ion-col>
                 <ion-col sizeMd="2" sizeXs="auto">
@@ -200,7 +200,7 @@
 
 
 
-<ng-template #cardTemplate let-card>
+<ng-template #cardChartTemplate let-card>
 
   @switch (card.chartType) {
   @case('pie') {
@@ -208,7 +208,7 @@
     [gradient]="true"></ngx-charts-pie-chart>
   }
   @case('bar') {
-  <ngx-charts-bar-vertical [view]="[!card.value ? 300 : 100, !card.value ? 90 : 100]" [results]="card.data"
+  <ngx-charts-bar-vertical [view]="[!card.value ? 250 : 10, !card.value ? 90 : 10]" [results]="card.data"
     [noBarWhenZero]="true" [gradient]="true"></ngx-charts-bar-vertical>
   }
   @case('line') {
@@ -251,13 +251,13 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: cobrancaForm};"></ng-content>
+              <!-- <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: cobrancaForm};"></ng-content> -->
             </ion-item>
 
           </ion-col>
           <ion-col>
             <ion-item>
-              <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: cobrancaForm};"></ng-content>
+              <!-- <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: cobrancaForm};"></ng-content> -->
             </ion-item>
           </ion-col>
         </ion-row>
@@ -413,7 +413,7 @@
 
       <ion-row class="ion-justify-content-center ion-margin-bottom ion-padding">
         <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
-          [disabled]="!reciboForm.valid" (click)="downloadRecibo()">
+          (click)="downloadRecibo()">
           Baixar
           <ion-icon class="ms-2" name="download-outline"></ion-icon>
         </ion-button>
@@ -427,144 +427,7 @@
 </ion-modal>
 
 
-<ion-modal [isOpen]="showFormReciboModal"
-  (didDismiss)="showFormReciboModal = false; selectedUsuario = null;  reciboForm.reset()"
-  (ionModalWillPresent)="isOpen = false">
-  <ng-template>
-    <!-- TODO transformar em component -->
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Registrar Pagamento</ion-title>
-        <ion-buttons slot="end">
-          <ion-icon name="close" (click)="showFormReciboModal  = false; selectedUsuario = null;">
-          </ion-icon>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-
-      <form [formGroup]="reciboForm">
-        <ion-row>
-          <ion-col size="6">
-            <ion-item formGroupName="member">
-              <ion-label position="floating">Membro</ion-label>
-              <ion-input type="text" readonly="true" formControlName="nome"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-item formGroupName="plano">
-              <ion-label position="floating">Plano</ion-label>
-              <ion-input type="text" readonly="true" formControlName="descricao"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-item formGroupName="plano">
-              <ion-label position="floating">Valor Padrão (R$):</ion-label>
-              <ion-input type="number" readonly="true" formControlName="valor"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-item>
-              <ion-label position="floating">Data de Pagmto</ion-label>
-              <ion-input type="date" formControlName="dataPagamento"></ion-input>
-            </ion-item>
-          </ion-col>
-
-          <ion-col size="3">
-            <ion-item class="w-100">
-              <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: reciboForm, control: 'mes'};">
-              </ng-content>
-            </ion-item>
-          </ion-col>
-          <ion-col size="3">
-            <ion-item class="w-100">
-
-              <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: reciboForm};"></ng-content>
-            </ion-item>
-          </ion-col>
-          <ion-col size="6">
-            <ion-row>
-              <ion-col sizeXs="9" sizeSm="10">
-                <ion-item>
-                  <ion-label position="floating">Desconto:</ion-label>
-                  <ion-input type="number" formControlName="desconto" (ionChange)="calculaValorFinal()"></ion-input>
-                </ion-item>
-              </ion-col>
-              <ion-col sizeXs="3" sizeSm="2">
-                <ion-radio-group value="%">
-                  <ion-item *ngFor="let discountType of ['R$', '%']" (click)="setDiscountType(discountType)"
-                    [ngClass]="discountType === reciboForm.get('discountType')?.value ? 'item-checked' : ''">
-                    <ion-label>{{discountType}}</ion-label>
-                    <ion-radio slot="start" id="{{discountType}}" [value]="discountType" [hidden]="true"></ion-radio>
-                  </ion-item>
-                </ion-radio-group>
-              </ion-col>
-            </ion-row>
-          </ion-col>
-          <ion-col size="4">
-            <ion-item>
-              <ion-label position="floating">Valor Pago (R$):</ion-label>
-              <ion-input type="text" formControlName="valorPago" readonly="true"></ion-input>
-            </ion-item>
-          </ion-col>
-          <ion-col size="8">
-            <ion-item>
-              <ion-select interface="popover" label="Forma de Pagamento" formControlName="formaPagamento"
-                labelPlacement="floating">
-                <ion-select-option [value]="'pix'">Pix</ion-select-option>
-                <ion-select-option [value]="'dinheiro'">Dinheiro</ion-select-option>
-                <ion-select-option [value]="'debito'">Cartão de Débito</ion-select-option>
-                <ion-select-option [value]="'credito'">Cartão de Crédito</ion-select-option>
-                <ion-select-option [value]="'boleto'">Boleto</ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-col>
-          <ion-col size="12">
-            <ion-item>
-              <ion-label>Comprovante</ion-label>
-              <ion-item>
-                <ion-input type="file"></ion-input>
-              </ion-item>
-            </ion-item>
-          </ion-col>
-
-
-
-        </ion-row>
-      </form>
-
-    </ion-content>
-    <ion-row class="ion-justify-content-center ion-margin-bottom ion-padding">
-
-
-      <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
-        (click)="gerarRecibo(reciboForm.value)" [disabled]="!reciboForm.valid">
-        Gerar Recibo
-        <ion-icon class="ms-2" name="receipt-outline"></ion-icon>
-      </ion-button>
-
-    </ion-row>
-  </ng-template>
-</ion-modal>
 
 
 
 
-
-
-<ng-template #mesesSelector let-form let-control="control">
-  <div [formGroup]="form">
-    <ion-label position="floating" *ngIf="form.get('mes').value">Mês</ion-label>
-    <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
-      <ion-select-option *ngFor="let mes of Constants.meses" [value]="mes.label">{{mes.label}}</ion-select-option>
-    </ion-select>
-  </div>
-</ng-template>
-<ng-template #anosSelector let-form>
-  <div [formGroup]="form">
-    <ion-label position="floating" *ngIf="form.get('ano').value">Ano</ion-label>
-    <ion-select interface="popover" placeholder="Ano" formControlName="ano">
-      <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
-    </ion-select>
-  </div>
-</ng-template>

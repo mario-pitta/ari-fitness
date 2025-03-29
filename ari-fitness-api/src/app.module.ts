@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+import { GeminiModule } from './gemini/gemini.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { FichaAlunoModule } from './ficha-usuario/ficha-aluno.module';
 import { GrupoMuscularModule } from './grupoMuscular/grupo-muscular.module';
@@ -21,8 +22,14 @@ import { ExercicioModule } from './exercicio/exercicio.module';
 import { ParteDoCorpoModule } from './parte-do-corpo/parte-do-corpo.module';
 import { CategoriaModule } from './categoria/categoria.module';
 import { TarefaModule } from './tarefas/tarefas.module';
+import { EventoModule } from './evento/evento.module';
+import { TransacaoFinanceiraModule } from './transacao_financeira/transacao-financeira.module';
+import { EmpresaModule } from './empresa/empresa.module';
+
+
 @Module({
   imports: [
+    GeminiModule,
     DashboardModule,
     FichaAlunoModule,
     ServeStaticModule.forRoot({
@@ -48,7 +55,10 @@ import { TarefaModule } from './tarefas/tarefas.module';
     GrupoMuscularModule,
     ParteDoCorpoModule,
     CategoriaModule,
-    TarefaModule
+    TarefaModule,
+    EventoModule,
+    TransacaoFinanceiraModule,
+    EmpresaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

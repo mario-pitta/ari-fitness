@@ -1,0 +1,237 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Relatório Financeiro Completo</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card-content>
+    @if(!loading){
+    @if(error){
+    <!-- <ion-content class="container"> -->
+    <ion-row>
+      <ion-col size="12">
+        <ion-text color="danger">Ocorreu um erro ao carregar os dados</ion-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="getAnalisys()">Tentar novamente</ion-button>
+    </ion-row>
+    <!-- </ion-content> -->
+    }
+    @else{
+
+    <div class="ion-padding" id="report-content" #reportContent>
+      <div>
+        <ion-card-header>
+          <ion-card-title>Visão Geral</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <markdown [data]="analisys.report"></markdown>
+        </ion-card-content>
+      </div>
+
+      <div>
+        <ion-card-header>
+          <ion-card-title>Resumo Financeiro</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-item>
+            <ion-label><strong>Receitas:</strong></ion-label>
+            <ion-note slot="end">R$ {{ analisys.data.receitas | number:'1.2-2' }}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Despesas:</strong></ion-label>
+            <ion-note slot="end">R$ {{ analisys.data.despesas | number:'1.2-2' }}</ion-note>
+          </ion-item>
+          <ion-item>
+            <ion-label><strong>Fluxo de Caixa:</strong></ion-label>
+            <ion-note [color]="analisys.data.fluxoDeCaixa >= 0 ? 'success' : 'danger'" slot="end">
+              R$ {{ analisys.data.fluxoDeCaixa | number:'1.2-2' }}
+            </ion-note>
+          </ion-item>
+        </ion-card-content>
+      </div>
+
+      <div>
+        <ion-card-header>
+          <ion-card-title>Problemas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let problema of analisys.data.problemas">
+              <ion-label>{{ problema.name }}</ion-label>
+              <ion-note slot="end">{{ problema.probabilidade }}%</ion-note>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </div>
+
+      <div>
+        <ion-card-header>
+          <ion-card-title>Causas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let causa of analisys.data.causas">
+              <ion-label>{{ causa.name }}</ion-label>
+              <ion-note slot="end">{{ causa.probabilidade }}%</ion-note>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </div>
+
+      <div>
+        <ion-card-header>
+          <ion-card-title>Melhorias</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-list>
+            <ion-item *ngFor="let melhoria of analisys.data.melhorias">
+              <ion-label>{{ melhoria.name }}</ion-label>
+              <ion-note slot="end">{{ melhoria.probabilidade }}%</ion-note>
+            </ion-item>
+          </ion-list>
+        </ion-card-content>
+      </div>
+
+      <ion-card *ngIf="analisys.data.chartData">
+        <ion-card-header>
+          <ion-card-title>{{ analisys.data.chartData.name }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div style="display: flex;">
+            <!--
+            <canvas baseChart
+                    [datasets]="barChartData"
+                    [labels]="barChartLabels"
+                    [options]="barChartOptions"
+                    [legend]="barChartLegend"
+                    [chartType]="barChartType">
+            </canvas> -->
+            <ion-col>
+              <ngx-charts-bar-vertical [view]="[120,120]" [results]="[
+              {'name': 'Despesas', 'value': analisys.data.despesas},
+              {'name': 'Receitas', 'value': analisys.data.receitas}
+        ]" [gradient]="true"></ngx-charts-bar-vertical>
+            </ion-col>
+            <ion-col>
+              <ion-chip class="ion-text-center" [color]="analisys.data.fluxoDeCaixa > 0 ? 'success' : 'danger'">
+                <ion-icon [name]="analisys.data.fluxoDeCaixa > 0 ? 'trending-up' : 'trending-down'"></ion-icon>
+              </ion-chip>
+              <ion-card-title>R$ {{analisys.data.fluxoDeCaixa}}</ion-card-title>
+              <ion-card-subtitle>Fluxo de Caixa</ion-card-subtitle>
+            </ion-col>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <div>
+        <ion-card-header>
+          <ion-card-title>Orientações</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>{{ analisys.orientacoes }}</p>
+        </ion-card-content>
+      </div>
+    </div>
+
+
+    <div class="d-flex ion-justify-content-around">
+
+      <ion-button expand="full" (click)="copyReport()">Copiar Relatório</ion-button>
+      <ion-button expand="full" (click)="gerarRelatorioPDF()">Baixar Relatório</ion-button>
+    </div>
+
+    }
+
+
+
+    }@else {
+    <ion-row>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <br>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <br>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 30%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+      <ion-col size="12">
+        <ion-skeleton-text animated style="width: 100%"></ion-skeleton-text>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col *ngFor="let i of [1,2,3,4]" size="12">
+        <ion-card>
+          <ion-list>
+            <ion-list-header>
+              <ion-skeleton-text [animated]="true" style="width: 80px"></ion-skeleton-text>
+            </ion-list-header>
+            <ion-item>
+              <ion-thumbnail slot="start">
+                <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+              </ion-thumbnail>
+              <ion-label>
+                <h3>
+                  <ion-skeleton-text [animated]="true" style="width: 80%;"></ion-skeleton-text>
+                </h3>
+                <p>
+                  <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+                </p>
+                <p>
+                  <ion-skeleton-text [animated]="true" style="width: 30%;"></ion-skeleton-text>
+                </p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    }
+
+
+  </ion-card-content>
+
+</ion-content>

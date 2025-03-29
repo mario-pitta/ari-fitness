@@ -9,6 +9,8 @@ export class DashboardService {
   constructor(private database: DataBaseService) {}
 
   getAllMembersDashboard(filters?: Partial<Usuario> | Usuario) {
+    console.log('filters: ', filters);
+    
     return this.database.supabase
       .from('usuario')
       .select(

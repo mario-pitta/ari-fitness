@@ -13,7 +13,6 @@ import Constants from 'src/core/Constants';
 import { Usuario } from 'src/core/models/Usuario';
 import { TipoUsuario } from 'src/core/models/TipoUsuario';
 import { Horario } from 'src/core/models/Horario';
-import { Plano } from 'src/core/models/Plano';
 
 import { TipoUsuarioService } from 'src/core/services/tipo-usuario/tipoUsuario.service';
 import { PlanoService } from 'src/core/services/plano/plano.service';
@@ -22,6 +21,7 @@ import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/core/services/auth/auth.service';
+import { Plano } from 'src/core/models/Empresa';
 
 @Component({
   selector: 'app-pessoa-form',
@@ -103,7 +103,7 @@ export class PessoaFormPage implements OnInit {
   }
 
   getActivePlans() {
-    return this.planoService.findByFilters({ fl_ativo: true }).subscribe({
+    return this.planoService.findByFilters({ fl_ativo: true, empresa_id: this.user?.empresa?.id }).subscribe({
       next: (planos: Plano[]) => {
         this.planos = planos;
       },
@@ -117,7 +117,7 @@ export class PessoaFormPage implements OnInit {
   }
 
   getActiveHorarios() {
-    return this.horarioService.findByFilters({ fl_ativo: true }).subscribe({
+    return this.horarioService.findByFilters({ fl_ativo: true, empresa_id: this.user?.empresa?.id }).subscribe({
       next: (horarios: Horario[]) => {
         this.horarios = horarios;
       },
@@ -284,7 +284,7 @@ export class PessoaFormPage implements OnInit {
         if (!this.form.value.id) {
           this.createForm();
         }else{
-          this.router.navigateByUrl('/usuarios')
+          this.router.navigateByUrl('admin/membros')
         }
       },
       error: (err: any) => {

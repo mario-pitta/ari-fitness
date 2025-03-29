@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { take, Observable } from 'rxjs';
-import { Plano } from 'src/core/models/Plano';
+import { Plano } from 'src/core/models/Empresa';
+
 import { environment } from 'src/environments/environment';
 
 @Injectable({

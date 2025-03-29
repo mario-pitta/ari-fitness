@@ -1,4 +1,9 @@
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import here
@@ -19,14 +24,12 @@ import { ExercicioFormModule } from './adm-page/exercicios/exercicio-form/exerci
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { register } from 'swiper/element/bundle';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-// import { CalendarModule, DateAdapter } from 'angular-calendar';
-// import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-
+import { PageSizeService } from 'src/core/services/page-size/page-size.service';
+import { provideMarkdown } from 'ngx-markdown';
 
 register();
 
-
-const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
+const httpProviders = () => provideHttpClient(withInterceptorsFromDi());
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,7 +46,7 @@ const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
+      registrationStrategy: 'registerWhenStable:30000',
     }),
     // CalendarModule.forRoot({
     //   provide: DateAdapter,
@@ -52,9 +55,11 @@ const httpProviders = () => provideHttpClient(withInterceptorsFromDi())
   ],
   providers: [
     httpProviders(),
+    provideMarkdown(),
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptors, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    PageSizeService,
   ],
   bootstrap: [AppComponent],
 })

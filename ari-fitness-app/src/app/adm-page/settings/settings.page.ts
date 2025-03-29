@@ -18,13 +18,13 @@ export class SettingsPage implements OnInit {
       title: 'Meu Usuário',
       subtitle: 'Edite seus dados pessoais',
       icon: 'person',
-      path: ''
+      path: 'perfil'
     },
     {
       title: 'Minha Empresa',
       subtitle: 'Edite seus dados da empresa',
       icon: 'business',
-      path: ''
+      path: 'empresa'
     },
     {
       title: 'Configurações',

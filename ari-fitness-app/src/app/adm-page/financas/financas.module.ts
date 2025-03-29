@@ -4,17 +4,24 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FinancasComponent } from './financas.component';
 import { IonicModule } from '@ionic/angular';
 import { FinancasRoutingModule } from './financas.routing';
-import { TransacaoFinanceiraFormModule } from 'src/app/shared/transacao-financeira-form/transacao-financeira-form.module';
+import { MarkdownModule } from 'ngx-markdown';
+
+
+import { FormTransacaoFinanceiraModule } from 'src/app/shared/form-transacao-finaceira/form-transacao-financeira.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { AnaliseIaModalComponent } from './analise-ia-modal/analise-ia-modal/analise-ia-modal.component';
 
 @NgModule({
-  declarations: [FinancasComponent],
+  declarations: [FinancasComponent, AnaliseIaModalComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
     FinancasRoutingModule,
-    TransacaoFinanceiraFormModule
+    FormTransacaoFinanceiraModule,
+    NgxChartsModule,
+    MarkdownModule.forRoot(),
   ],
 })
 export class FinancasModule {}

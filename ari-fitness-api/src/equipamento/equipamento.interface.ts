@@ -5,6 +5,7 @@ export interface Equipamento {
   nome: string,
   fl_ativo: boolean,
   foto_url?: string,
+  empresa_id?: string;
   categoria_id?: number,
   categoria?: Categoria
 }

@@ -12,5 +12,6 @@ import { Module } from '@nestjs/common';
   imports: [DataBaseModule],
   controllers: [FichaAlunoController],
   providers: [FichaAlunoService],
+  exports: [FichaAlunoService],
 })
 export class FichaAlunoModule {}

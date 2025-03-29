@@ -1,0 +1,180 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{action |  uppercase}} TRANSAÇÃO {{tipo? ' - ': '' + tipo| uppercase}} </ion-title>
+    <ion-buttons slot="end">
+      <ion-icon name="close" size="large" (click)="closeModal()"></ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="form-container">
+    <form *ngIf="transacaoForm" [formGroup]="transacaoForm" class="ion-text-left ion-padding"
+      (ionChange)="onFormChange($event)">
+      <ion-row>
+        <ion-col size="12" class="ion-text-start start-0 float-start ion-align-content-start">
+          <div class="form-group ">
+            <ion-label class="form-label">Data de Lançamento:</ion-label>
+            <p>
+              <ion-datetime-button class="ion-float-start" datetime="dataLancamento">
+              </ion-datetime-button>
+            </p>
+          </div>
+
+          <ion-modal #dateModal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime presentation="date" #dataLancamento id="dataLancamento" formControlName="data_lancamento">
+                <ion-buttons slot="buttons">
+                  <ion-button color="primary" (click)="dataLancamento.cancel(); dateModal.dismiss()">Cancelar
+                  </ion-button>
+                  <ion-button color="primary" (click)="dataLancamento.confirm(); dateModal.dismiss()">OK</ion-button>
+                </ion-buttons>
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-select formControlName="tr_tipo_id" (ionChange)="onChangeTipo($event)" interface="popover"
+            class="ion-text-capitalize" label="Tipo" labelPlacement="floating">
+            <ion-select-option class="ion-text-capitalize" *ngFor="let tipo of tipos" [value]="tipo.id">
+              {{tipo.descricao | titlecase}}</ion-select-option>
+          </ion-select>
+
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-select formControlName="tr_categoria_id" interface="popover" (ionChange)="onChangeCategoria($event)"
+            class="ion-text-capitalize" label="Categoria" labelPlacement="floating">
+            <ion-select-option class="ion-text-capitalize" *ngFor="let categoria of categorias " [value]="categoria.id">
+              {{categoria.descricao | titlecase}}</ion-select-option>
+          </ion-select>
+        </ion-col>
+
+        <ion-input type="text" formControlName="descricao" label="Descrição*: " labelPlacement="floating"></ion-input>
+
+        <ion-col size="6" *ngIf="f.get('tr_categoria_id')?.value === 1">
+          <ion-input type="text" readonly="true" label="Membro: " labelPlacement="floating"
+            *ngIf="selectedMembro; else memberSelector" [(ngModel)]="selectedMembro.nome"
+            [ngModelOptions]="{standalone: true}"></ion-input>
+
+          <ng-template #memberSelector>
+            <ion-select interface="popover" formControlName="pago_por" (ionChange)="onChangeMembro($event)">
+              <div slot="label" position="floating">Membro: <ion-text color="danger">*</ion-text>
+              </div>
+              <ion-select-option *ngFor="let membro of membros" [value]="membro">
+                {{membro.nome | titlecase}}
+              </ion-select-option>
+            </ion-select>
+          </ng-template>
+
+        </ion-col>
+
+        <ion-col size="6" *ngIf="f.get('tr_categoria_id')?.value === 1">
+          <ion-input type="text" readonly="true" label="Plano de Assinatura:" labelPlacement="floating"
+            [(ngModel)]="selectedMembro?.planos.descricao" [ngModelOptions]="{standalone: true}"></ion-input>
+
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-input type="number" [readonly]="f.get('tr_categoria_id')?.value === 1" label="Valor Padrão (R$):"
+            labelPlacement="floating" formControlName="valor_real"></ion-input>
+        </ion-col>
+        <ion-col size="3" *ngIf="f.get('tr_categoria_id')?.value === 1">
+
+          <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: transacaoForm, control: 'mes'};">
+          </ng-content>
+
+        </ion-col>
+
+        <ion-col size="3" *ngIf="f.get('tr_categoria_id')?.value === 1">
+          <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: transacaoForm};"></ng-content>
+        </ion-col>
+
+        <ion-col size="6">
+          <ion-row>
+            <ion-col sizeXs="8" sizeSm="9">
+              <ion-input type="number" label="Desconto:" labelPlacement="floating" formControlName="desconto"
+                (keyup)="calculaValorFinal()" [max]="discountType === '%' ? 100 : f.get('valor_real')?.value" [min]="0">
+              </ion-input>
+            </ion-col>
+            <ion-col sizeXs="4" sizeSm="3">
+              <ion-radio-group value="%">
+                <div *ngFor="let tipoDesconto of ['R$', '%']" (click)="setDiscountType(tipoDesconto)"
+                  [ngClass]="discountType === tipoDesconto ? 'item-checked' : ''"
+                  class="tipo-disconto-option text-center rounded-2 cursor-pointer">
+                  <ion-label>{{tipoDesconto}}</ion-label>
+                  <ion-radio slot="start" id="{{tipoDesconto}}" [value]="tipoDesconto" [hidden]="true"></ion-radio>
+                </div>
+              </ion-radio-group>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+
+        <ion-col>
+          <ion-input label="Valor Final (R$):" labelPlacement="floating" type="number" [disabled]="true"
+            formControlName="valor_final">
+          </ion-input>
+        </ion-col>
+
+        <ion-col size="12" sizeLg="5">
+          <ion-select interface="popover" formControlName="forma_pagamento" id="forma_pagamento"
+            labelPlacement="floating">
+            <div slot="label" for="forma_pagamento" position="floating">Forma de Pagamento: <ion-text color="danger">*
+              </ion-text>
+            </div>
+            <ion-select-option *ngFor="let formaPagamento of formasPagamento" [value]="formaPagamento">
+              {{ formaPagamento }}</ion-select-option>
+          </ion-select>
+        </ion-col>
+
+        <ion-col size="12" sizeLg="12">
+          <ion-label>Comprovante</ion-label>
+          <ion-input type="file"></ion-input>
+        </ion-col>
+      </ion-row>
+    </form>
+
+  </div>
+
+  <ion-row>
+    <ion-col size="12">
+      <ion-button *ngIf="!f.get('id')?.value" class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
+        class="text-light" (click)="saveTransacao(transacaoForm.value)" [disabled]="!transacaoForm.valid">
+        <ion-icon class="me-2" name="receipt-outline"></ion-icon>
+        Salvar Transação
+      </ion-button>
+    </ion-col>
+    <!-- <ion-col size="6" *ngIf="f.get('id')?.value">
+    <ion-button class="w-100 d-flex gap-2" color="success" expand="block" shape="round"
+      (click)="gerarRecibo(transacaoForm.value)" [disabled]="!transacaoForm.valid">
+      Gerar Recibo
+      <ion-icon class="ms-2" name="receipt-outline"></ion-icon>
+    </ion-button>
+  </ion-col> -->
+    <ion-col *ngIf="f.get('id')?.value">
+      <ion-button class="w-100 d-flex gap-2" expand="block" shape="round" class="text-light"
+        (click)="updateTransacao(transacaoForm.value)" [disabled]="!transacaoForm.valid">
+        Alterar Registro
+        <ion-icon class="ms-2" name="receipt-outline"></ion-icon>
+      </ion-button>
+    </ion-col>
+  </ion-row>
+
+
+
+
+  <ng-template #mesesSelector let-form let-control="control">
+    <div [formGroup]="form">
+      <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
+        <ion-select-option *ngFor="let mes of meses" [value]="mes.value">{{mes.label}}</ion-select-option>
+      </ion-select>
+    </div>
+  </ng-template>
+  <ng-template #anosSelector let-form>
+    <div [formGroup]="form">
+      <ion-select interface="popover" placeholder="Ano" formControlName="ano">
+        <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
+      </ion-select>
+    </div>
+  </ng-template>

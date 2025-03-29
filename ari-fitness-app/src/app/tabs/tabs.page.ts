@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import Constants from 'src/core/Constants';
 import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
+import { PageSizeService } from 'src/core/services/page-size/page-size.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
 
 @Component({
@@ -16,21 +18,32 @@ export class TabsPage implements OnInit, OnDestroy {
   Constants = Constants;
   pageTitle = 'Home';
   isMobile = false;
+  subs$: Subscription = new Subscription();
   constructor(
     private titleService: PagetitleService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private pageSizeService: PageSizeService
   ) {
-    // this.user = JSON.parse(localStorage.getItem('user') as string);
-    this.titleService.title.asObservable().subscribe({
-      next: (title) => {
-        this.pageTitle = title;
-        // this.route = this.aRoute.snapshot.url
-      },
-    });
+    this.subs$.add(
+
+      this.titleService.title.asObservable().subscribe({
+        next: (title) => {
+          this.pageTitle = title;
+          // this.route = this.aRoute.snapshot.url
+        },
+      }),
+    )
+    this.subs$.add(
+
+      this.pageSizeService.screenSizeChange$.subscribe((size) => {
+        this.isMobile = size.isMobile;
+      })
+    )
   }
 
   ngOnInit() {
+    this.isMobile = this.pageSizeService.getSize().isMobile
     this.router.events.subscribe(ev => {
       if(ev instanceof NavigationEnd){
         console.log('selected: ',ev);
@@ -55,13 +68,14 @@ export class TabsPage implements OnInit, OnDestroy {
     });
   }
 
-  navigate(path: string) {
+  navigate(path: string, whitParams: boolean = true, params?: any) {
     setTimeout(() => {
-      this.router.navigate([path], { queryParams: { userId: this.user.id } });
+      this.router.navigate([path], whitParams ? { queryParams: { userId: this.user.id } }  : {});
     }, 80);
   }
 
   ngOnDestroy() {
     console.log('destroying tabs page');
+    this.subs$.unsubscribe();
   }
 }

@@ -4,7 +4,6 @@ import { DataBaseService } from 'src/datasource/database.service';
 import { Usuario } from './Usuario.interface';
 import md5 = require('md5');
 
-
 const tableName = 'usuario';
 
 @Injectable()
@@ -54,10 +53,13 @@ export class UsuarioService {
     console.log(md5('message'));
     return this.database.supabase
       .from(tableName)
-      .insert({
-        ...body, 
-        senha: md5('123456')
-      }, {})
+      .insert(
+        {
+          ...body,
+          senha: md5('123456'),
+        },
+        {},
+      )
       .then((res) => {
         console.log('RES: ', res);
 
@@ -73,10 +75,43 @@ export class UsuarioService {
    * @returns The `update` method is returning a promise that represents the result of updating the
    * record in the database table specified by `tableName` with the data provided in the `body` object.
    */
-  update(body: Partial<Usuario>) {
-    return this.database.supabase
+  async update(body: Partial<Usuario>) {
+    console.log('updateUsuario body: ', body);
+    
+    return await this.database.supabase
       .from(tableName)
       .update(body)
-      .eq('id', body.id);
+      .eq('id', body.id).then((res) => {
+        
+        console.log('res do updadeUsuario', res)
+        
+
+        return res
+      });
+  }
+
+  findInstrutorByFilters(empresaId: number, filters: any) {
+    return this.database.supabase
+      .from(tableName)
+      .select(
+        `*,
+        alunos: ficha_aluno!ficha_aluno_instrutor_id_fkey(
+          *,
+          usuario: usuario!ficha_aluno_usuario_id_fkey(
+            id, 
+            nome, 
+            data_nascimento,
+
+            genero,
+            *
+          )
+        )
+        `,
+      )
+      .eq('tipo_usuario', 2)
+      .eq('empresa_id', empresaId)
+      .match({
+        ...filters,
+      });
   }
 }

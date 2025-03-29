@@ -6,6 +6,7 @@ import { EquipamentoService } from './equipamento.service';
 @Module({
     controllers: [EquipamentoController],
     providers: [EquipamentoService],
-    imports:[DataBaseModule]
+    imports:[DataBaseModule],
+    exports: [EquipamentoService],
 })
 export class EquipamentoModule {};

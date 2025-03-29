@@ -1,9 +1,9 @@
-import { IEmpresa } from "./Empresa";
-import { FichaAluno } from "./FichaAluno";
-import { Historico } from "./Historico";
-import { Horario } from "./Horario";
-import { Plano } from "./Plano";
-import { Treino } from "./Treino";
+import { IEmpresa, Plano } from './Empresa';
+import { FichaAluno } from './FichaAluno';
+import { Historico } from './Historico';
+import { Horario } from './Horario';
+
+import { Treino } from './Treino';
 
 export interface IUsuario {
   idade?: any;
@@ -16,9 +16,9 @@ export interface IUsuario {
   whatsapp: string;
   plano: number;
   planos: Plano;
-  horario_id: number
-  horarios: Horario
-  data_vencimento: Date | string;
+  horario_id: number;
+  horarios: Horario;
+  data_vencimento: number;
   senha: string;
   fl_ativo: boolean;
   foto_url: string;
@@ -40,11 +40,13 @@ export interface IUsuario {
   data_nascimento: Date | string;
   flagAdmin: boolean;
   ficha_aluno?: FichaAluno[];
-  historico?: Historico[]
+  historico?: Historico[];
   empresa_id?: string;
-  empresa?: Partial<IEmpresa>
+  empresa?: Partial<IEmpresa>;
+  data_ultimo_pagamento?: Date | string;
+  fl_pago?: boolean;
 }
-export class Usuario implements IUsuario{
+export class Usuario implements IUsuario {
   idade?: any;
   id?: number;
   created_at?: Date | string;
@@ -55,9 +57,9 @@ export class Usuario implements IUsuario{
   whatsapp!: string;
   plano!: number;
   planos!: Plano;
-  horario_id!: number
-  horarios!: Horario
-  data_vencimento!: Date | string;
+  horario_id!: number;
+  horarios!: Horario;
+  data_vencimento!: number;
   senha!: string;
   fl_ativo!: boolean;
   foto_url!: string;
@@ -82,9 +84,67 @@ export class Usuario implements IUsuario{
   historico?: Historico[];
   empresa_id?: string;
   empresa?: Partial<IEmpresa> | undefined;
-
+  image_url?: string;
+  data_ultimo_pagamento?: Date | string;
+  fl_pago?: boolean;
 
   constructor(obj: IUsuario) {
     Object.assign(this, obj);
   }
+}
+
+interface obj {
+  report: '[CONTEÚDO DO RELATÓRIO DETALHADO EM FORMATO MARKDOWN CONFORME A ESTRUTURA DEFINIDA ACIMA, SEM INCLUIR NENHUM BLOCO JSON DENTRO DESTA STRING]';
+  data: {
+    fluxoDeCaixa: number;
+    totalDescontos: number;
+    problemas: [
+      {
+        name: 'string';
+        probabilidade: number; // (em porcentagem, soma deve ser 100)
+      }
+      // ... mais problemas
+    ];
+    causas: [
+      {
+        name: 'string';
+        probabilidade: number; // (em porcentagem, soma deve ser 100)
+      }
+      // ... mais causas
+    ];
+    melhorias: [
+      {
+        name: 'string';
+        probabilidade: number; // (em porcentagem, soma deve ser 100)
+      }
+      // ... mais melhorias
+    ];
+    chartData: [
+      {
+        name: 'Receitas vs Despesas';
+        type: 'barra';
+        series: [
+          { name: 'Receitas'; value: number },
+          { name: 'Despesas'; value: number }
+        ];
+      },
+      {
+        name: 'Distribuição de Receitas';
+        type: 'pizza';
+        series: [
+          { name: 'string'; value: number } // Ex: { "name": "Mensalidades", "value": 15000 }
+          // ... mais categorias de receita
+        ];
+      },
+      {
+        name: 'Distribuição de Despesas';
+        type: 'pizza';
+        series: [
+          { name: 'string'; value: number } // Ex: { "name": "Salários", "value": 8000 }
+          // ... mais categorias de despesa
+        ];
+      }
+    ];
+  };
+  orientacoes: '[TEXTO SIMPLES, SEM MARKDOWN, contendo orientações adicionais ou ressalvas importantes]';
 }

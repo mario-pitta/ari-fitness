@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Response } from 'express';
 import { Plano } from './plano.interface';
 import { PlanoService } from './plano.service';
@@ -5,7 +6,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
   Post,
   Put,
   Query,

@@ -11,5 +11,6 @@ import { Module } from '@nestjs/common';
   imports: [DataBaseModule],
   controllers: [TreinoController],
   providers: [TreinoService],
+  exports: [TreinoService],
 })
 export class TreinoModule {}

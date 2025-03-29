@@ -9,9 +9,11 @@ export interface Usuario {
   whatsapp: string;
   horario_id: number;
   horario: any;
+  empresa_id: string;
   plano: number;
   data_vencimento: Date | string;
-  senha: string;
+  senha?: string;
+  instagram_username?: string
   fl_ativo: boolean;
   foto_url: string;
   avc: boolean;
@@ -30,4 +32,6 @@ export interface Usuario {
   objetivo: string | number;
   data_nascimento: Date | string;
   flagAdmin: boolean;
+  data_ultimo_pagamento?: Date | string;
 }
+  

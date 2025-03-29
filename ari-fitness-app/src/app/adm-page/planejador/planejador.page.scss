@@ -1,21 +1,16 @@
-
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .board {
-  display: flex;
-  gap: 20px;
-  padding: 20px 0;
+  margin: 0 auto;
 }
 
 .column {
   background: #252424;
   border-radius: 3px;
-  min-width: 300px;
   padding: 10px;
+  border: 1px solid var(--ion-background-color);
+}
+
+.taskContainer{
+  min-height: 50px;
 }
 
 .column-header {
@@ -26,12 +21,7 @@
   align-items: center;
 }
 
-.task-list {
-  min-height: 100px;
-}
-
 .task {
-  // background: white;
   border-radius: 3px;
   padding: 10px;
   margin: 10px 0;
@@ -46,7 +36,6 @@
 
 .add-task {
   padding: 10px;
-  // color: #5e6c84;
   cursor: pointer;
 
 }
@@ -58,7 +47,6 @@
 }
 
 .task-form {
-  // display: none;
   padding: 10px;
 }
 
@@ -69,12 +57,6 @@
   border-radius: 3px;
   margin-bottom: 8px;
 }
-
-
-// .dragging {
-//   opacity: 0.5;
-// }
-
 
 
 .medium-priority {
@@ -88,7 +70,8 @@
 .gu-transit{
   opacity: 0.5;
   position: absolute;
-  transform: rotate(15deg);
+  z-index: 1;
+  transform: rotate(5deg);
 }
 
 .gu-mirror {
@@ -107,37 +90,37 @@
 
 
 //make it responsible
-@media screen and (max-width: 768px) {
-  .board {
-    flex-direction: column;
-  }
+// @media screen and (max-width: 768px) {
+//   .board {
+//     flex-direction: column;
+//   }
 
-  .column {
-    width: 100%;
-  }
+//   .column {
+//     width: 100%;
+//   }
 
-  .column-header {
-    justify-content: center;
-  }
+//   .column-header {
+//     justify-content: center;
+//   }
 
-  .column-count {
-    display: none;
-  }
+//   .column-count {
+//     display: none;
+//   }
 
-  .add-task {
-    text-align: center;
-  }
+//   .add-task {
+//     text-align: center;
+//   }
 
-  .task-form {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+//   .task-form {
+//     position: fixed;
+//     top: 0;
+//     left: 0;
+//     width: 100%;
+//     height: 100%;
+//     background: rgba(0, 0, 0, 0.5);
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//   }
 
-}
+// }

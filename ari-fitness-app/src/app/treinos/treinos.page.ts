@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Usuario } from 'src/core/models/Usuario';
@@ -16,7 +15,6 @@ import { Historico } from 'src/core/models/Historico';
   styleUrls: ['./treinos.page.scss'],
 })
 export class TreinosPage implements OnInit {
-
   user!: Usuario;
   selectedTreino: any;
   interval: any;
@@ -55,11 +53,14 @@ export class TreinosPage implements OnInit {
 
   onTreinoSelected(event: any) {
     console.log(event);
-    this.selectedTreino =
-      this.user?.ficha_aluno &&
-      this.user?.ficha_aluno
-        .filter((f) => f.fl_ativo)[0]
-        .treinos.find((t: any) => t.treino.id == event).treino;
+
+    console.log('this.user: ', this.user);
+    const ficha = this.user?.ficha_aluno?.filter((f) => f.fl_ativo && f.treinos.length > 0)[0];
+    console.log('ficha: ', ficha);
+
+    this.selectedTreino = ficha?.treinos.find(
+        (t: any) => t.treino.id == event
+      )?.treino;
     console.log('selectedTreino ============ ', this.selectedTreino);
   }
   serieArr: any[] = [];
@@ -190,23 +191,23 @@ export class TreinosPage implements OnInit {
       carga: this.exercicioPresets.carga || 0,
       intervalo: this.exercicioPresets.intervalo,
       nivel_dificuldade: this.selectedExercicio.nivel_dificuldade,
-      data: new Date().toLocaleString()
+      data: new Date().toLocaleString(),
     };
 
     console.log('historico: ', historico);
 
-    this.historico.push(historico)
+    this.historico.push(historico);
 
     this.selectedExercicio.exercicio.concluido = true;
     this.modalController.dismiss();
-    this.confettiService.showConfetti()
+    this.confettiService.showConfetti();
   }
 
   finishTreino() {
     console.log('finishTreino');
     this.auth.updateUser({
       ...this.user,
-      historico: this.user.historico?.concat(this.historico) || this.historico
+      historico: this.user.historico?.concat(this.historico) || this.historico,
     });
     this.confettiService.showConfetti();
     history.back();

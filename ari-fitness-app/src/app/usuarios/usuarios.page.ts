@@ -1,5 +1,4 @@
 import { ConfettiService } from './../../core/services/confetti/confetti.service';
-
 import { ToastrService } from './../../core/services/toastr/toastr.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
@@ -9,10 +8,12 @@ import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { ModalController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Clipboard } from '@capacitor/clipboard';
-import html2canvas from 'html2canvas';
-import { v4 as uuid } from 'uuid';
+
 import { DashboardMembersService } from 'src/core/services/dashboard/members/members.service';
 import { AuthService } from 'src/core/services/auth/auth.service';
+import { FormTransacaoFinaceiraComponent } from '../shared/form-transacao-finaceira/form-transacao-finaceira.component';
+import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
+import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -20,6 +21,10 @@ import { AuthService } from 'src/core/services/auth/auth.service';
   styleUrls: ['./usuarios.page.scss'],
 })
 export class UsuariosPage implements OnInit {
+  downloadRecibo() {
+    throw new Error('Method not implemented.');
+  }
+
   Constants = Constants;
   tipoSelected: number | string = Constants.ALUNO_ID;
   usuarioList: Usuario[] = [];
@@ -35,6 +40,7 @@ export class UsuariosPage implements OnInit {
   memberDataCard: {
     title: string;
     subtitle: string;
+    size: number;
     data: {
       name: string;
       value?: number;
@@ -55,6 +61,7 @@ export class UsuariosPage implements OnInit {
       title: 'Alunos',
       subtitle: 'Total de alunos',
       data: [],
+      size: 3,
       iconColor: 'primary',
       chartType: 'pie',
       value: null,
@@ -65,6 +72,7 @@ export class UsuariosPage implements OnInit {
     {
       title: 'Novos Membros',
       subtitle: 'Mês ' + (new Date().getMonth() + 1).toString(),
+      size: 3,
       data: [
         {
           name: 'Mulheres',
@@ -83,8 +91,9 @@ export class UsuariosPage implements OnInit {
       tendencyValue: 7,
     },
     {
-      title: 'Desistentes',
+      title: 'Visitantes',
       subtitle: 'No mês',
+      size: 6,
       data: [
         {
           name: 'Mulheres',
@@ -99,13 +108,14 @@ export class UsuariosPage implements OnInit {
       iconColor: 'warning',
       chartType: 'bar',
       value: '15',
-      cardIconName: 'person-remove',
+      cardIconName: 'person',
       tendency: 'down',
       tendencyValue: -8,
     },
     {
-      title: 'Horários x Alunos',
+      title: 'Horarios de Pico',
       subtitle: '',
+      size: 6,
       data: [
         {
           name: '5:20h',
@@ -145,6 +155,7 @@ export class UsuariosPage implements OnInit {
     },
   ];
   discountType: string = '%';
+  recibo: any;
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
@@ -152,11 +163,12 @@ export class UsuariosPage implements OnInit {
     private toastr: ToastrService,
     private confetti: ConfettiService,
     private dashboardMembersService: DashboardMembersService,
-    private authService: AuthService
+    private authService: AuthService,
+    private transacaoFincaneiraDashService: TransacaoFinanceiraDashService
   ) {}
   user: IUsuario | null = null;
   ngOnInit() {
-    this.user =  this.authService.getUser;
+    this.user = this.authService.getUser;
     this.getUsuarios();
 
     if (!this.onlyList) {
@@ -169,6 +181,7 @@ export class UsuariosPage implements OnInit {
       .getDashboardMembersData({
         fl_ativo: true,
         tipo_usuario: Constants.ALUNO_ID,
+        empresa_id: this.user?.empresa?.id,
       })
       .subscribe({
         next: (res: {
@@ -191,7 +204,7 @@ export class UsuariosPage implements OnInit {
           console.log('res: ', res);
           this.buildTotalMembersChartCard(res);
           this.buildNovosMembrosChartCard(res);
-          // this.buildDesistentesChartCard(res);
+          this.buildDiariasChartCard(res);
           this.buildHorariosChartCard(res);
         },
       });
@@ -201,7 +214,7 @@ export class UsuariosPage implements OnInit {
     this.memberDataCard[3].data = Object.keys(res.horarios).map((key) => ({
       name: key,
       value: res.horarios[key],
-    }))
+    }));
     //ordenar lista de horarios pelo horario
     this.memberDataCard[3].data.sort((a, b) => {
       if (a.name < b.name) {
@@ -211,13 +224,15 @@ export class UsuariosPage implements OnInit {
         return 1;
       }
       return 0;
-    })
+    });
   }
-
 
   buildTotalMembersChartCard(res: any) {
     this.memberDataCard[0].value = res.totalMembers.total;
-    this.memberDataCard[0].tendencyValue = `${res.totalMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` + (res.totalMembers.total - (res.totalMembers.total - res.memberAtLastMonth) / 100);
+    this.memberDataCard[0].tendencyValue =
+      `${res.totalMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
+      (res.totalMembers.total -
+        (res.totalMembers.total - res.memberAtLastMonth) / 100);
     this.memberDataCard[0].data = [
       {
         name: 'Mulheres',
@@ -232,7 +247,10 @@ export class UsuariosPage implements OnInit {
 
   buildNovosMembrosChartCard(res: any) {
     this.memberDataCard[1].value = res.newMembers.total;
-    this.memberDataCard[1].tendencyValue = `${res.newMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` + (res.newMembers.total - (res.newMembers.total - res.memberAtLastMonth) / 100);
+    this.memberDataCard[1].tendencyValue =
+      `${res.newMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
+      (res.newMembers.total -
+        (res.newMembers.total - res.memberAtLastMonth) / 100);
     this.memberDataCard[1].data = [
       {
         name: 'Mulheres',
@@ -245,21 +263,22 @@ export class UsuariosPage implements OnInit {
     ];
   }
 
-  buildDesistentesChartCard(res: any) {
-    console.log('res: ', res);
-
-    this.memberDataCard[2].value = res.newMembers.total;
-    this.memberDataCard[2].tendencyValue = `${res.newMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` + (res.newMembers.total - (res.newMembers.total - res.memberAtLastMonth) / 100);
-    this.memberDataCard[2].data = [
-      {
-        name: 'Mulheres',
-        value: res.newMembers.female
-      },
-      {
-        name: 'Homens',
-        value: res.newMembers.male,
-      },
-    ];
+  buildDiariasChartCard(res: any) {
+    this.transacaoFincaneiraDashService
+      .getByPeriod(
+        new Date().toISOString(),
+        new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
+        this.user?.empresa?.id as string,
+        {
+          fl_ativo: true,
+          tr_categoria_id: Constants.TR_CATEGORIA_DIARIA,
+        }
+      )
+      .subscribe({
+        next: (res) => {
+          this.memberDataCard[2].value = res.length;
+        },
+      });
   }
 
   changeTipoUsuario(e: any) {
@@ -268,18 +287,83 @@ export class UsuariosPage implements OnInit {
   }
 
   getUsuarios(tipoUsuario: number | string = Constants.ALUNO_ID) {
-    this.usuarioService.findByFilters({ tipo_usuario: tipoUsuario, fl_ativo: true, empresa_id: this.user?.empresa?.id }).subscribe({
-      next: (res) => {
-        this.usuarioList = res.map((u: Usuario) => {
-          return {
-            ...u,
-            idade:
-              new Date().getFullYear() -
-              new Date(u.data_nascimento).getFullYear(),
-          };
-        });
-      },
-    });
+    const checkStatusPagamento = (u: Usuario) => {
+      if (u.data_ultimo_pagamento !== null && u.data_vencimento !== null) {
+        const ultimoPagamento = new Date(u.data_ultimo_pagamento as string);
+        const diaUltimoPagamento = ultimoPagamento.getDate();
+        const mesUltimoPagamento = ultimoPagamento.getMonth();
+        const anoUltimoPagamento = ultimoPagamento.getFullYear();
+
+        const diaVencimento = u.data_vencimento;
+
+        const hoje = new Date();
+        const mesAtual = hoje.getMonth();
+        const anoAtual = hoje.getFullYear();
+
+        // --- Lógica para o mês atual ---
+        if (
+          mesUltimoPagamento === mesAtual &&
+          anoUltimoPagamento === anoAtual
+        ) {
+          // Pagamento feito no mês atual, deve ser no dia ou após o dia de vencimento
+          return diaUltimoPagamento >= diaVencimento;
+        }
+
+        // --- Lógica para o mês anterior ---
+        const mesAnterior = mesAtual === 0 ? 11 : mesAtual - 1;
+        const anoAnterior = mesAtual === 0 ? anoAtual - 1 : anoAtual;
+
+        if (
+          mesUltimoPagamento === mesAnterior &&
+          anoUltimoPagamento === anoAnterior
+        ) {
+          // Pagamento feito no mês anterior, deve ser no dia ou após o dia de vencimento do mês anterior
+          const ultimoDiaMesAnterior = new Date(
+            anoAnterior,
+            mesAnterior + 1,
+            0
+          ).getDate();
+          const dataVencimentoMesAnterior = new Date(
+            anoAnterior,
+            mesAnterior,
+            diaVencimento
+          );
+
+          // Se o dia de vencimento for maior que o último dia do mês anterior,
+          // consideramos o último dia do mês anterior como a data de vencimento.
+          const dataVencimentoAnteriorAjustada =
+            diaVencimento > ultimoDiaMesAnterior
+              ? new Date(anoAnterior, mesAnterior, ultimoDiaMesAnterior)
+              : dataVencimentoMesAnterior;
+
+          return ultimoPagamento >= dataVencimentoAnteriorAjustada;
+        }
+
+        return false;
+      }
+      return false;
+    };
+
+    this.usuarioService
+      .findByFilters({
+        tipo_usuario: tipoUsuario,
+        fl_ativo: true,
+        empresa_id: this.user?.empresa?.id,
+      })
+      .subscribe({
+        next: (res) => {
+          this.usuarioList = res.map((u: Usuario) => {
+            return {
+              ...u,
+              idade:
+                new Date().getFullYear() -
+                new Date(u.data_nascimento).getFullYear(),
+              fl_pago: checkStatusPagamento(u),
+            };
+          });
+          console.log('this.usuarioList: ', this.usuarioList);
+        },
+      });
   }
 
   showNavigationOptions(usuario: Usuario) {
@@ -359,165 +443,58 @@ export class UsuariosPage implements OnInit {
     this.showCobrancaModal = true;
   }
 
-  anos: {
-    value: number;
-  }[] = new Array(5)
-    .fill(0)
-    .map((i, index) => ({ value: new Date().getFullYear() - index }));
-
-  reciboForm: FormGroup = new FormGroup({
-    id: new FormControl(null, [Validators.required]),
-    member: new FormGroup({
-      id: new FormControl(null, [Validators.required]),
-      nome: new FormControl(null, [Validators.required]),
-    }),
-    plano: new FormGroup({
-      id: new FormControl(null, [Validators.required]),
-      descricao: new FormControl(null, [Validators.required]),
-      valor: new FormControl(null, [Validators.required]),
-    }),
-    dataPagamento: new FormControl(new Date().toISOString().split('T')[0], [
-      Validators.required,
-    ]),
-    mes: new FormControl(null, [Validators.required]),
-    ano: new FormControl(null, [Validators.required]),
-    desconto: new FormControl('0', [Validators.nullValidator]),
-    discountType: new FormControl('%', [Validators.required]),
-    valorPago: new FormControl(null, [Validators.required]),
-    formaPagamento: new FormControl(null, [Validators.required]),
-    comprovante: new FormControl(null, [Validators.nullValidator]),
-  });
-
   openFormReciboModal(member: Usuario | null | undefined) {
     if (!member) return;
 
     const mesAtual = new Date().getMonth() + 1;
     const mesFormatado = mesAtual < 10 ? `0${mesAtual}` : `${mesAtual}`;
     this.selectedUsuario = member;
-    this.showFormReciboModal = true;
 
-    this.reciboForm.patchValue({
-      id: uuid(),
-      member: {
-        id: member.id,
-        nome: member.nome,
-      },
-      plano: {
-        id: member.planos.id,
-        descricao: member.planos.descricao,
-        valor: member.planos.preco_padrao,
-      },
-      dataPagamento: new Date().toISOString().split('T')[0],
-      mes: null,
-      ano: new Date().getFullYear(),
-      desconto: '0',
-      discountType: '%',
-      valorPago: member.planos.preco_padrao,
-      formaPagamento: 'pix',
-      comprovante: null,
-    });
+    this.modalController
+      .create({
+        component: FormTransacaoFinaceiraComponent,
+        componentProps: {
+          selectedMembro: member,
+          categoriaTransacaoId: 1,
+          mes: mesFormatado,
+          ano: new Date().getFullYear(),
+        },
+      })
+      .then((modal) => {
+        modal.present();
+        modal.onDidDismiss().then((res) => {
+          console.log(res);
+          if (res.data) {
+            this.getUsuarios();
+          }
+        });
+      });
 
-    console.log('this.reciboForm: ', this.reciboForm);
+    // this.reciboForm.patchValue({
+    //   id: uuid(),
+    //   member: {
+    //     id: member.id,
+    //     nome: member.nome,
+    //   },
+    //   plano: {
+    //     id: member.planos.id,
+    //     descricao: member.planos.descricao,
+    //     valor: member.planos.preco_padrao,
+    //   },
+    //   dataPagamento: new Date().toISOString().split('T')[0],
+    //   mes: null,
+    //   ano: new Date().getFullYear(),
+    //   desconto: '0',
+    //   discountType: '%',
+    //   valorPago: member.planos.preco_padrao,
+    //   formaPagamento: 'pix',
+    //   comprovante: null,
+    // });
+
+    // console.log('this.reciboForm: ', this.reciboForm);
   }
   openReciboModal(member: Usuario | null | undefined) {
     if (!member) return;
     this.showReciboModal = true;
   }
-
-  setDiscountType(type: string) {
-    this.reciboForm.get('discountType')?.setValue(type);
-    this.calculaValorFinal();
-  }
-
-  calculaValorFinal() {
-    const desconto = this.reciboForm.get('desconto')?.value;
-    const discountType = this.reciboForm.get('discountType')?.value;
-    const valorPlano = Number(
-      this.reciboForm.get('plano')?.get('valor')?.value
-    );
-    if (discountType === '%') {
-      this.reciboForm
-        .get('valorPago')
-        ?.setValue(valorPlano - (Number(valorPlano) * desconto) / 100);
-    } else {
-      this.reciboForm.get('valorPago')?.setValue(Number(valorPlano) - desconto);
-    }
-  }
-
-  recibo!: Recibo | null;
-  gerarRecibo(recibo: Recibo) {
-    this.recibo = recibo;
-    const audio = new Audio('../../assets/audios/cash-register.mp3');
-    console.log('audio: ', audio);
-
-    audio.play();
-    setTimeout(() => {
-      this.confetti.showConfetti();
-    }, 250);
-    this.showReciboModal = true;
-  }
-
-  buildReciboImage(
-    recibo: Recibo,
-    callback: (data: { blob: Blob; base64: string }) => any
-  ) {
-    const reciboContainer = document.getElementById('recibo-container');
-
-    return html2canvas(reciboContainer as HTMLElement).then((canvas) => {
-      const img = document.createElement('img');
-      img.src = canvas.toDataURL('image/png');
-      const data = img.src.replace(/^data:image\/\w+;base64,/, '');
-      const buffer = Buffer.from(data, 'base64');
-      const blob = new Blob([buffer], { type: 'image/png' });
-      callback({
-        blob: blob,
-        base64: data,
-      });
-    });
-  }
-
-  //TODO CORRIGIR A COPIA DO RECIBO
-  copyReciboImage() {
-    this.buildReciboImage(this.recibo!, (data) => {
-      navigator.clipboard.write([
-        new ClipboardItem({
-          'image/png': data['base64'] as string,
-        }),
-      ]);
-      // Clipboard.write({
-      //   image: data['base64']
-      // })
-    });
-  }
-
-  downloadRecibo() {
-    this.buildReciboImage(this.recibo!, (data) => {
-      const url = URL.createObjectURL(data['blob']);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `Recibo - ${this.recibo?.mes}-${this.recibo?.ano} - ${this.recibo?.member?.nome} .png`;
-      link.click();
-    });
-  }
-}
-
-export interface Recibo {
-  id: number;
-  member: {
-    id: number;
-    nome: string;
-  };
-  plano: {
-    id: number;
-    descricao: string;
-    valor: number;
-  };
-  dataPagamento: string;
-  mes: number;
-  ano: number;
-  desconto: number;
-  discountType: string;
-  valorPago: number;
-  formaPagamento: string;
-  comprovante: string;
 }

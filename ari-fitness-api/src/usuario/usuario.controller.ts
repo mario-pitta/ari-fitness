@@ -6,6 +6,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -97,4 +98,25 @@ export class UsuarioController {
       res.status(201).send(_res.data);
     });
   }
+
+
+  //#region Instrutor
+  @Get('instrutor/:empresaId')
+  findInstrutorByFilters(@Res() res: Response, @Param('empresaId')  empresaId: number, @Query() filters: Partial<Usuario> | Usuario) {
+    console.log('search instrutor... byFilters', filters);
+    return this.usuarioService.findInstrutorByFilters(empresaId, filters).then((_res) => {
+      if (_res.error) {
+        console.error('erro no instrutor/findAll', _res.error);
+        res.status(500).send({
+          status: 500,
+          ..._res.error,
+        });
+      }
+
+      return res.send(_res.data);
+    });
+  }
+
+
+  //#endregion
 }

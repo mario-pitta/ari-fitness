@@ -7,5 +7,6 @@ import { ExercicioService } from './exercicio.service';
   controllers: [ExercicioController],
   providers: [ExercicioService],
   imports: [DataBaseModule],
+  exports: [ExercicioService],
 })
 export class ExercicioModule {}

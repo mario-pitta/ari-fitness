@@ -44,7 +44,7 @@
           <ion-icon name="person" slot="start"></ion-icon>
           Meu Perfil
         </ion-item>
-        <ion-item [button]="true" (click)="showOptions = false">
+        <ion-item [button]="true" (click)="showOptions = false; logout()">
           <ion-icon name="exit" slot="start"></ion-icon>
           Sair
         </ion-item>

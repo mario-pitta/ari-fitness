@@ -8,6 +8,8 @@ import { UsuariosPageRoutingModule } from './usuarios-routing.module';
 
 import { UsuariosPage } from './usuarios.page';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { TransacaoFinanceiraFormModule } from "../shared/transacao-financeira-form/transacao-financeira-form.module";
+import { FormTransacaoFinanceiraModule } from '../shared/form-transacao-finaceira/form-transacao-financeira.module';
 
 @NgModule({
   imports: [
@@ -16,8 +18,9 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     IonicModule,
     UsuariosPageRoutingModule,
     NgxChartsModule,
-    ReactiveFormsModule
-  ],
+    ReactiveFormsModule,
+    FormTransacaoFinanceiraModule
+],
   declarations: [UsuariosPage],
   exports: [UsuariosPage],
   schemas: []

@@ -17,7 +17,7 @@ export class AuthService {
     this.user.set(this.userValue.value);
   }
 
-  get getUser() {
+  get getUser() : IUsuario {
     return this.userValue.value;
   }
 

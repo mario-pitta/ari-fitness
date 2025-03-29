@@ -7,9 +7,10 @@ import { Module } from '@nestjs/common';
 import { DashboardController } from './dashboard.controller';
 import { DashboardService } from './dashboard.service';
 import { DataBaseModule } from 'src/datasource/database.module';
+import { TransacaoFinanceiraDashModule } from './transacao-financeira/transacao-financeira-dash.module';
 
 @Module({
-  imports: [DataBaseModule],
+  imports: [DataBaseModule, TransacaoFinanceiraDashModule],
   controllers: [DashboardController],
   providers: [DashboardService],
 })

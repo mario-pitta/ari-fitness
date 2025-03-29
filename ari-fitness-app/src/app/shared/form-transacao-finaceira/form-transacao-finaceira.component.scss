@@ -1,0 +1,46 @@
+
+ion-radio {
+  // display: none; /* Esconde o círculo padrão */
+}
+
+ion-item:has(ion-radio) {
+  --padding-start: 10px; /* Ajusta o padding interno do item */
+  --inner-padding-end: 10px;
+  // border: 1px solid #ccc; /* Adiciona borda aos itens */
+  // border-radius: 5px; /* Arredonda os cantos */
+  // margin-bottom: 5px; /* Espaçamento entre os itens */
+  transition: background-color 0.3s, border-color 0.3s; /* Transição suave */
+  height: 35px;
+  font-size: 10px;
+  display: flex;
+}
+
+
+ion-item * {
+  color: #424040
+}
+
+
+div.item-checked{
+  background: var(--ion-color-primary) !important;
+  border-color: var(--ion-color-primary);
+  color: white;
+  }
+// ion-radio.radio-checked::part(container) {
+//   background: #6815ec;
+//   border-color: transparent;
+// }
+
+ion-item.item-checked:has(ion-radio) {
+  /* Estilo quando o item está selecionado */
+  --ion-item-background: var(
+    --ion-color-primary
+  )  !important; /* Usa a cor primária do tema Ionic */
+  border-color: var(--ion-color-primary);
+  color: white;
+}
+
+ion-item:has(ion-radio):hover {
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}

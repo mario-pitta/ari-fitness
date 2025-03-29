@@ -13,5 +13,6 @@ export interface Exercicio {
   musculo_id?: number;
   musculo?: Musculo;
   fl_ativo: boolean;
+  empresa_id?: string;
 }
 

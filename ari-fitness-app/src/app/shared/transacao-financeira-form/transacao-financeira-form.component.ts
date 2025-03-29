@@ -5,6 +5,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { TransacaoFinanceiraForm } from 'src/core/models/TransacaoFInanceira';
 
 @Component({
   selector: 'app-transacao-financeira-form',
@@ -22,8 +23,8 @@ throw new Error('Method not implemented.');
     { tipo: 'receita', descricao: 'Diária' },
     { tipo: 'receita', descricao: 'Extra' },
     { tipo: 'receita', descricao: 'Aula Particular' },
-
     { tipo: 'receita', descricao: 'Outros' },
+
     { tipo: 'despesa', descricao: 'Fixa' },
     { tipo: 'despesa', descricao: 'Variável' },
     { tipo: 'despesa', descricao: 'Reparos' },
@@ -48,6 +49,9 @@ throw new Error('Method not implemented.');
 
 
   createForm(){
+
+console.log('novo form...', new TransacaoFinanceiraForm());
+
     this.transacaoForm =  this.fb.group({
       id: [null, Validators.nullValidator],
       descricao: [null, Validators.nullValidator],

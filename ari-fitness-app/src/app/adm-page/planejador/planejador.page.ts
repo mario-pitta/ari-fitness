@@ -48,7 +48,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
     }
   }
   showTaskForm: boolean = false;
-  cols: { title: string; tasks: Tarefa[]; status_tarefa_id: number }[] = [];
+  cols: { title: string; visible: boolean; tasks: Tarefa[]; status_tarefa_id: number }[] = [];
 
   user: Usuario | null = null;
 
@@ -168,6 +168,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
         this.cols = [
           {
             title: 'A Fazer',
+            visible: true,
             tasks: res
               .filter((t: Tarefa) => t.status_tarefa_id == 1)
               .sort((a, b) => a.posicao - b.posicao),
@@ -175,6 +176,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
           },
           {
             title: 'Fazendo',
+            visible: true,
             tasks: res
               .filter((t: Tarefa) => t.status_tarefa_id == 2)
               .sort((a, b) => a.posicao - b.posicao),
@@ -182,6 +184,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
           },
           {
             title: 'Feito',
+            visible: true,
             tasks: res
               .filter((t: Tarefa) => t.status_tarefa_id == 3)
               .sort((a, b) => a.posicao - b.posicao),

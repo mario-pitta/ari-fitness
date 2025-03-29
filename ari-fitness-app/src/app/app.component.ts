@@ -1,12 +1,14 @@
-
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import {
   NavigationEnd,
   NavigationStart,
   Router,
   RouterEvent,
 } from '@angular/router';
+import { Subject } from 'rxjs';
+import { AuthService } from 'src/core/services/auth/auth.service';
 import { OverlayControllerService } from 'src/core/services/overlay-controller.service';
+import { PageSizeService } from 'src/core/services/page-size/page-size.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
 
 @Component({
@@ -25,8 +27,23 @@ export class AppComponent implements OnInit {
     private titleService: PagetitleService,
     private overlayService: OverlayControllerService,
     private router: Router,
+    private authService: AuthService,
+    private pageSizeService: PageSizeService
+  ) {
+    this.pageSizeService.screenSizeChange$.subscribe((size) => {
+      console.log('size: ', size);
+    });
+  }
 
-  ) {}
+  isMobile = false;
+  screenSize = 0;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    console.log(event);
+    this.screenSize = window.innerWidth;
+    this.pageSizeService.setSize(this.screenSize);
+  }
 
   ngOnInit() {
     // console.log('AppComponent Initing....');
@@ -34,6 +51,7 @@ export class AppComponent implements OnInit {
 
     //   this.confetti.clearConfetti();
     // }, 250);
+
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationStart) {
         if (ev.navigationTrigger == 'popstate') {
@@ -52,10 +70,13 @@ export class AppComponent implements OnInit {
         this.pageTitle = title;
       },
     });
+  }
 
+  logout() {
+    this.authService.logout();
   }
 
   navigateBack() {
-    history.back()
+    history.back();
   }
 }

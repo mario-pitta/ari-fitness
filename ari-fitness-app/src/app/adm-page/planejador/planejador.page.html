@@ -1,18 +1,19 @@
-<ion-content [fullscreen]="true">
+<ion-grid class="board">
+  <ion-row class="d-flex flex-wrap justify-content-around">
 
-
-  <ion-grid class="board" id="board">
-    <ion-col class="column position-relative" *ngFor="let column of cols">
-      <div class="column-header d-flex justify-content-between align-items-center">
+    <ion-col class="mb-3 column position-relative " sizeXs="12" sizeSm="12" sizeMd="12" sizeLg="4  " sizeXl="4"
+      *ngFor="let column of cols">
+      <div class="column-header d-flex justify-content-between align-items-center"
+        (click)="column.visible = !column.visible">
         {{column.title}}
         <span class="column-count gap-2 d-flex justify-content-around align-items-center"> {{column.tasks.length}}
           <ion-button fill="clear" shape="round" (click)="showTaskForm = true; createForm(column.status_tarefa_id)">
-            <ion-icon name="add-circle-outline"  ></ion-icon>
+            <ion-icon name="add-circle-outline"></ion-icon>
           </ion-button>
         </span>
       </div>
-      <div data-column="todo" class="task-list mb-5" [id]="'task-list_'+column.status_tarefa_id" dragula="tarefas"
-        [(dragulaModel)]="column.tasks">
+      <div data-column="todo" class="taskContainer task-list mb-5" [id]="'task-list_'+column.status_tarefa_id"
+        dragula="tarefas" [hidden]="!column.visible" [(dragulaModel)]="column.tasks">
         <div *ngFor="let task of column.tasks">
 
           <ion-card class="mb-2" (click)="showTaskForm = true; createForm(column.status_tarefa_id, task)" [ngClass]="
@@ -45,9 +46,9 @@
         (click)="showTaskForm = true; createForm(column.status_tarefa_id)">+ Adicionar tarefa</div>
 
     </ion-col>
-  </ion-grid>
+  </ion-row>
 
-</ion-content>
+</ion-grid>
 
 
 
@@ -83,14 +84,16 @@
             </ion-select>
           </div>
           <div class="form-group">
-            <ion-checkbox labelPlacement="end" #prazo  [checked]="f.value.data_limite_conclusao"  (ionChange)="prazoChange($event)" class="mb-2">
+            <ion-checkbox labelPlacement="end" #prazo [checked]="f.value.data_limite_conclusao"
+              (ionChange)="prazoChange($event)" class="mb-2">
               <ion-label>Possui Prazo</ion-label>
             </ion-checkbox>
             <div class="d-flex">
               <ion-datetime-button class="ms-0" [disabled]="!prazo.checked" datetime="datetime"></ion-datetime-button>
               <ion-modal [keepContentsMounted]="true">
                 <ng-template>
-                  <ion-datetime id="datetime" presentation="date" formControlName="data_limite_conclusao"  [formatOptions]="{
+                  <ion-datetime id="datetime" presentation="date" formControlName="data_limite_conclusao"
+                    [formatOptions]="{
                   date: {
                     weekday: 'short',
                     month: 'long',

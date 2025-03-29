@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 export class AlunoHomeComponent implements OnInit {
   goToTreino(arg0: number | undefined) {
-    this.router.navigate(['treinar/treino'], {
+    this.router.navigate(['treinar'], {
       queryParams: {
         treinoId: arg0,
         userId: this.user.id,
@@ -48,8 +48,8 @@ export class AlunoHomeComponent implements OnInit {
       this.ficha = this.user.ficha_aluno[this.user.ficha_aluno.length - 1];
       console.log('this.ficha: ', this.ficha);
       //TODO APÓS A PERSISTENCIA DO HISTORICO DE TREINOS, ESSE TREINO DEVE SER CALCULADO COMO PROXIMO TREINO, OU O PRIMEIRO DA FICHA CASO NÃO HAJA PROXIMO. EM CASO DE NOVA FICHA, O TREINO DEVE SER O PRIMEIRO.
-      this.treino = this.ficha.treinos[this.ficha.treinos.length - 3].treino;
-      this.exRecomendados = this.treino.treino_exercicio.map(
+      this.treino = this.ficha?.treinos[0]?.treino;
+      this.exRecomendados = this.treino?.treino_exercicio.map(
         (e: any) => e.exercicio
       );
       console.log('this.exRecomendados: ', this.exRecomendados);

@@ -1,0 +1,17 @@
+@import "prismjs/themes/prism-okaidia.css";
+@import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+@import "prismjs/plugins/line-highlight/prism-line-highlight.css";
+
+ion-skeleton-text {
+  --border-radius: 9999px;
+}
+
+#report-content, #report-content *, #report-content *:before, #report-content *:after, #report-content ion-item:not(ion-note) {
+  color: #242323;
+  background-color: #ffffff;
+}
+
+#report-content ion-item::part(native) {
+  background-color: #ffffff;
+  --background: #ffffff;
+}

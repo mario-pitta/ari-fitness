@@ -6,6 +6,7 @@ import { DataBaseModule } from 'src/datasource/database.module';
 @Module({
     controllers: [UsuarioController],
     providers: [UsuarioService],
-    imports:[DataBaseModule]
+    imports:[DataBaseModule],
+    exports: [UsuarioService],
 })
 export class UsuarioModule {};

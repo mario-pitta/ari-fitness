@@ -89,8 +89,13 @@ const routes: Routes = [
         ]
 
       },
+      {
+        path: 'instrutores',
+        loadChildren: () => import('./instrutores/instrutores.module').then( m => m.InstrutoresPageModule)
+      },
     ]
   },
+
 
   // {
   //   path: 'equipamentos',

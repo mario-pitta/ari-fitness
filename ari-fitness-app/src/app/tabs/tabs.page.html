@@ -3,36 +3,62 @@
     <ion-title>{{pageTitle}}</ion-title>
   </ion-toolbar>
 </ion-header> -->
-@if(!user.flagAdmin ){
-
+@if(user.flagAdmin ){
 <ion-tabs>
+  @if(isMobile){
+
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="home" routerLink="home">
+    <ion-tab-button
+      [ngClass]="route.indexOf('admin/dashboard') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/dashboard', false)">
       <ion-icon aria-hidden="true" name="home"></ion-icon>
     </ion-tab-button>
 
-    <ion-tab-button [ngClass]="route.indexOf('treinar') > -1 ? 'tab-selected' : ''" (click)="navigate('treinar')">
+    <ion-tab-button [ngClass]="route.indexOf('admin/financas') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/financas', false)"
+      >
       <ion-icon name="cash"></ion-icon>
     </ion-tab-button>
 
-    <ion-tab-button tab="stats" routerLink="stats">
+    <ion-tab-button
+      [ngClass]="route.indexOf('admin/membros') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/membros', false)"
+    >
       <ion-icon name="people"></ion-icon>
     </ion-tab-button>
 
+
+    <!-- planejador -->
+    <ion-tab-button [ngClass]="route.indexOf('admin/planejador') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/planejador', false)"
+      >
+      <ion-icon name="time"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button [ngClass]="route.indexOf('admin/calendario') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/calendario', false)"
+      >
+      <ion-icon name="calendar"></ion-icon>
+    </ion-tab-button>
+
+
+
     <ion-tab-button
-      [ngClass]="route.indexOf('usuarios') > -1 ||  route.indexOf('cadastro-usuario') > -1 ? 'tab-selected' : ''"
-      (click)="navigate(user.tipo_usuario !== Constants.ALUNO_ID ? 'usuarios' : 'cadastro-usuario')">
+      [ngClass]="route.indexOf('admin/configuracoes') > -1 ? 'tab-selected' : ''"
+      (click)="navigate('admin/configuracoes', false)"
+      >
       <ion-icon name="settings"></ion-icon>
     </ion-tab-button>
 
   </ion-tab-bar>
 
+  }
 </ion-tabs>
 }@else{
 
 
 <ion-tabs>
-  <!-- <ion-tab-bar slot="bottom">
+  <ion-tab-bar slot="bottom">
     <ion-tab-button tab="home" routerLink="home">
       <ion-icon aria-hidden="true" name="home"></ion-icon>
     </ion-tab-button>
@@ -51,6 +77,6 @@
       <ion-icon aria-hidden="true" [name]="user.tipo_usuario !== Constants.ALUNO_ID ? 'people' : 'person'"></ion-icon>
     </ion-tab-button>
 
-  </ion-tab-bar> -->
+  </ion-tab-bar>
 </ion-tabs>
 }
