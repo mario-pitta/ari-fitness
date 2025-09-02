@@ -62,14 +62,13 @@
             <ion-reorder-group [disabled]="!user.flagAdmin" (ionItemReorder)="handleReorder($any($event))">
                 <ion-card *ngFor="let tr of treinos.value; let i = index" [attr.data-item]="stringfy(tr)">
                     <ion-card-content class="d-flex ion-justify-content-between ion-align-items-center">
+                      <div class="d-flex ion-align-items-center gap-2">
                         <ion-reorder slot="start" [id]="'reorder_tr_' + tr.id"></ion-reorder>
-                        <div>
-                            <strong slot="start">{{ tr.treino.nome }}</strong>
-                            <p>{{ tr.treino.duracao }} | {{ tr.treino.intensidade }}</p>
+                            <strong class="text-uppercase">{{ tr.treino.nome }}</strong>
                         </div>
                         <div class="icons ion-padding-end">
-                            <ion-icon size="large" name="play-outline" color="primary" *ngIf="user.id === aluno?.value.id" (click)="onTreinoSelected(tr.treino)"></ion-icon>
-                            <ion-icon size="large" name="close" color="danger" *ngIf="user.flagAdmin || user.id === aluno?.value.id" (click)="removeTreino(tr.treino.id)"></ion-icon>
+                            <ion-icon name="play-outline" color="primary" *ngIf="user.id === aluno?.value.id" (click)="onTreinoSelected(tr.treino)"></ion-icon>
+                            <ion-icon size="small" name="close" color="danger" *ngIf="user.flagAdmin || user.id !== aluno?.value.id" (click)="removeTreino(tr.treino.id)"></ion-icon>
                         </div>
                     </ion-card-content>
                 </ion-card>
