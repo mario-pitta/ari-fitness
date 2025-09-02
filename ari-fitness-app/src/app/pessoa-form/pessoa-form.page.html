@@ -79,7 +79,7 @@
                             <ion-row>
                                 <ion-select formControlName="data_vencimento" class="ion-color-danger" [value]="null" interface="popover" label="Dia de Vencimento" placeholder="--SELECIONE--">
                                     <ion-select-option [value]="null">--SELECIONE--</ion-select-option>
-                                    <ion-select-option *ngFor="let dia of [5, 10, 15, 20, 25, 30]" [value]="dia">{{dia}}
+                                    <ion-select-option *ngFor="let dia of [1, 5, 10, 15, 20, 25, 30]" [value]="dia">{{dia}}
                                     </ion-select-option>
 
                                 </ion-select>

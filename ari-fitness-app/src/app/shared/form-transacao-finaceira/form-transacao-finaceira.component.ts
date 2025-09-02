@@ -60,8 +60,8 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
   auth = inject(AuthService);
   usuarioService = inject(UsuarioService);
 
-  meses = Constants.meses;
   confetti = inject(ConfettiService);
+  meses = Constants.meses;
   anos: {
     value: number;
   }[] = new Array(5)

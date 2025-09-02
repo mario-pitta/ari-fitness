@@ -251,13 +251,13 @@
         <ion-row>
           <ion-col>
             <ion-item>
-              <!-- <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: cobrancaForm};"></ng-content> -->
+              <ng-content *ngTemplateOutlet="mesesSelector; context: {$implicit: cobrancaForm};"></ng-content>
             </ion-item>
 
           </ion-col>
           <ion-col>
             <ion-item>
-              <!-- <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: cobrancaForm};"></ng-content> -->
+              <ng-content *ngTemplateOutlet="anosSelector; context: {$implicit: cobrancaForm};"></ng-content>
             </ion-item>
           </ion-col>
         </ion-row>
@@ -431,3 +431,21 @@
 
 
 
+
+
+
+
+  <ng-template #mesesSelector let-form let-control="control">
+    <div [formGroup]="form">
+      <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
+        <ion-select-option *ngFor="let mes of meses" [value]="mes.value">{{mes.label}}</ion-select-option>
+      </ion-select>
+    </div>
+  </ng-template>
+  <ng-template #anosSelector let-form>
+    <div [formGroup]="form">
+      <ion-select interface="popover" placeholder="Ano" formControlName="ano">
+        <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
+      </ion-select>
+    </div>
+  </ng-template>

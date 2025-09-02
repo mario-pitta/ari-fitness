@@ -2,7 +2,6 @@ import { ConfettiService } from './../../core/services/confetti/confetti.service
 import { ToastrService } from './../../core/services/toastr/toastr.service';
 import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
-import Constants from 'src/core/Constants';
 import { IUsuario, Usuario } from 'src/core/models/Usuario';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { ModalController } from '@ionic/angular';
@@ -14,7 +13,7 @@ import { AuthService } from 'src/core/services/auth/auth.service';
 import { FormTransacaoFinaceiraComponent } from '../shared/form-transacao-finaceira/form-transacao-finaceira.component';
 import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
 import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
-
+import  Constants  from 'src/core/Constants';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.page.html',
@@ -25,6 +24,12 @@ export class UsuariosPage implements OnInit {
     throw new Error('Method not implemented.');
   }
 
+  meses = Constants.meses;
+  anos: {
+    value: number;
+  }[] = new Array(5)
+    .fill(0)
+    .map((i, index) => ({ value: new Date().getFullYear() - index }));
   Constants = Constants;
   tipoSelected: number | string = Constants.ALUNO_ID;
   usuarioList: Usuario[] = [];
@@ -289,7 +294,11 @@ export class UsuariosPage implements OnInit {
   getUsuarios(tipoUsuario: number | string = Constants.ALUNO_ID) {
     const checkStatusPagamento = (u: Usuario) => {
       if (u.data_ultimo_pagamento !== null && u.data_vencimento !== null) {
+        console.log('Checando pagamento: ',  u.nome);
+
         const ultimoPagamento = new Date(u.data_ultimo_pagamento as string);
+        console.log('ultimoPagamento',  ultimoPagamento);
+
         const diaUltimoPagamento = ultimoPagamento.getDate();
         const mesUltimoPagamento = ultimoPagamento.getMonth();
         const anoUltimoPagamento = ultimoPagamento.getFullYear();
@@ -436,7 +445,7 @@ export class UsuariosPage implements OnInit {
   }
 
   openCobrancaModal(member: Usuario) {
-    if (member.fl_ativo) {
+    if (member.fl_pago) {
       return;
     }
     this.selectedUsuario = member;
