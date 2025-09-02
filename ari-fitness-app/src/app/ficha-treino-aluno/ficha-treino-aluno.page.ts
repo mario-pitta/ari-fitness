@@ -71,11 +71,11 @@ export class FichaTreinoAlunoPage implements OnInit {
   }
 
   ngOnInit() {
+    this.user = this.auth.getUser;
     console.log('init do ficha aluno!!!', this.aRoute.snapshot);
     this.createForm();
     this.checkUserParams();
     this.loadData();
-    this.user = this.auth.getUser;
     // this.selectedTreino = this.user.treinos && this.user.treinos[0];
   }
 
@@ -106,7 +106,7 @@ export class FichaTreinoAlunoPage implements OnInit {
 
   getInstrutores() {
     this.usuarioService
-      .findByFilters({ tipo_usuario: Constants.INSTRUTOR_ID, fl_ativo: true })
+      .findByFilters({ tipo_usuario: Constants.INSTRUTOR_ID, fl_ativo: true, empresa_id: this.user?.empresa_id })
       .subscribe({
         next: (instrutores) => {
           this.instrutores = instrutores;
