@@ -10,12 +10,12 @@ import { environment } from 'src/environments/environment';
 export class TreinoService {
   constructor(private http: HttpClient) {}
 
-  find(filters?: Treino): Observable<Treino[]> {
+  find(filters?: Partial<Treino>): Observable<Treino[]> {
     const query =
       (filters &&
         Object.keys(filters).map(
           (k: string) => `${k}=${filters[k as keyof Treino]}`
-        )) ||
+        ))?.join('&') ||
       '';
     return this.http
       .get<Treino[]>(environment.apiUrl + '/treinos?' + query)

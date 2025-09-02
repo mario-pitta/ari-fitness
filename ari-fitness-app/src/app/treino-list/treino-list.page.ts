@@ -71,7 +71,10 @@ export class TreinosListPage implements OnInit {
   }
 
   getTreinos() {
-    return this.treinoService.find().subscribe({
+    return this.treinoService.find({
+      fl_ativo: true,
+      empresa_id: this.user.empresa_id
+    }).subscribe({
       next: (treinos: Treino[]) => {
         this.filteredTreinos = this.treinos = treinos;
 

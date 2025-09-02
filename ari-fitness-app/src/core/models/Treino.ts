@@ -16,4 +16,7 @@ export interface Treino {
   descricao: string;
   carga: number;
   nivel_dificuldade: number;
+  empresa_id: string;
+  fl_ativo: boolean;
+  fl_publico: boolean;
 }
