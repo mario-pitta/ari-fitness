@@ -53,6 +53,9 @@ export class TreinosListPage implements OnInit {
   ngOnInit() {
     this.user = this.auth.getUser;
     console.log(this.user);
+    console.log('💻🔍🪲 - this.listMode', this.gridMode);
+
+
     this.createForm();
     this.loadData();
     // this.selectedTreino = this.user.treinos && this.user.treinos[0];
@@ -126,8 +129,10 @@ export class TreinosListPage implements OnInit {
     });
   }
 
+  @Input({required: true}) gridMode: boolean = true;
   openTreinoEditor(treino: Treino) {
-    this.openModal = !this.openModal;
+    this.openModal = true;
+
     console.log('treino patchValue', treino);
     this.f.patchValue(treino);
     treino.treino_exercicio.forEach((trex: any) => {
@@ -152,7 +157,13 @@ export class TreinosListPage implements OnInit {
         this.filterList();
         break;
       case 'edit':
+        console.log('💻🔍🪲 - edit', event);
+
+
           this.openTreinoEditor(event.value)
+        break;
+      case 'loading':
+        this.loading = event.value;
         break;
       default:
         break;
@@ -227,6 +238,7 @@ export class TreinosListPage implements OnInit {
     this.exercicios.clear();
     this.f.reset();
     this.modalController.dismiss();
+    this.gridMode = false;
   }
 
   onSelectTreino() {}
@@ -296,5 +308,9 @@ export class TreinosListPage implements OnInit {
     this.filteredTreinos = this.treinos.filter((tr) =>
       tr.nome.toLowerCase().includes(this.searchText.toLowerCase())
     );
+  }
+
+  ngOnDestroy(){
+    this.gridMode = false;
   }
 }

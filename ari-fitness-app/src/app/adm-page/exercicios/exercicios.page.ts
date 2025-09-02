@@ -50,6 +50,11 @@ export class ExerciciosPage implements OnInit {
     });
   }
 
+
+  filterItems(){
+
+  }
+
   ngOnDestroy(): void {
     console.log('destruindo exercicios...');
   }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { forkJoin, throwError } from 'rxjs';
+import { forkJoin, tap, throwError } from 'rxjs';
 import {
   MaskitoOptions,
   MaskitoElementPredicate,
@@ -58,7 +58,7 @@ export class PessoaFormPage implements OnInit {
     private aRoute: ActivatedRoute,
     private router: Router,
     private auth: AuthService
-  ) {}
+  ) { }
   user!: Usuario
   ngOnInit() {
     this.user = this.auth.getUser;
@@ -73,7 +73,10 @@ export class PessoaFormPage implements OnInit {
     if (this.aRoute.snapshot.queryParams['userId']) {
       this.getUserInfo(this.aRoute.snapshot.queryParams['userId']);
     }
+
+
   }
+  tipoUsuarioForm!: TipoUsuario;
 
   getUserInfo(id: any) {
     this.usuarioService.findByFilters({ id: id }).subscribe({
@@ -92,7 +95,8 @@ export class PessoaFormPage implements OnInit {
       this.getActivePlans(),
     ]).subscribe({
       next: (result) => {
-        // console.log('tipoUsuario, horarios, planos: ', result);
+        console.log('tipoUsuario, horarios, planos: ', result);
+
       },
       error: (err) => {
         this.loading = false;
@@ -138,7 +142,22 @@ export class PessoaFormPage implements OnInit {
       },
       error: (err) => {
         this.loading = false;
+        this.aRoute.data.subscribe({
+          next: (data: any) => {
+            console.log('💻🔍🪲 - data', data);
 
+
+            if (!data) return;
+            this.tipoUsuarioForm = this.tiposUsuario.find(t => t.id == data.tipoUsuario) as TipoUsuario;
+            console.log('💻🔍🪲 - this.tipoUsuarioForm ', this.tipoUsuarioForm);
+
+
+            this.form.get('tipo_usuario')?.setValue(data.tipoUsuario)
+            // this.form.get('tipo_usuario')?.disable()
+
+            console.log(this.form)
+          }
+        })
         throwError(err);
       },
       complete: () => {
@@ -175,7 +194,7 @@ export class PessoaFormPage implements OnInit {
       nome: ['', [Validators.required]],
       data_nascimento: null,
       tipo_usuario: [
-        Number(this.aRoute.snapshot.params['id']),
+        null,
         [Validators.required],
       ],
       genero: ['', [Validators.required]],
@@ -283,7 +302,7 @@ export class PessoaFormPage implements OnInit {
         this.form.enable();
         if (!this.form.value.id) {
           this.createForm();
-        }else{
+        } else {
           this.router.navigateByUrl('admin/membros')
         }
       },
@@ -299,7 +318,7 @@ export class PessoaFormPage implements OnInit {
   }
 
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     console.log('destruindo pessoa-form...')
     this.form.reset();
   }

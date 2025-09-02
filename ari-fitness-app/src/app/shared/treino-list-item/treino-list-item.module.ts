@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TreinoListItemComponent } from './treino-list-item.component';
 import { IonicModule } from '@ionic/angular';
@@ -8,5 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   imports: [CommonModule, FormsModule, IonicModule, ReactiveFormsModule],
   declarations: [TreinoListItemComponent],
   exports: [TreinoListItemComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TreinoListItemModule {}

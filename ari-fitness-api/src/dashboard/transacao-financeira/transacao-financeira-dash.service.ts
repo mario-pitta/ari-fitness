@@ -5,9 +5,9 @@ import { TransacaoFinanceira } from 'src/transacao_financeira/TransacaoFinanceir
 
 @Injectable()
 export class TransacaoFinanceiraDashService {
-  constructor(private database: DataBaseService) {}
+  constructor(private database: DataBaseService) { }
 
-  buildDashboardData(query: {data_inicio: string, data_fim: string, empresa_id: string}) {
+  buildDashboardData(query: { data_inicio: string, data_fim: string, empresa_id: string }) {
     console.log('query: ', query);
     return this.database.supabase
       .from('transacao_financeira')
@@ -79,5 +79,51 @@ export class TransacaoFinanceiraDashService {
 
         return dashboardData;
       });
+  }
+
+  async obterAnaliseReceitasMensal(ano: number, empresaId: string) {
+
+    console.log('💻🔍🪲 - obterAnaliseReceitasMensal');
+    const dataInicio = new Date(ano, 0, 1).toISOString(); // Primeiro dia do ano
+    const dataFim = new Date(ano, 11, 31).toISOString();
+
+
+    const { data, error } = await this.database.supabase
+      .from('transacao_financeira')
+      .select(`
+        data_lancamento,
+        tr_tipo_id,
+        valor_final
+      `)
+      .eq('empresa_id', empresaId)
+      .lte('data_lancamento', dataFim)
+      .gte('data_lancamento', dataInicio)
+
+    const nomesMeses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+
+    const meses = Array.from({ length: 12 }, (_, index) => ({
+      mes: nomesMeses[index],
+      receitas: 0,
+      despesas: 0,
+    }));
+
+    data?.forEach(d => {
+      const mesIndex = new Date(d.data_lancamento).getMonth();
+
+      if (mesIndex >= 0 && mesIndex < 12) {
+        if (d.tr_tipo_id === 1) {
+          meses[mesIndex].receitas += d.valor_final;
+        } else {
+          meses[mesIndex].despesas += d.valor_final;
+        }
+      }
+    });
+
+    if (error) {
+      console.error('💻🔍🪲 - error', error);
+      throw new Error('Erro ao buscar análise de receitas.');
+    }
+
+    return meses
   }
 }

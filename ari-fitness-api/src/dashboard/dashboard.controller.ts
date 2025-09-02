@@ -3,7 +3,7 @@
 https://docs.nestjs.com/controllers#controllers
 */
 
-import { Controller, Get,  Query } from '@nestjs/common';
+import { Controller, Get,  Param,  Query } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 
 @Controller('dashboard')
@@ -15,7 +15,12 @@ export class DashboardController {
     
     return this.dashboardService.getAllMembersDashboard(query);
   }    
-
+  
+  @Get('best-instrutores-data/:empresaId')
+  async getBestInstrutoresData(@Param('empresaId') empresaId: string, @Query() payload: any) {
+    const { mes } = payload
+    return await this.dashboardService.getBestInstrutoresData(empresaId);
+  }    
 
 
 }

@@ -1,8 +1,12 @@
-import { Component,  HostListener, OnInit } from '@angular/core';
+import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
+
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import Constants from 'src/core/Constants';
-import { IUsuario } from 'src/core/models/Usuario';
+import { IUsuario, Usuario } from 'src/core/models/Usuario';
+import { AuthService } from 'src/core/services/auth/auth.service';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
+import { DashboardMembersService } from 'src/core/services/dashboard/members/members.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +14,7 @@ import { UsuarioService } from 'src/core/services/usuario/usuario.service';
   styleUrls: ['./dashboard.page.scss'],
 })
 export class DashboardPage implements OnInit {
-view: [number,number] =  [520, 230];
+  view: [number, number] = [520, 230];
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.isMobile();
@@ -27,20 +31,20 @@ view: [number,number] =  [520, 230];
 
     if (innerWidth < 500) {
       this.view = [350, 100];
-    }else if (innerWidth < 800) {
+    } else if (innerWidth < 800) {
       this.view = [430, 230];
-    }else if (innerWidth < 900) {
+    } else if (innerWidth < 900) {
       this.view = [470, 230];
-    }else if(innerWidth < 1000){
+    } else if (innerWidth < 1000) {
       this.view = [650, 230];
-    }else if( innerWidth < 1980){
+    } else if (innerWidth < 1980) {
 
       this.view = [780, 230];
     }
     console.log('this.view: ', this.view);
   }
 
-  constructor(private usuarioService: UsuarioService) {
+  constructor(private usuarioService: UsuarioService, private dashboardService: DashboardMembersService, private auth: AuthService, private transFinServ: TransacaoFinanceiraDashService) {
     this.searchControl.valueChanges.subscribe((value) => {
       this.getMembers(value);
     });
@@ -116,13 +120,14 @@ view: [number,number] =  [520, 230];
 
   members: IUsuario[] = [
   ];
-
+  usuario: Usuario = this.auth.getUser
   loading: boolean = true;
   ngOnInit() {
     console.log('iniciando dashboard...');
 
     this.getMembers();
-
+    this.getFinanceData();
+    this.getBestInstrutoresData()
     this.isMobile();
   }
   getMembers(text?: string, flag_ativo: boolean = true, orderBy: string = 'nome') {
@@ -131,11 +136,12 @@ view: [number,number] =  [520, 230];
     const filters: Partial<IUsuario> = {
       tipo_usuario: Constants.ALUNO_ID,
       fl_ativo: flag_ativo,
-     };
+      empresa_id: this.usuario.empresa_id
+    };
 
-     if(text) {
+    if (text) {
       filters['nome'] = text
-     }
+    }
 
     this.usuarioService.findByFilters(filters).subscribe({
       next: (res) => {
@@ -149,6 +155,25 @@ view: [number,number] =  [520, 230];
       complete: () => (this.loading = false),
 
     });
+  }
+
+  getFinanceData() {
+    this.transFinServ.getFinancialResumeByEmpresaId(this.usuario.empresa_id as string).subscribe({
+      next: (data) => {
+        console.log('💻🔍🪲 - getFinanceData', data);
+        console.log('💻🔍🪲 - getFinanceData', data);
+
+
+      }
+    })
+  }
+
+  getBestInstrutoresData() {
+
+
+
+
+
   }
 
 

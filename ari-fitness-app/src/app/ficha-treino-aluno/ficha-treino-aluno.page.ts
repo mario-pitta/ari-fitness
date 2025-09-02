@@ -232,6 +232,7 @@ export class FichaTreinoAlunoPage implements OnInit {
         component: TreinosListPage,
         componentProps: {
           enableEdit: true,
+          listMode: true,
           selectedTreinos: this.treinos.value,
         },
       })

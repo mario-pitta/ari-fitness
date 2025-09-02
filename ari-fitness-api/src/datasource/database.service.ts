@@ -15,9 +15,5 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 @Injectable()
 export class DataBaseService {
   supabase: SupabaseClient = supabase;
-  private counter = 0;
-  constructor() {
-    this.counter++;
-    console.log('DataBaseService construction...', this.counter);
-  }
+  constructor() {}
 }

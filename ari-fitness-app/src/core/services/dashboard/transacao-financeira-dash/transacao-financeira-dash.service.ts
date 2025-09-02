@@ -25,4 +25,10 @@ export class TransacaoFinanceiraDashService {
       `${environment.apiUrl}/transacao-financeira-dash?${query}`
     );
   }
+
+
+  getFinancialResumeByEmpresaId(empresaId: string){
+    return this.http.get(`${environment.apiUrl}/transacao-financeira-dash/receitas-por-mes/${empresaId}`)
+
+  }
 }

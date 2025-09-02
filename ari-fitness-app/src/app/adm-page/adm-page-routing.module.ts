@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdmPagePage } from './adm-page.page';
+import Constants from 'src/core/Constants';
 
 const routes: Routes = [
   {
@@ -30,58 +31,59 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../usuarios/usuarios.module').then( m => m.UsuariosPageModule),
-            data: {role: 'admin'}
+            loadChildren: () => import('../usuarios/usuarios.module').then(m => m.UsuariosPageModule),
+            data: { role: 'admin' }
           },
           {
             path: 'cadastro-usuario',
-            loadChildren: () => import('../pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule),
-            data: {role: 'admin'}
+            loadChildren: () => import('../pessoa-form/pessoa-form.module').then(m => m.PessoaFormPageModule),
+            data: { role: ['admin', 'instrutor'], tipoUsuario: Constants.ALUNO_ID }
           },
           {
             path: 'ficha-de-treino',
-            loadChildren: () => import('../ficha-treino-aluno/ficha-treino-aluno.module').then( m => m.FichaTreinoAlunoPageModule),
-            data: {role: 'admin'}
+            loadChildren: () => import('../ficha-treino-aluno/ficha-treino-aluno.module').then(m => m.FichaTreinoAlunoPageModule),
+            data: { role: ['admin', 'instrutor'] }
           }
         ]
       },
       {
         path: 'financas',
-        loadChildren: () => import('./financas/financas.module').then( m => m.FinancasModule)      },
+        loadChildren: () => import('./financas/financas.module').then(m => m.FinancasModule)
+      },
       {
         path: 'equipamentos',
-        loadChildren: () => import('./equipamentos/equipamentos.module').then( m => m.EquipamentosPageModule)
+        loadChildren: () => import('./equipamentos/equipamentos.module').then(m => m.EquipamentosPageModule)
       },
       {
         path: 'exercicios',
-        loadChildren: () => import('./exercicios/exercicios.module').then( m => m.ExerciciosPageModule)
+        loadChildren: () => import('./exercicios/exercicios.module').then(m => m.ExerciciosPageModule)
       },
       {
         path: 'treinos',
-        loadChildren: () => import('./treinos/treinos.module').then( m => m.TreinosPageModule)
+        loadChildren: () => import('./treinos/treinos.module').then(m => m.TreinosPageModule)
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
       {
         path: 'calendario',
-        loadChildren: () => import('./calendario/calendario.module').then( m => m.CalendarioPageModule)
+        loadChildren: () => import('./calendario/calendario.module').then(m => m.CalendarioPageModule)
       },
       {
-        path: 'planejador',
-        loadChildren: () => import('./planejador/planejador.module').then( m => m.PlanejadorPageModule)
+        path: 'atividades',
+        loadChildren: () => import('./planejador/planejador.module').then(m => m.PlanejadorPageModule)
       },
       {
         path: 'configuracoes',
         children: [
           {
             path: '',
-            loadChildren: () => import('./settings/settings.module').then( m => m.SettingsPageModule)
+            loadChildren: () => import('./settings/settings.module').then(m => m.SettingsPageModule)
           },
           {
             path: 'dados-cadastrais',
-            loadChildren: () => import('../pessoa-form/pessoa-form.module').then( m => m.PessoaFormPageModule),
+            loadChildren: () => import('../pessoa-form/pessoa-form.module').then(m => m.PessoaFormPageModule),
           },
           //minha-empresa
           //meus-planos
@@ -91,7 +93,7 @@ const routes: Routes = [
       },
       {
         path: 'instrutores',
-        loadChildren: () => import('./instrutores/instrutores.module').then( m => m.InstrutoresPageModule)
+        loadChildren: () => import('./instrutores/instrutores.module').then(m => m.InstrutoresPageModule)
       },
     ]
   },
@@ -126,4 +128,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AdmPagePageRoutingModule {}
+export class AdmPagePageRoutingModule { }

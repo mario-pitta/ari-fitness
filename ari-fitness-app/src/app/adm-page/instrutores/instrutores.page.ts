@@ -3,6 +3,7 @@ import { UsuarioService } from './../../../core/services/usuario/usuario.service
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { Usuario } from 'src/core/models/Usuario';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-instrutores',
@@ -14,7 +15,8 @@ export class InstrutoresPage implements OnInit {
 
   constructor(
     private usuarioService: UsuarioService,
-    private readonly auth: AuthService
+    private readonly auth: AuthService,
+    private readonly router: Router
   ) {}
 
   ngOnInit() {
@@ -50,5 +52,10 @@ export class InstrutoresPage implements OnInit {
   excluirInstrutor(instrutor: any) {
     // Lógica para excluir o instrutor
     console.log('Excluir instrutor:', instrutor);
+  }
+
+
+  openForm(id: number){
+    this.router.navigate(['/admin/instrutores/formulario'], { queryParams: { userId: id } });
   }
 }

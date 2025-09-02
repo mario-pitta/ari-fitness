@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier  */
-import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Controller, Get, Param, Query, Res } from '@nestjs/common';
 import { TransacaoFinanceiraDashService } from './transacao-financeira-dash.service';
 import { Response } from 'express';
 
@@ -18,5 +18,12 @@ export class TransacaoFinanceiraDashController {
         return this.transFinanServ.buildDashboardData(query).then(_res => {
             res.send(_res);
         });
+    }
+
+
+    @Get('receitas-por-mes/:empresaId')
+    async obterReceitaMensal(@Param('empresaId') empresaId: string){
+        console.log('chegou')
+        return await this.transFinanServ.obterAnaliseReceitasMensal(new Date().getFullYear(), empresaId)
     }
 }

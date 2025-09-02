@@ -1,11 +1,22 @@
-<ion-item  class="ion-justify-content-between ion-align-items-center">
-  <ion-checkbox slot="start" [(ngModel)]="treino.checked" (ionChange)="output.emit({action: 'check', value: treino})"></ion-checkbox>
-  <ion-label>
-    <h2>{{ treino.nome }}</h2>
-    <p>Nível: {{ treino.nivel_dificuldade }}</p>
-    <p *ngIf="treino.parte_do_corpo">Parte do Corpo: {{ treino.parte_do_corpo?.nome }}</p>
-    <p *ngIf="treino.grupo_muscular">Grupo Muscular: {{ treino.grupo_muscular?.nome }}</p>
-  </ion-label>
-  <ion-icon *ngIf="user.flagAdmin || (enableEdit && !treino.fl_publico)" name="create" slot="end" (click)="output.emit({action: 'edit', value: treino})"></ion-icon>
-  <ion-icon *ngIf="user.flagAdmin " name="trash" slot="end" (click)="output.emit({action: 'delete', value: treino.id})"></ion-icon>
-</ion-item>
+<ion-card class="treino-card">
+    <ion-card-content class="treino-card-content">
+        <div class="d-flex">
+            <div class="d-block w-100">
+                <ion-card-title>
+                    <ion-checkbox [(ngModel)]="treino.checked" [id]="'treino_id_'+treino.id" (ionChange)="output.emit({ action: 'check', value: treino })"></ion-checkbox>
+                    {{ treino.nome }}</ion-card-title>
+                <ion-card-subtitle [for]="'treino_id_'+treino.id">Nível: {{ treino.nivel_dificuldade }}</ion-card-subtitle>
+                <p *ngIf="treino.parte_do_corpo">
+                    Parte do Corpo: {{ treino.parte_do_corpo?.nome }}
+                </p>
+                <p *ngIf="treino.grupo_muscular">
+                    Grupo Muscular: {{ treino.grupo_muscular?.nome }}
+                </p>
+            </div>
+            <div class="treino-card-actions">
+                <ion-icon *ngIf="user.flagAdmin || (enableEdit && !treino.fl_publico)" name="create" (click)="output.emit({ action: 'edit', value: treino })"></ion-icon>
+                <ion-icon *ngIf="user.flagAdmin" name="trash" color="danger" (click)="deleteTreino(treino.id)"></ion-icon>
+            </div>
+        </div>
+    </ion-card-content>
+</ion-card>

@@ -88,7 +88,10 @@ export class PlanejadorPage implements OnInit, OnDestroy {
       this.dragula
         .dropModel('tarefas')
         .subscribe(({ el, target, source, sourceModel, targetModel, item }) => {
-           targetModel.forEach((task: any, index: number) => {
+
+
+          console.log('dropou elemento:', el, target, source, sourceModel, targetModel, item);
+          targetModel.forEach((task: any, index: number) => {
             task.posicao = index + 1;
             this.updateTaskStatus(
               task.id,
@@ -155,7 +158,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
   updateTaskStatus(taskId: number, status: number, posicao: number = 0) {
     this.tarefaService
       .updateStatus(taskId, status, posicao)
-      .subscribe((res) => {});
+      .subscribe((res) => { });
   }
 
   log(v: any) {
