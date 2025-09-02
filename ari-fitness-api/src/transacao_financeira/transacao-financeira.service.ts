@@ -17,10 +17,12 @@ export class TransacaoFinanceiraService {
    */
   findAll(filter: Partial<TransacaoFinanceira> | TransacaoFinanceira | any) {
     console.log('findAll: ', filter);
-    const { data_inicio, data_fim } = filter;
+    const { data_inicio, data_fim, orderBy, asc } = filter;
 
     delete filter.data_inicio;
     delete filter.data_fim;
+    delete filter.orderBy;
+    delete filter.asc;
 
     return this.database.supabase
       .from(tableName)
@@ -32,11 +34,11 @@ export class TransacaoFinanceiraService {
         tipo: tipo_transacao_financeira!transacao_financeira_tr_tipo_id_fkey(id, descricao)
         `,
       )
-      .match({ ...filter.filter, fl_ativo: true })
+      .match({ ...filter, fl_ativo: true })
       .gte('data_lancamento', data_inicio)
       .lte('data_lancamento', data_fim)
-      .order(filter.orderBy, {
-        ascending: filter.asc,
+      .order(orderBy, {
+        ascending: asc,
       });
   }
 
