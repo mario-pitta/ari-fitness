@@ -182,6 +182,10 @@
         <ion-icon aria-hidden="true"  size="small" name="receipt" slot="start"></ion-icon>
         <ion-text size="small">Registrar Pagamento</ion-text>
       </ion-item>
+      <ion-item [button]="true"  lines="full" (click)="openHistoricoModal(selectedUsuario)">
+        <ion-icon aria-hidden="true"  size="small" name="receipt" slot="start"></ion-icon>
+        <ion-text size="small">Histórico de Pagamento</ion-text>
+      </ion-item>
       <ion-item [button]="true"  lines="full" (click)="showCobrancaModal = true">
         <ion-icon aria-hidden="true"  size="small" name="logo-whatsapp" slot="start"></ion-icon>
         <ion-text size="small">Enviar Cobrança</ion-text>
@@ -430,7 +434,45 @@
 
 
 
-
+<ion-modal [isOpen]="showHistoricoModal" (didDismiss)="showHistoricoModal = false; selectedUsuario = null"
+  (ionModalWillPresent)="isOpen = false">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Histórico de Pagamento</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="showHistoricoModal = false">Fechar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ng-container *ngIf="selectedUsuario">
+        <p>
+          <strong>Filtrar por Ano</strong>
+          <ion-select value="2023" interface="popover" placeholder="Ano" (ionChange)="filterAno($event)">
+            <ion-select-option *ngFor="let ano of anos" [value]="ano">
+              {{ ano.value }}
+            </ion-select-option>
+          </ion-select>
+        </p>
+        <ion-list>
+          <ion-item *ngFor="let pagamento of pagamentos">
+            <ion-label>
+              <p>{{ pagamento.nome_mes.label }}/{{ pagamento.ano }}</p>
+              <h2>Pago em: {{ pagamento.transacao?.data_lancamento | date: 'dd/MM/yyyy' }}</h2>
+              <p>Valor: R$ {{ pagamento.transacao?.valor_final }}</p>
+              <p>Status:
+                <ion-chip color="{{ pagamento.status ? 'success' : 'warning' }}">
+                  {{ pagamento.status ? 'Pago' : 'Nao Pago' }}
+                </ion-chip>
+              </p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+    </ion-content>
+  </ng-template>
+</ion-modal>
 
 
 

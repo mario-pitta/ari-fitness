@@ -31,6 +31,13 @@ export interface IUsuario {
   genero: string;
   fumante: boolean;
   tipo_alimentacao: string;
+  /** The `tipo_usuario` property in the `IUsuario` interface and `Usuario` class is defining the type
+  of user. It can be either a string or a number, allowing flexibility in how the user type is
+  represented in the data structure. This property can be used to categorize users based on
+  // 1 - ADMIN 2 - INSTRUTOR 3- ALUNO
+  different criteria or roles within the system.
+  *
+  */
   tipo_usuario: string | number;
   relato_dor: boolean;
   medicacao_em_uso: string;

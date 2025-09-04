@@ -53,13 +53,13 @@ export class TransacaoFinanceiraController {
     }
 
     if (!filter.empresa_id)
-      return new HttpException(
+      return res.status(HttpStatus.BAD_REQUEST).send(new HttpException(
         'Empresa não informada',
         HttpStatus.BAD_REQUEST,
         {
           cause: new Error('Empresa não informada'),
         },
-      );
+      ));
 
     console.log('getting all TransacaoFinanceiras...');
     return this.TransacaoFinanceiraService.findAll(filter).then((_res) => {

@@ -13,17 +13,25 @@ import { AuthService } from 'src/core/services/auth/auth.service';
 import { FormTransacaoFinaceiraComponent } from '../shared/form-transacao-finaceira/form-transacao-finaceira.component';
 import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
 import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
-import  Constants  from 'src/core/Constants';
+import Constants from 'src/core/Constants';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.page.html',
   styleUrls: ['./usuarios.page.scss'],
 })
 export class UsuariosPage implements OnInit {
+  showHistoricoModal: boolean = false;
   downloadRecibo() {
     throw new Error('Method not implemented.');
   }
-
+  pagamentos: any[] = new Array(12).fill(0).map((_, index) => ({
+    mes: index + 1,
+    ano: new Date().getFullYear(),
+    data: new Date(new Date().getFullYear(), index, 1),
+    nome_mes: Constants.meses[index],
+    pago: false,
+    valor: 0,
+  }));
   meses = Constants.meses;
   anos: {
     value: number;
@@ -75,8 +83,9 @@ export class UsuariosPage implements OnInit {
       tendencyValue: null,
     },
     {
-      title: 'Novos Membros',
-      subtitle: 'Mês ' + (new Date().getMonth() + 1).toString(),
+      title: 'Novos Alunos',
+      subtitle:
+        'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
       size: 3,
       data: [
         {
@@ -169,7 +178,8 @@ export class UsuariosPage implements OnInit {
     private confetti: ConfettiService,
     private dashboardMembersService: DashboardMembersService,
     private authService: AuthService,
-    private transacaoFincaneiraDashService: TransacaoFinanceiraDashService
+    private transacaoFinanceiraDashService: TransacaoFinanceiraDashService,
+    private transacaoFinanceiraService: TransacaoFinanceiraService
   ) {}
   user: IUsuario | null = null;
   ngOnInit() {
@@ -269,7 +279,7 @@ export class UsuariosPage implements OnInit {
   }
 
   buildDiariasChartCard(res: any) {
-    this.transacaoFincaneiraDashService
+    this.transacaoFinanceiraDashService
       .getByPeriod(
         new Date().toISOString(),
         new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString(),
@@ -294,10 +304,10 @@ export class UsuariosPage implements OnInit {
   getUsuarios(tipoUsuario: number | string = Constants.ALUNO_ID) {
     const checkStatusPagamento = (u: Usuario) => {
       if (u.data_ultimo_pagamento !== null && u.data_vencimento !== null) {
-        console.log('Checando pagamento: ',  u.nome);
+        console.log('Checando pagamento: ', u.nome);
 
         const ultimoPagamento = new Date(u.data_ultimo_pagamento as string);
-        console.log('ultimoPagamento',  ultimoPagamento);
+        console.log('ultimoPagamento', ultimoPagamento);
 
         const diaUltimoPagamento = ultimoPagamento.getDate();
         const mesUltimoPagamento = ultimoPagamento.getMonth();
@@ -501,6 +511,78 @@ export class UsuariosPage implements OnInit {
     // });
 
     // console.log('this.reciboForm: ', this.reciboForm);
+  }
+
+  async openHistoricoModal(member: Usuario | null | undefined, ano?: number) {
+    if (!ano) ano = new Date().getFullYear();
+    if (!member) return;
+    this.selectedUsuario = member;
+
+   this.filterAno({ detail: { value: { value: ano } } });
+  }
+
+  async filterAno(event: any) {
+    const ano = event.detail.value.value;
+    if (!this.selectedUsuario) return;
+
+    console.log('ano', ano);
+
+    const data_inicio = new Date(ano, 0, 1).toISOString();
+
+    //ultimo dia do ano
+    const data_fim = new Date(ano, 11, 31).toISOString();
+
+    await this.buildPagamentosArray(ano);
+    this.getTransacoesByUser(
+      this.selectedUsuario.id as number,
+      data_inicio,
+      data_fim
+    );
+  }
+
+  getTransacoesByUser(id: number, data_inicio: string, data_fim: string) {
+    this.transacaoFinanceiraService
+      .getTrasacoes({
+        pago_por: id,
+        empresa_id: this.user?.empresa_id,
+        data_inicio,
+        data_fim,
+        tr_categoria_id: 1,
+        fl_ativo: true,
+      })
+      .subscribe({
+        next: (res) => {
+          console.log('res', res);
+
+          this.pagamentos = this.pagamentos.map((p) => {
+            p.status = res.find((r: any) => {
+              if (r.mes === p.mes && r.ano === p.ano)
+               p =  {
+                  ...p,
+                  status: true,
+                  transacao: r,
+                };
+            });
+
+            return p;
+          });
+
+          console.log('this.pagamentos', this.pagamentos);
+
+          this.showHistoricoModal = true;
+        },
+      });
+  }
+
+  buildPagamentosArray(ano: number = new Date().getFullYear()) {
+    this.pagamentos = new Array(12).fill(0).map((_, index) => ({
+      mes: index + 1,
+      ano: ano,
+      data: new Date(ano, index, 1),
+      nome_mes: Constants.meses[index],
+      pago: false,
+      valor: 0,
+    }));
   }
   openReciboModal(member: Usuario | null | undefined) {
     if (!member) return;
