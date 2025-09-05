@@ -18,7 +18,7 @@ export class TransacaoFinanceiraService {
   findAll(filter: Partial<TransacaoFinanceira> | TransacaoFinanceira | any) {
     console.log('findAll: ', filter);
     const { data_inicio, data_fim, orderBy, asc } = filter;
-
+   
     delete filter.data_inicio;
     delete filter.data_fim;
     delete filter.orderBy;
@@ -35,8 +35,10 @@ export class TransacaoFinanceiraService {
         `,
       )
       .match({ ...filter, fl_ativo: true })
-      .gte('data_lancamento', data_inicio)
-      .lte('data_lancamento', data_fim)
+      // filtrar por data de lancamento
+      .gte(data_inicio ? 'data_lancamento' : '', data_inicio ? data_inicio : '')
+      .lte(data_fim ? 'data_lancamento' : '', data_fim ? data_fim : '')
+      // ordenar
       .order(orderBy, {
         ascending: asc,
       });

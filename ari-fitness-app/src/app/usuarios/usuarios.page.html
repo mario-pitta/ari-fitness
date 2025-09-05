@@ -132,14 +132,14 @@
                 </ion-col>
                 <ion-col sizeMd="1" sizeXs="auto" (click)="openCobrancaModal(member)">
                   <sub>Mensalidade</sub>
-                  <ion-chip [color]="member.fl_pago  ? 'success' : 'warning'">
-                    {{member.fl_pago  ? 'Paga' : 'Pendente'}}
+                  <ion-chip [color]="member.fl_adimplente  ? 'success' : 'warning'">
+                    {{member.fl_adimplente ? 'Paga' : 'Pendente'}}
                   </ion-chip>
                 </ion-col>
                 <ion-col sizeMd="2" sizeXs="auto">
                   <sub>Horario</sub>
                   <ion-card-subtitle>
-                    {{member.horarios.hora_inicio.slice(0, 5) + ' - ' +  member.horarios.hora_fim.slice(0, 5)}}
+                    {{member.horarios.hora_inicio.slice(0, 5) + ' - ' + member.horarios.hora_fim.slice(0, 5)}}
                   </ion-card-subtitle>
                 </ion-col>
                 <ion-col sizeMd="1" sizeXs="auto" offset-sm="2" class="position-absolute top-0 end-0">
@@ -170,31 +170,31 @@
         Ações
       </ion-list-header>
       <hr> -->
-      <ion-item [button]="true"  lines="full" (click)="navigate('/admin/membros/cadastro-usuario', selectedUsuario)">
-        <ion-icon aria-hidden="true"  size="small" name="document-text-outline" slot="start"></ion-icon>
+      <ion-item [button]="true" lines="full" (click)="navigate('/admin/membros/cadastro-usuario', selectedUsuario)">
+        <ion-icon aria-hidden="true" size="small" name="document-text-outline" slot="start"></ion-icon>
         <ion-text size="small">Det. do Membro</ion-text>
       </ion-item>
-      <ion-item [button]="true"  lines="full" (click)="navigate('/admin/membros/ficha-de-treino/', selectedUsuario)">
-        <ion-icon aria-hidden="true"  size="small" name="fitness" slot="start"></ion-icon>
+      <ion-item [button]="true" lines="full" (click)="navigate('/admin/membros/ficha-de-treino/', selectedUsuario)">
+        <ion-icon aria-hidden="true" size="small" name="fitness" slot="start"></ion-icon>
         <ion-text size="small">Treinos</ion-text>
       </ion-item>
-      <ion-item [button]="true"  lines="full" (click)="openFormReciboModal(selectedUsuario)">
-        <ion-icon aria-hidden="true"  size="small" name="receipt" slot="start"></ion-icon>
+      <ion-item [button]="true" lines="full" (click)="openFormReciboModal(selectedUsuario)">
+        <ion-icon aria-hidden="true" size="small" name="receipt" slot="start"></ion-icon>
         <ion-text size="small">Registrar Pagamento</ion-text>
       </ion-item>
-      <ion-item [button]="true"  lines="full" (click)="openHistoricoModal(selectedUsuario)">
-        <ion-icon aria-hidden="true"  size="small" name="receipt" slot="start"></ion-icon>
+      <ion-item [button]="true" lines="full" (click)="openHistoricoModal(selectedUsuario)">
+        <ion-icon aria-hidden="true" size="small" name="cash" slot="start"></ion-icon>
         <ion-text size="small">Histórico de Pagamento</ion-text>
       </ion-item>
-      <ion-item [button]="true"  lines="full" (click)="showCobrancaModal = true">
-        <ion-icon aria-hidden="true"  size="small" name="logo-whatsapp" slot="start"></ion-icon>
+      <ion-item [button]="true" lines="full" (click)="showCobrancaModal = true">
+        <ion-icon aria-hidden="true" size="small" name="logo-whatsapp" slot="start"></ion-icon>
         <ion-text size="small">Enviar Cobrança</ion-text>
       </ion-item>
 
-      <ion-item [button]="true"  lines="full">
-        <ion-icon aria-hidden="true"  size="small"
-          [name]=" selectedUsuario?.fl_ativo ? 'lock-closed' : 'lock-open'" slot="start"></ion-icon>
-        <ion-text size="small">{{selectedUsuario?.fl_ativo ?  'Bloquear' : 'Desbloquear'}}</ion-text>
+      <ion-item [button]="true" lines="full">
+        <ion-icon aria-hidden="true" size="small" [name]=" selectedUsuario?.fl_ativo ? 'lock-closed' : 'lock-open'"
+          slot="start"></ion-icon>
+        <ion-text size="small">{{selectedUsuario?.fl_ativo ? 'Bloquear' : 'Desbloquear'}}</ion-text>
       </ion-item>
     </ion-list>
   </ng-template>
@@ -276,7 +276,8 @@
         <p>Olá, {{ selectedUsuario?.nome }}. Aqui é Ari, da <strong>Ari Fitness</strong>. Tudo bem?</p>
 
         <p>Ainda não foi identificado o pagamento da sua mensalidade do mês de <strong>{{ mes?.value }}</strong> de
-          <strong>{{ ano?.value }}</strong>.</p>
+          <strong>{{ ano?.value }}</strong>.
+        </p>
         <p>Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. Caso ainda não tenha
           realizado o pagamento, segue os dados de transferência:</p>
         <p><strong>Chave Pix: </strong> {{'minha@chave.pix'}} </p>
@@ -416,8 +417,7 @@
       </div>
 
       <ion-row class="ion-justify-content-center ion-margin-bottom ion-padding">
-        <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round"
-          (click)="downloadRecibo()">
+        <ion-button class="w-100 d-flex gap-2" color="primary" expand="block" shape="round" (click)="downloadRecibo()">
           Baixar
           <ion-icon class="ms-2" name="download-outline"></ion-icon>
         </ion-button>
@@ -440,6 +440,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-title>Histórico de Pagamento</ion-title>
+
         <ion-buttons slot="end">
           <ion-button (click)="showHistoricoModal = false">Fechar</ion-button>
         </ion-buttons>
@@ -447,27 +448,65 @@
     </ion-header>
     <ion-content>
       <ng-container *ngIf="selectedUsuario">
-        <p>
-          <strong>Filtrar por Ano</strong>
-          <ion-select value="2023" interface="popover" placeholder="Ano" (ionChange)="filterAno($event)">
-            <ion-select-option *ngFor="let ano of anos" [value]="ano">
-              {{ ano.value }}
-            </ion-select-option>
-          </ion-select>
-        </p>
-        <ion-list>
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{selectedUsuario.nome}}</ion-card-title>
+            <ion-card-subtitle>Cadastrado em: {{selectedUsuario.created_at | date: 'dd/MM/yyyy'}}</ion-card-subtitle>
+            <ion-card-subtitle>Plano: {{selectedUsuario.planos.descricao}}</ion-card-subtitle>
+            <ion-card-subtitle>Data de Vencimento: {{selectedUsuario.data_vencimento }}</ion-card-subtitle>
+
+          </ion-card-header>
+        </ion-card>
+        <ion-list [inset]="true">
+          <p class="ion-padding d-flex gap-2 ion-align-items-center">
+            <strong class="fw-bold w-75">Filtrar por Ano</strong>
+            <ion-select interface="popover" placeholder="2025" (ionChange)="filterAno($event)">
+              <ion-select-option *ngFor="let ano of anos" [value]="ano">
+                {{ ano.value }}
+              </ion-select-option>
+            </ion-select>
+          </p>
+          <ion-row>
+            <ion-col *ngIf="pagamentosLoading" size="12" class="text-center ion-padding">
+              <ion-spinner name="crescent"></ion-spinner>
+
+              <p class="mt-2">Carregando pagamentos...</p>
+            </ion-col>
+
+            <ion-col size="12" *ngIf="!pagamentosLoading && pagamentos.length === 0" class="text-center ion-padding">
+              <p>Nenhum pagamento encontrado.</p>
+            </ion-col>
+          </ion-row>
+          <ng-container *ngIf="!pagamentosLoading && pagamentos.length > 0">
           <ion-item *ngFor="let pagamento of pagamentos">
             <ion-label>
-              <p>{{ pagamento.nome_mes.label }}/{{ pagamento.ano }}</p>
-              <h2>Pago em: {{ pagamento.transacao?.data_lancamento | date: 'dd/MM/yyyy' }}</h2>
-              <p>Valor: R$ {{ pagamento.transacao?.valor_final }}</p>
-              <p>Status:
-                <ion-chip color="{{ pagamento.status ? 'success' : 'warning' }}">
-                  {{ pagamento.status ? 'Pago' : 'Nao Pago' }}
-                </ion-chip>
-              </p>
+              <ion-row>
+                <ion-col size="1" class="ion-text-end">
+                  <ion-checkbox *ngIf="!pagamento.pago" [(ngModel)]="pagamento.checked"></ion-checkbox>
+                </ion-col>
+                <ion-col size="11">
+                  <p>{{ pagamento.nome_mes.label }}/{{ pagamento.ano }}</p>
+                  <h2>Pago em: {{ pagamento.transacao?.data_lancamento | date: 'dd/MM/yyyy' }}</h2>
+                  <p>Valor: R$ {{ pagamento.transacao?.valor_final }}</p>
+                  <p>Status:
+                    <ion-chip color="{{ pagamento.pago ? 'success' : 'warning' }}">
+                      {{ pagamento.pago ? 'Pago' : 'Nao Pago' }}
+                    </ion-chip>
+                  </p>
+
+                </ion-col>
+              </ion-row>
             </ion-label>
           </ion-item>
+          <ion-row class="ion-justify-content-center ion-align-items-center d-flex ion-padding">
+            <ion-col size="6" class="ion-text-end">
+              <ion-button color="warning" shape="round" (click)="registrarPagamentos('isentar')" >Isentar</ion-button>
+            </ion-col>
+            <ion-col size="6" class="ion-text-start">
+              <ion-button color="primary" shape="round" (click)="registrarPagamentos('registrar')" >Registrar</ion-button>
+            </ion-col>
+          </ion-row>
+          </ng-container>
         </ion-list>
       </ng-container>
     </ion-content>
@@ -477,17 +516,17 @@
 
 
 
-  <ng-template #mesesSelector let-form let-control="control">
-    <div [formGroup]="form">
-      <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
-        <ion-select-option *ngFor="let mes of meses" [value]="mes.value">{{mes.label}}</ion-select-option>
-      </ion-select>
-    </div>
-  </ng-template>
-  <ng-template #anosSelector let-form>
-    <div [formGroup]="form">
-      <ion-select interface="popover" placeholder="Ano" formControlName="ano">
-        <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
-      </ion-select>
-    </div>
-  </ng-template>
+<ng-template #mesesSelector let-form let-control="control">
+  <div [formGroup]="form">
+    <ion-select interface="popover" placeholder="Mês" [formControlName]="control || 'mes'">
+      <ion-select-option *ngFor="let mes of meses" [value]="mes.value">{{mes.label}}</ion-select-option>
+    </ion-select>
+  </div>
+</ng-template>
+<ng-template #anosSelector let-form>
+  <div [formGroup]="form">
+    <ion-select interface="popover" placeholder="Ano" formControlName="ano">
+      <ion-select-option *ngFor="let ano of anos" [value]="ano.value">{{ano.value}}</ion-select-option>
+    </ion-select>
+  </div>
+</ng-template>

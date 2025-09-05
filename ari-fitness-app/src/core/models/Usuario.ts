@@ -52,6 +52,8 @@ export interface IUsuario {
   empresa?: Partial<IEmpresa>;
   data_ultimo_pagamento?: Date | string;
   fl_pago?: boolean;
+  fl_adimplente?: boolean;
+
 }
 export class Usuario implements IUsuario {
   idade?: any;
@@ -94,6 +96,7 @@ export class Usuario implements IUsuario {
   image_url?: string;
   data_ultimo_pagamento?: Date | string;
   fl_pago?: boolean;
+  fl_adimplente?: boolean;
 
   constructor(obj: IUsuario) {
     Object.assign(this, obj);

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { IUsuario, Usuario } from 'src/core/models/Usuario';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Clipboard } from '@capacitor/clipboard';
 
@@ -14,6 +14,8 @@ import { FormTransacaoFinaceiraComponent } from '../shared/form-transacao-finace
 import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
 import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
 import Constants from 'src/core/Constants';
+import { TransacaoFinanceira } from '../../../../ari-fitness-api/dist/transacao_financeira/TransacaoFinanceira.interface';
+import { FormaDePagamento } from 'src/core/models/TransacaoFInanceira';
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.page.html',
@@ -24,13 +26,27 @@ export class UsuariosPage implements OnInit {
   downloadRecibo() {
     throw new Error('Method not implemented.');
   }
-  pagamentos: any[] = new Array(12).fill(0).map((_, index) => ({
+  pagamentos: {
+    checked: boolean;
+    mes: number;
+    ano: number;
+    data: Date | string;
+    nome_mes: {
+      value: number;
+      label: string;
+    };
+    pago: boolean;
+    valor: number;
+    transacao?: any;
+  }[] = new Array(12).fill(0).map((_, index) => ({
+    checked: false,
     mes: index + 1,
     ano: new Date().getFullYear(),
     data: new Date(new Date().getFullYear(), index, 1),
     nome_mes: Constants.meses[index],
     pago: false,
     valor: 0,
+    transacao: null,
   }));
   meses = Constants.meses;
   anos: {
@@ -170,6 +186,7 @@ export class UsuariosPage implements OnInit {
   ];
   discountType: string = '%';
   recibo: any;
+  pagamentosLoading: boolean = false;
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
@@ -179,7 +196,8 @@ export class UsuariosPage implements OnInit {
     private dashboardMembersService: DashboardMembersService,
     private authService: AuthService,
     private transacaoFinanceiraDashService: TransacaoFinanceiraDashService,
-    private transacaoFinanceiraService: TransacaoFinanceiraService
+    private transacaoFinanceiraService: TransacaoFinanceiraService,
+    private alertController: AlertController
   ) {}
   user: IUsuario | null = null;
   ngOnInit() {
@@ -517,8 +535,9 @@ export class UsuariosPage implements OnInit {
     if (!ano) ano = new Date().getFullYear();
     if (!member) return;
     this.selectedUsuario = member;
+    this.showHistoricoModal = true;
 
-   this.filterAno({ detail: { value: { value: ano } } });
+    this.filterAno({ detail: { value: { value: ano } } });
   }
 
   async filterAno(event: any) {
@@ -533,43 +552,57 @@ export class UsuariosPage implements OnInit {
     const data_fim = new Date(ano, 11, 31).toISOString();
 
     await this.buildPagamentosArray(ano);
-    this.getTransacoesByUser(
-      this.selectedUsuario.id as number,
-      data_inicio,
-      data_fim
-    );
+    this.getTransacoesByUser(this.selectedUsuario, ano);
   }
 
-  getTransacoesByUser(id: number, data_inicio: string, data_fim: string) {
+  getTransacoesByUser(aluno: Usuario, ano: number) {
+    this.pagamentosLoading = true;
     this.transacaoFinanceiraService
       .getTrasacoes({
-        pago_por: id,
+        pago_por: aluno.id,
         empresa_id: this.user?.empresa_id,
-        data_inicio,
-        data_fim,
+        ano,
         tr_categoria_id: 1,
         fl_ativo: true,
       })
       .subscribe({
         next: (res) => {
           console.log('res', res);
+          this.pagamentos = this.pagamentos
+            //filtrar pagamentos para pegar apenas a partir da data de criação do aluno
+            .filter((p) => {
+              const pagamentoDate = new Date(p.data);
+              const alunoCreatedDate = new Date(aluno.created_at as string);
 
-          this.pagamentos = this.pagamentos.map((p) => {
-            p.status = res.find((r: any) => {
-              if (r.mes === p.mes && r.ano === p.ano)
-               p =  {
-                  ...p,
-                  status: true,
-                  transacao: r,
-                };
+              // Só inclui pagamentos do ano de criação do aluno em diante
+              if (
+                pagamentoDate.getFullYear() < alunoCreatedDate.getFullYear() ||
+                (pagamentoDate.getFullYear() ===
+                  alunoCreatedDate.getFullYear() &&
+                  pagamentoDate.getMonth() < alunoCreatedDate.getMonth())
+              ) {
+                return false;
+              }
+              return true;
+            })
+            //e mapear os pagamentos no array de pagamentos
+            .map((p) => {
+
+              p.pago = res.find((r: any) => {
+                if (r.mes === p.mes && r.ano === p.ano)
+                  p = {
+                    ...p,
+                    pago: true,
+                    transacao: r,
+                  };
+              });
+
+              return p;
             });
 
-            return p;
-          });
 
-          console.log('this.pagamentos', this.pagamentos);
 
-          this.showHistoricoModal = true;
+          this.pagamentosLoading = false;
         },
       });
   }
@@ -578,14 +611,102 @@ export class UsuariosPage implements OnInit {
     this.pagamentos = new Array(12).fill(0).map((_, index) => ({
       mes: index + 1,
       ano: ano,
-      data: new Date(ano, index, 1),
+      data: new Date(ano, index, 1).toISOString(),
       nome_mes: Constants.meses[index],
       pago: false,
       valor: 0,
+      checked: false,
     }));
   }
   openReciboModal(member: Usuario | null | undefined) {
     if (!member) return;
     this.showReciboModal = true;
+  }
+
+  async registrarPagamentos(action: 'isentar' | 'registrar') {
+    console.log('action', action);
+    console.log('this.pagamentos', this.pagamentos);
+    console.log('this.selectedUsuario',  this.selectedUsuario);
+    if (!this.selectedUsuario) return;
+
+    if (this.pagamentos.filter((p) => p.checked).length === 0) {
+      this.toastr.warning('Selecione ao menos um pagamento para '  + action +'!');
+      return;
+    }
+
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: 'Deseja realmente '  + action + ' os pagamentos?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            const pagamentos = this.pagamentos.filter((p) => p.checked);
+
+            pagamentos.forEach((p) => {
+              console.log('Registrando pagamento: ', p);
+              const transacao: Partial<TransacaoFinanceira> = {
+                tr_categoria_id: 1,
+                tr_tipo_id: 1,
+                data_lancamento: p.data,
+                valor_real: Number(this.selectedUsuario?.planos?.preco_padrao),
+                desconto_real:
+                  action === 'isentar'
+                    ? Number(this.selectedUsuario?.planos?.preco_padrao)
+                    : 0,
+                valor_final:
+                  action !== 'isentar'
+                    ? Number(this.selectedUsuario?.planos?.preco_padrao)
+                    : 0,
+                pago_por: Number(this.selectedUsuario?.id),
+                empresa_id: String(this.user?.empresa_id),
+                fl_pago: true,
+                mes: p.mes,
+                ano: p.ano,
+                descricao: '',
+                recebido_por: this.user?.id as number,
+                forma_pagamento: FormaDePagamento.PIX,
+              };
+
+              this.transacaoFinanceiraService.save(transacao).subscribe({
+                next: (res) => {
+                  console.log('Pagamento registrado com sucesso: ', res); //TODO: mostrar mensagem de sucesso
+                  this.toastr.success(
+                    'Pagamento registrado com sucesso!',
+                    'top'
+                  );
+                  this.confetti.showConfetti();
+                  this.getUsuarios();
+                },
+              });
+            });
+
+
+            this.pagamentos = this.pagamentos.map((p) => ({
+              ...p,
+              checked: false,
+            }));
+            this.getTransacoesByUser(this.selectedUsuario as Usuario, this.pagamentos[0].ano);
+          },
+        },
+      ],
+    });
+    alert.present();
+  }
+
+  desativarUsuario(usuario: Usuario) {
+    if (!usuario.fl_ativo) {
+      this.toastr.warning('Usuário já está desativado!');
+      return;
+    }
+  }
+
+  ativarUsuario(usuario: Usuario) {
+    if (usuario.fl_ativo) {
+      this.toastr.warning('Usuário já está ativo!');
+      return;
+    }
   }
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { DataBaseService } from 'src/datasource/database.service';
 import { Usuario } from './Usuario.interface';
 import md5 = require('md5');
+import { TransacaoFinanceira } from 'src/transacao_financeira/TransacaoFinanceira.interface';
 
 const tableName = 'usuario';
 
@@ -21,8 +22,63 @@ export class UsuarioService {
     });
   }
 
-  findByFilters(filters: Partial<Usuario> | Usuario) {
-    return this.database.supabase
+  checkAdimplencia(user: Usuario, transacoes: [], isFirstUser: boolean): boolean {
+    
+    //Cria uma lista de meses desde que o aluno foi cadastrado ate a data atual
+    const meses: {
+      ano: number;
+      mes: number;
+      label: string;
+      pago: boolean;
+    }[] = [];
+    const dataAtual = new Date();
+    const dataCadastro = new Date(user.created_at as string);
+
+    const anoCadastro = dataCadastro.getFullYear();
+    const mesCadastro = dataCadastro.getMonth();
+
+    const anoAtual = dataAtual.getFullYear();
+    const mesAtual = dataAtual.getMonth();
+
+    for (let ano = anoCadastro; ano <= anoAtual; ano++) {
+      const mesInicio = ano === anoCadastro ? mesCadastro : 0;
+      const mesFim = ano === anoAtual ? mesAtual : 11;
+      for (let mes = mesInicio; mes <= mesFim; mes++) {
+        meses.push({ ano, mes, label: `${mes + 1}/${ano}`, pago: false });
+      }
+    }
+
+    transacoes.forEach((t: TransacaoFinanceira) => {
+      if (t.fl_pago) {
+        // const dataPagamento = new Date(t.data_lancamento as string);
+        const anoPagamento = t.ano;
+        const mesPagamento = t.mes - 1; //-1 pq o mes vem 1-12 e o getMonth() retorna 0-11
+
+        const mesHistorico = meses.find(
+          (m) => m.ano === anoPagamento && m.mes === mesPagamento,
+        );
+        // atualiza o mes como pago
+        if (mesHistorico) {
+          console.log('houve pagamento em ', mesHistorico.label);
+          meses.find(
+            (m) => m.ano === anoPagamento && m.mes === mesPagamento,
+          )!.pago = true;
+        }
+      }
+    });
+    
+    //Se for o primeiro usuario, loga os meses
+    if (isFirstUser) {
+      console.log('usuario cadastrado em ', dataCadastro);
+      console.log('numero de transacoes ', transacoes.length); 
+      console.log('data atual ', dataAtual);
+      console.log('meses do usuario ', user.nome, meses);
+    }
+    return meses.every((m) => m.pago);
+  }
+
+  async findByFilters(filters: Partial<Usuario> | Usuario) {
+    const res = await this.database.supabase
       .from(tableName)
       .select(
         `*,
@@ -31,6 +87,9 @@ export class UsuarioService {
         ), 
         planos (
           *
+        ), 
+        transacao_financeira!transacao_financeira_pago_por_fkey (
+          *
         )
         `,
       )
@@ -38,6 +97,17 @@ export class UsuarioService {
       .order('nome', {
         ascending: true,
       });
+
+    console.log('res do findByFilters', res);
+    if (!res.error) {
+      res.data = res.data?.map((u, i) => ({
+        ...u,
+        fl_adimplente: this.checkAdimplencia(u, u.transacao_financeira as [], i === 2),
+      }));
+    }
+
+
+    return res;
   }
 
   /**
@@ -77,16 +147,15 @@ export class UsuarioService {
    */
   async update(body: Partial<Usuario>) {
     console.log('updateUsuario body: ', body);
-    
+
     return await this.database.supabase
       .from(tableName)
       .update(body)
-      .eq('id', body.id).then((res) => {
-        
-        console.log('res do updadeUsuario', res)
-        
+      .eq('id', body.id)
+      .then((res) => {
+        console.log('res do updadeUsuario', res);
 
-        return res
+        return res;
       });
   }
 
