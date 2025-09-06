@@ -152,11 +152,7 @@ export class UsuarioService {
       .from(tableName)
       .update(body)
       .eq('id', body.id)
-      .then((res) => {
-        console.log('res do updadeUsuario', res);
-
-        return res;
-      });
+      .select('*');
   }
 
   findInstrutorByFilters(empresaId: number, filters: any) {

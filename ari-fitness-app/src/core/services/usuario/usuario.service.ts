@@ -13,13 +13,25 @@ export class UsuarioService {
   create(usuario: Usuario) {
     delete usuario.id;
     delete usuario.created_at;
-    return this.http
-      .post<Usuario>(environment.apiUrl + '/usuario', usuario)
-      .pipe(take(1));
-  }
-  update(usuario: Usuario | Partial<Usuario>) {
 
-    delete usuario.created_at;
+    return this.http
+    .post<Usuario>(environment.apiUrl + '/usuario', usuario)
+    .pipe(take(1));
+  }
+  update(usuario: Usuario | Partial<Usuario> | any) {
+
+    delete usuario.fl_adimplente;
+    delete usuario.fl_pago;
+    delete usuario.horarios;
+    delete usuario.planos;
+    delete usuario.empresa;
+    delete usuario.ficha_aluno;
+    delete usuario.historico;
+    delete usuario.idade;
+    delete usuario.image_url;
+    delete usuario.transacao_financeira;
+
+
     return this.http
       .put<Usuario>(environment.apiUrl + '/usuario', usuario)
       .pipe(take(1));

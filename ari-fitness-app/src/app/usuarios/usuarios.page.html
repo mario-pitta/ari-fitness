@@ -61,10 +61,10 @@
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col size="6">
-          <ion-searchbar></ion-searchbar>
+          <ion-searchbar placeholder="Buscar por..." [(ngModel)]="searchText" (ionClear)="searchText = ''; filterMember({ detail: { value: 'input' }})" (ionInput)="filterMember({ detail: { value: 'input' }})"></ion-searchbar>
         </ion-col>
 
-        <ion-col size="3" class="d-flex gap-2 ion-align-items-center ion-justify-content-around">
+        <!-- <ion-col size="3" class="d-flex gap-2 ion-align-items-center ion-justify-content-around">
           <ion-card-subtitle for="orderMemberSelector" style="width: inherit !important;"
             class="d-flex gap-1 ion-text-center fw-light">
             <ion-icon name="swap-vertical-sharp" size="small"></ion-icon>
@@ -78,17 +78,18 @@
             <ion-select-option [value]="'horario'">Horário</ion-select-option>
             <ion-select-option [value]="'ultimaAtividade'">Última Atividade</ion-select-option>
           </ion-select>
-        </ion-col>
+        </ion-col> -->
         <ion-col size="3" class="w-50 d-flex gap-2 ion-align-items-center ion-justify-content-around">
           <ion-card-subtitle for="filterMemberSelector" style="width: inherit !important;"
             class="d-flex gap-1 ion-text-center fw-light">
             <ion-icon name="funnel" size="small"></ion-icon>
             <ion-label>Filtrar:</ion-label>
           </ion-card-subtitle>
-          <ion-select name="filterMemberSelector" id="filterMemberSelector" interface="popover">
-            <ion-select-option [value]="'status'">Todos</ion-select-option>
-            <ion-select-option [value]="'idade'">Inadiplentes</ion-select-option>
-            <ion-select-option [value]="'status'">Inativo</ion-select-option>
+          <ion-select name="filterMemberSelector" id="filterMemberSelector" (ionChange)="filterMember($event)" interface="popover" value="todos">
+            <ion-select-option [value]="'todos'" selected>Todos</ion-select-option>
+            <ion-select-option [value]="'ativos'" >Ativos</ion-select-option>
+            <ion-select-option [value]="'inadimplentes'">Inadimplentes</ion-select-option>
+            <ion-select-option [value]="'inativo'">Inativos</ion-select-option>
           </ion-select>
         </ion-col>
       </ion-row>
@@ -131,9 +132,9 @@
                   </ion-card-subtitle>
                 </ion-col>
                 <ion-col sizeMd="1" sizeXs="auto" (click)="openCobrancaModal(member)">
-                  <sub>Mensalidade</sub>
-                  <ion-chip [color]="member.fl_adimplente  ? 'success' : 'warning'">
-                    {{member.fl_adimplente ? 'Paga' : 'Pendente'}}
+                  <sub>Status:</sub>
+                  <ion-chip [color]="!member.fl_ativo ? 'danger' : member.fl_adimplente  ? 'success' : 'warning'">
+                    {{!member.fl_ativo ? 'Inativo' : member.fl_adimplente ? 'Em Dia' : 'Inadimplente'}}
                   </ion-chip>
                 </ion-col>
                 <ion-col sizeMd="2" sizeXs="auto">
@@ -191,10 +192,10 @@
         <ion-text size="small">Enviar Cobrança</ion-text>
       </ion-item>
 
-      <ion-item [button]="true" lines="full">
+      <ion-item [button]="true" lines="full" (click)="toggleAtivo(selectedUsuario)">
         <ion-icon aria-hidden="true" size="small" [name]=" selectedUsuario?.fl_ativo ? 'lock-closed' : 'lock-open'"
           slot="start"></ion-icon>
-        <ion-text size="small">{{selectedUsuario?.fl_ativo ? 'Bloquear' : 'Desbloquear'}}</ion-text>
+        <ion-text size="small">{{selectedUsuario?.fl_ativo ? 'Desativar' : 'Ativar'}}</ion-text>
       </ion-item>
     </ion-list>
   </ng-template>

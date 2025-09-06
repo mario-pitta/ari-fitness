@@ -57,6 +57,7 @@ export class UsuariosPage implements OnInit {
   Constants = Constants;
   tipoSelected: number | string = Constants.ALUNO_ID;
   usuarioList: Usuario[] = [];
+  usuarios: Usuario[] = [];
   showCobrancaModal: boolean = false;
   showReciboModal: boolean = false;
   showFormReciboModal: boolean = false;
@@ -187,6 +188,7 @@ export class UsuariosPage implements OnInit {
   discountType: string = '%';
   recibo: any;
   pagamentosLoading: boolean = false;
+  searchText: string = '';
   constructor(
     private usuarioService: UsuarioService,
     private router: Router,
@@ -384,12 +386,11 @@ export class UsuariosPage implements OnInit {
     this.usuarioService
       .findByFilters({
         tipo_usuario: tipoUsuario,
-        fl_ativo: true,
         empresa_id: this.user?.empresa?.id,
       })
       .subscribe({
         next: (res) => {
-          this.usuarioList = res.map((u: Usuario) => {
+          this.usuarios = res.map((u: Usuario) => {
             return {
               ...u,
               idade:
@@ -399,6 +400,7 @@ export class UsuariosPage implements OnInit {
             };
           });
           console.log('this.usuarioList: ', this.usuarioList);
+          this.usuarioList = this.usuarios;
         },
       });
   }
@@ -473,7 +475,7 @@ export class UsuariosPage implements OnInit {
   }
 
   openCobrancaModal(member: Usuario) {
-    if (member.fl_pago) {
+    if (!member.fl_ativo || member.fl_adimplente) {
       return;
     }
     this.selectedUsuario = member;
@@ -587,7 +589,6 @@ export class UsuariosPage implements OnInit {
             })
             //e mapear os pagamentos no array de pagamentos
             .map((p) => {
-
               p.pago = res.find((r: any) => {
                 if (r.mes === p.mes && r.ano === p.ano)
                   p = {
@@ -599,8 +600,6 @@ export class UsuariosPage implements OnInit {
 
               return p;
             });
-
-
 
           this.pagamentosLoading = false;
         },
@@ -626,18 +625,19 @@ export class UsuariosPage implements OnInit {
   async registrarPagamentos(action: 'isentar' | 'registrar') {
     console.log('action', action);
     console.log('this.pagamentos', this.pagamentos);
-    console.log('this.selectedUsuario',  this.selectedUsuario);
+    console.log('this.selectedUsuario', this.selectedUsuario);
     if (!this.selectedUsuario) return;
 
     if (this.pagamentos.filter((p) => p.checked).length === 0) {
-      this.toastr.warning('Selecione ao menos um pagamento para '  + action +'!');
+      this.toastr.warning(
+        'Selecione ao menos um pagamento para ' + action + '!'
+      );
       return;
     }
 
-
     const alert = await this.alertController.create({
       header: 'Confirmar',
-      message: 'Deseja realmente '  + action + ' os pagamentos?',
+      message: 'Deseja realmente ' + action + ' os pagamentos?',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
@@ -683,12 +683,14 @@ export class UsuariosPage implements OnInit {
               });
             });
 
-
             this.pagamentos = this.pagamentos.map((p) => ({
               ...p,
               checked: false,
             }));
-            this.getTransacoesByUser(this.selectedUsuario as Usuario, this.pagamentos[0].ano);
+            this.getTransacoesByUser(
+              this.selectedUsuario as Usuario,
+              this.pagamentos[0].ano
+            );
           },
         },
       ],
@@ -696,17 +698,75 @@ export class UsuariosPage implements OnInit {
     alert.present();
   }
 
-  desativarUsuario(usuario: Usuario) {
-    if (!usuario.fl_ativo) {
-      this.toastr.warning('Usuário já está desativado!');
-      return;
+  filterMember(event: any) {
+    const filter = event.detail.value;
+    console.log('filter', filter);
+
+    switch (filter) {
+      case 'todos':
+        this.usuarioList = this.usuarios;
+        break;
+      case 'ativos':
+        this.usuarioList = this.usuarios.filter((u) => u.fl_ativo);
+        break;
+      case 'inativos':
+        this.usuarioList = this.usuarios.filter((u) => !u.fl_ativo);
+        break;
+      case 'inadimplente':
+        this.usuarioList = this.usuarios.filter((u) => !u.fl_adimplente && u.fl_ativo);
+        break;
+      case 'input':
+        this.usuarioList = this.usuarios.filter((u) => {
+          const searchLower = this.searchText.toLowerCase();
+          return (
+            u.nome.toLowerCase().includes(searchLower) ||
+            u.cpf?.toLowerCase().includes(searchLower) ||
+            u.whatsapp?.toLowerCase().includes(searchLower) ||
+            u.planos?.descricao.toLowerCase().includes(searchLower)
+          );
+        });
+        break;
     }
   }
 
-  ativarUsuario(usuario: Usuario) {
-    if (usuario.fl_ativo) {
-      this.toastr.warning('Usuário já está ativo!');
-      return;
-    }
+  async toggleAtivo(usuario: Usuario | null | undefined) {
+    if (!usuario) return;
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar',
+      message: `Deseja realmente ${
+        usuario.fl_ativo ? 'desativar' : 'ativar'
+      } o usuário ${usuario.nome}?`,
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Confirmar',
+          handler: () => {
+            const fl_ativo = !usuario.fl_ativo;
+
+            this.usuarioService
+              .update({ id: usuario.id, fl_ativo, data_desativacao: fl_ativo ? null : new Date().toISOString()})
+              .subscribe({
+                next: (res) => {
+                  if (res) {
+                    this.toastr.success(
+                      `Usuário ${
+                        usuario.fl_ativo ? 'desativado' : 'ativado'
+                      } com sucesso!`,
+                      'top'
+                    );
+                    this.getUsuarios();
+                    this.isOpen = false;
+
+                  }
+                },
+              });
+          },
+        },
+      ],
+    });
+    alert.present();
   }
+
+
 }
