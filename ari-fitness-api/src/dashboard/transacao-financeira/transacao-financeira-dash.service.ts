@@ -21,6 +21,7 @@ export class TransacaoFinanceiraDashService {
       )
       .eq('empresa_id', query.empresa_id)
       .eq('fl_ativo', true)
+      .gte('valor_final', 0)
       .gte('data_lancamento', query.data_inicio)
       .lte('data_lancamento', query.data_fim)
       .then((_res) => {

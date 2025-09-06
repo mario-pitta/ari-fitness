@@ -299,7 +299,9 @@ export class FinancasComponent implements OnInit {
         next: (res) => {
           console.log('res: ', res);
 
-          this.transacoes = res;
+          this.transacoes = res.filter(
+            (t: TransacaoFinanceira) => (t.valor_final as number) > 0
+          );
           this.loading = false;
         },
       });
@@ -322,13 +324,12 @@ export class FinancasComponent implements OnInit {
         },
       })
       .then((m) => {
-        m.present()
+        m.present();
         m.onDidDismiss().then((res) => {
-
           if (res.data) {
             this.ngOnInit();
           }
-        })
+        });
       });
   }
 

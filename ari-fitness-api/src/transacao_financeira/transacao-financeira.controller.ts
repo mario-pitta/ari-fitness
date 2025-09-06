@@ -15,13 +15,12 @@ import {
 } from '@nestjs/common';
 import { TransacaoFinanceiraService } from './transacao-financeira.service';
 import { TransacaoFinanceira } from './TransacaoFinanceira.interface';
-import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Controller('transacao-financeira')
 export class TransacaoFinanceiraController {
   constructor(
     private TransacaoFinanceiraService: TransacaoFinanceiraService,
-    private usuarioService: UsuarioService
+
   ) {}
 
   /**
