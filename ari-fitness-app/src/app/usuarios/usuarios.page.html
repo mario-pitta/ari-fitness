@@ -6,7 +6,7 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col *ngFor="let card of memberDataCard" size-xs="12" size-md="6" size-lg="3" [size]="card.size">
+    <ion-col *ngFor="let card of memberDataCard" [attr.size-xs]="12" [attr.size-md]="6" [attr.size-lg]="card.size" [size]="card.size">
       <ion-card class="member-data-card" [ngClass]="card.chartType ? 'chart-card' : ''">
         <ion-card-content>
           @if(!card.value && card.chartType){
@@ -89,7 +89,7 @@
             <ion-select-option [value]="'todos'" selected>Todos</ion-select-option>
             <ion-select-option [value]="'ativos'" >Ativos</ion-select-option>
             <ion-select-option [value]="'inadimplentes'">Inadimplentes</ion-select-option>
-            <ion-select-option [value]="'inativo'">Inativos</ion-select-option>
+            <ion-select-option [value]="'inativos'">Inativos</ion-select-option>
           </ion-select>
         </ion-col>
       </ion-row>
@@ -274,14 +274,14 @@
 
       <div class="ion-padding" id="message">
 
-        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é Ari, da <strong>Ari Fitness</strong>. Tudo bem?</p>
+        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é {{ user?.nome }}, da <strong>{{ user?.empresa?.nome }}</strong>. Tudo bem?</p>
 
         <p>Ainda não foi identificado o pagamento da sua mensalidade do mês de <strong>{{ mes?.value }}</strong> de
           <strong>{{ ano?.value }}</strong>.
         </p>
         <p>Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. Caso ainda não tenha
           realizado o pagamento, segue os dados de transferência:</p>
-        <p><strong>Chave Pix: </strong> {{'minha@chave.pix'}} </p>
+        <p><strong>Chave Pix: </strong> {{user?.empresa?.chave_pix}} </p>
 
         <p>Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. Será
           um prazer te atender!</p>

@@ -87,103 +87,90 @@ export class UsuariosPage implements OnInit {
       value: number;
     }[];
   }[] = [
-    {
-      title: 'Alunos',
-      subtitle: 'Total de alunos',
-      data: [],
-      size: 3,
-      iconColor: 'primary',
-      chartType: 'pie',
-      value: null,
-      cardIconName: 'people',
-      tendency: 'up',
-      tendencyValue: null,
-    },
-    {
-      title: 'Novos Alunos',
-      subtitle:
-        'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
-      size: 3,
-      data: [
-        {
-          name: 'Mulheres',
-          value: 7,
-        },
-        {
-          name: 'Homens',
-          value: 2,
-        },
-      ],
-      iconColor: 'success',
-      chartType: 'pie',
-      value: 9,
-      cardIconName: 'person-add',
-      tendency: 'up',
-      tendencyValue: 7,
-    },
-    {
-      title: 'Visitantes',
-      subtitle: 'No mês',
-      size: 6,
-      data: [
-        {
-          name: 'Mulheres',
-          value: 28,
-        },
-        {
-          name: 'Homens',
-          value: 35,
-        },
-      ],
-
-      iconColor: 'warning',
-      chartType: 'bar',
-      value: '15',
-      cardIconName: 'person',
-      tendency: 'down',
-      tendencyValue: -8,
-    },
-    {
-      title: 'Horarios de Pico',
-      subtitle: '',
-      size: 6,
-      data: [
-        {
-          name: '5:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '6:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '7:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '16:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '17:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '18:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-        {
-          name: '19:20h',
-          value: Number((Math.random() * 100).toFixed(0)),
-        },
-      ],
-      iconColor: 'danger',
-      chartType: 'bar',
-      value: null,
-      cardIconName: 'alarm-outline',
-      // tendency: 'down',
-      // tendencyValue: -28,
-    },
+    // {
+    //   title: 'Novos Alunos',
+    //   subtitle:
+    //     'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
+    //   size: 3,
+    //   data: [
+    //     {
+    //       name: 'Mulheres',
+    //       value: 7,
+    //     },
+    //     {
+    //       name: 'Homens',
+    //       value: 2,
+    //     },
+    //   ],
+    //   iconColor: 'success',
+    //   chartType: 'pie',
+    //   value: 9,
+    //   cardIconName: 'person-add',
+    //   tendency: 'up',
+    //   tendencyValue: 7,
+    // },
+    // {
+    //   title: 'Visitantes',
+    //   subtitle: 'No mês',
+    //   size: 6,
+    //   data: [
+    //     {
+    //       name: 'Mulheres',
+    //       value: 28,
+    //     },
+    //     {
+    //       name: 'Homens',
+    //       value: 35,
+    //     },
+    //   ],
+    //   iconColor: 'warning',
+    //   chartType: 'bar',
+    //   value: '15',
+    //   cardIconName: 'person',
+    //   tendency: 'down',
+    //   tendencyValue: -8,
+    // },
+    // {
+    //   title: 'Horarios de Pico',
+    //   subtitle: '',
+    //   size: 6,
+    //   data: [
+    //     {
+    //       name: '5:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '6:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '7:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '16:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '17:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '18:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //     {
+    //       name: '19:20h',
+    //       value: Number((Math.random() * 100).toFixed(0)),
+    //     },
+    //   ],
+    //   iconColor: 'danger',
+    //   chartType: 'bar',
+    //   value: null,
+    //   cardIconName: 'alarm-outline',
+    //   // tendency: 'down',
+    //   // tendencyValue: -28,
+    // },
   ];
   discountType: string = '%';
   recibo: any;
@@ -238,64 +225,95 @@ export class UsuariosPage implements OnInit {
         }) => {
           console.log('res: ', res);
           this.buildTotalMembersChartCard(res);
-          this.buildNovosMembrosChartCard(res);
-          this.buildDiariasChartCard(res);
+          // this.buildNovosMembrosChartCard(res);
+          // this.buildDiariasChartCard(res);
           this.buildHorariosChartCard(res);
         },
       });
   }
 
   buildHorariosChartCard(res: any) {
-    this.memberDataCard[3].data = Object.keys(res.horarios).map((key) => ({
-      name: key,
-      value: res.horarios[key],
-    }));
-    //ordenar lista de horarios pelo horario
-    this.memberDataCard[3].data.sort((a, b) => {
-      if (a.name < b.name) {
-        return -1;
-      }
-      if (a.name > b.name) {
-        return 1;
-      }
-      return 0;
-    });
+    const cardData = {
+      title: 'Horários de Pico',
+      subtitle: '',
+      size: 6,
+      iconColor: 'danger',
+      chartType: 'bar',
+      value: null,
+      cardIconName: 'alarm-outline',
+      tendency: 'down',
+      tendencyValue: -28,
+      data: Object.keys(res.horarios)
+        .map((key) => ({
+          name: key,
+          value: res.horarios[key],
+        }))
+        .sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        }),
+    };
+
+    this.memberDataCard.push(cardData);
   }
 
   buildTotalMembersChartCard(res: any) {
-    this.memberDataCard[0].value = res.totalMembers.total;
-    this.memberDataCard[0].tendencyValue =
-      `${res.totalMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
-      (res.totalMembers.total -
-        (res.totalMembers.total - res.memberAtLastMonth) / 100);
-    this.memberDataCard[0].data = [
-      {
-        name: 'Mulheres',
-        value: res.totalMembers.female || 0,
-      },
-      {
-        name: 'Homens',
-        value: res.totalMembers.male || 0,
-      },
-    ];
+    const cardData = {
+      title: 'Alunos',
+      size: 6,
+      iconColor: 'primary',
+      chartType: 'pie',
+      cardIconName: 'people',
+      subtitle: '',
+      value: res.totalMembers.total,
+      tendencyValue:
+        `${res.totalMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
+        (res.totalMembers.total -
+          (res.totalMembers.total - res.memberAtLastMonth) / 100),
+      data: [
+        {
+          name: 'Mulheres',
+          value: res.totalMembers.female || 0,
+        },
+        {
+          name: 'Homens',
+          value: res.totalMembers.male || 0,
+        },
+      ],
+    };
+    this.memberDataCard.push(cardData);
   }
 
   buildNovosMembrosChartCard(res: any) {
-    this.memberDataCard[1].value = res.newMembers.total;
-    this.memberDataCard[1].tendencyValue =
-      `${res.newMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
-      (res.newMembers.total -
-        (res.newMembers.total - res.memberAtLastMonth) / 100);
-    this.memberDataCard[1].data = [
-      {
-        name: 'Mulheres',
-        value: res.newMembers.female || 0,
-      },
-      {
-        name: 'Homens',
-        value: res.newMembers.male || 0,
-      },
-    ];
+    const cardData = {
+      title: 'Novos Membros',
+      subtitle: 'Total de novos membros',
+
+      size: 6,
+      iconColor: 'primary',
+      chartType: 'pie',
+      value: null,
+      cardIconName: 'people',
+      tendency: 'up',
+      tendencyValue: null,
+      data: [
+        {
+          name: 'Mulheres',
+          value: res.newMembers.female || 0,
+        },
+        {
+          name: 'Homens',
+          value: res.newMembers.male || 0,
+        },
+      ],
+    };
+
+    this.memberDataCard.push(cardData);
   }
 
   buildDiariasChartCard(res: any) {
@@ -436,12 +454,12 @@ export class UsuariosPage implements OnInit {
 
   get message(): string {
     return `
-    Olá, Alana. Aqui é Ari, da *Ari Fitness*. Tudo bem? %0D
+    Olá, ${this.selectedUsuario?.nome}. Aqui é Ari, da *Ari Fitness*. Tudo bem? %0D
   Ainda não foi identificado o pagamento da sua mensalidade do mês de *${this.mes?.value}* de *${this.ano?.value}*.%0D
   Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. %0D%0D
 
   Caso ainda não tenha realizado o pagamento, segue os dados de transferência: %0D
-    *Chave Pix*: minha@chave.pix %0D%0D
+    *Chave Pix*: ${this.user?.empresa?.chave_pix} %0D%0D
   Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. %0DSerá um prazer te atender!`;
   }
 
@@ -450,7 +468,7 @@ export class UsuariosPage implements OnInit {
 
     const mdMessage = this.message;
 
-    const whasappUrl = `https://web.whatsapp.com/send?phone=5571985263173
+    const whasappUrl = `https://web.whatsapp.com/send?phone=55${this.selectedUsuario?.whatsapp}&
     &text=${mdMessage}`;
 
     const a = document.createElement('a');
@@ -712,8 +730,10 @@ export class UsuariosPage implements OnInit {
       case 'inativos':
         this.usuarioList = this.usuarios.filter((u) => !u.fl_ativo);
         break;
-      case 'inadimplente':
-        this.usuarioList = this.usuarios.filter((u) => !u.fl_adimplente && u.fl_ativo);
+      case 'inadimplentes':
+        this.usuarioList = this.usuarios.filter(
+          (u) => !u.fl_adimplente && u.fl_ativo
+        );
         break;
       case 'input':
         this.usuarioList = this.usuarios.filter((u) => {
@@ -745,7 +765,11 @@ export class UsuariosPage implements OnInit {
             const fl_ativo = !usuario.fl_ativo;
 
             this.usuarioService
-              .update({ id: usuario.id, fl_ativo, data_desativacao: fl_ativo ? null : new Date().toISOString()})
+              .update({
+                id: usuario.id,
+                fl_ativo,
+                data_desativacao: fl_ativo ? null : new Date().toISOString(),
+              })
               .subscribe({
                 next: (res) => {
                   if (res) {
@@ -757,7 +781,6 @@ export class UsuariosPage implements OnInit {
                     );
                     this.getUsuarios();
                     this.isOpen = false;
-
                   }
                 },
               });
@@ -767,6 +790,4 @@ export class UsuariosPage implements OnInit {
     });
     alert.present();
   }
-
-
 }
