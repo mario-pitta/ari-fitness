@@ -1,0 +1,39 @@
+
+
+
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>Check-in de Alunos</ion-card-title>
+    <ion-card-subtitle>Escaneie o QR Code ou registre manualmente o check-in do aluno</ion-card-subtitle>
+  </ion-card-header>
+
+
+
+</ion-card>
+<div class="qrcodeImage">
+  <qrcode
+    [qrdata]="checkinUrl"
+    [allowEmptyString]="true"
+    [ariaLabel]="'QR Code image with the following content...'"
+    [cssClass]="'center'"
+    [colorDark]="'#000000ff'"
+    [colorLight]="'#ffffffff'"
+    [elementType]="'canvas'"
+    [errorCorrectionLevel]="'Q'"
+    [imageSrc]="empresa?.logo_url"
+    [imageHeight]="75"
+    [imageWidth]="70"
+    [margin]="4"
+    [scale]="1"
+    [title]="'Fazer Check-in'"
+    [width]="isMobile ? 200 : 400"
+  ></qrcode>
+</div>
+<h6 class="ion-text-center ion-padding-top">Ou registre manualmente</h6>
+<div class="ion-container  ion-text-center d-flex ion-justify-content-center ion-align-items-center">
+  <div class=" ion-container ion-padding ion-align-items-center">
+    <ion-input  class="ion-text-left"  [(ngModel)]="cpf"  label="CPF" labelPlacement="floating" [maskito]="cpfMask" [maskitoElement]="maskPredicate"  type="text" placeholder="000.000.000-00" />
+    <ion-button class="ion-margin-top "color="primary" shape="round" expand="block" (click)="registrarCheckIn()">Registrar Check-in</ion-button>
+  </div>
+</div>
+

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdmPagePage } from './adm-page.page';
 import Constants from 'src/core/Constants';
+import { CheckInPageModule } from '../check-in/check-in.module';
 
 const routes: Routes = [
   {
@@ -94,6 +95,10 @@ const routes: Routes = [
       {
         path: 'instrutores',
         loadChildren: () => import('./instrutores/instrutores.module').then(m => m.InstrutoresPageModule)
+      },
+      {
+        path: 'qrcode',
+        loadChildren: () => import('../check-in/check-in.module').then(m => m.CheckInPageModule)
       },
     ]
   },

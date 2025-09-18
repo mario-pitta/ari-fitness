@@ -237,10 +237,10 @@ ion-card {
   cursor: pointer;
 }
 
-ion-card:hover {
-  animation: zoomIn 0.15s ease-in forwards;
-  box-shadow: 5px 6px 7px 0px #464647;
-}
+// ion-card:hover {
+//   animation: zoomIn 0.15s ease-in forwards;
+//   box-shadow: 5px 6px 7px 0px #464647;
+// }
 
 .zoomIn {
   animation: zoomIn 0.15s ease-in forwards;

@@ -13,6 +13,10 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
 
   },
+  {
+    path: 'check-in',
+    loadChildren: () => import('./check-in/check-in.module').then( m => m.CheckInPageModule)
+  },
 
 
 

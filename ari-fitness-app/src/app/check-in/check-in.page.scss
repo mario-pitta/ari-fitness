@@ -1,0 +1,25 @@
+/* Put this code in your CSS file, e.g. app.component.css */
+
+/* The div container */
+.qrcodeImage {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Add custom styles here */
+.center {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
+
+
+@media (max-width: 600px) {
+  .qrcode {
+    width: 200px;
+    height: 200px;
+  }
+}
