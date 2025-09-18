@@ -16,6 +16,16 @@ import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/tran
 import Constants from 'src/core/Constants';
 import { TransacaoFinanceira } from '../../../../ari-fitness-api/dist/transacao_financeira/TransacaoFinanceira.interface';
 import { FormaDePagamento } from 'src/core/models/TransacaoFInanceira';
+
+const WHATSAPP_MESSAGE_TEMPLATE = `
+    Olá, {{nome}}. Aqui é {{remetente}}, da *{{empresa}}*. Tudo bem? %0D
+  Ainda não foi identificado o pagamento da sua mensalidade do mês de *{{mes}}* de *{{ano}}*.%0D
+  Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. %0D%0D
+
+  Caso ainda não tenha realizado o pagamento, segue os dados de transferência: %0D
+    *Chave Pix*: {{chave_pix}} %0D%0D
+  Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. %0DSerá um prazer te atender!`;
+
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.page.html',
@@ -453,20 +463,17 @@ export class UsuariosPage implements OnInit {
   }
 
   get message(): string {
-    return `
-    Olá, ${this.selectedUsuario?.nome}. Aqui é Ari, da *Ari Fitness*. Tudo bem? %0D
-  Ainda não foi identificado o pagamento da sua mensalidade do mês de *${this.mes?.value}* de *${this.ano?.value}*.%0D
-  Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. %0D%0D
-
-  Caso ainda não tenha realizado o pagamento, segue os dados de transferência: %0D
-    *Chave Pix*: ${this.user?.empresa?.chave_pix} %0D%0D
-  Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. %0DSerá um prazer te atender!`;
+    return WHATSAPP_MESSAGE_TEMPLATE
+      .replace('{{nome}}', this.selectedUsuario?.nome ?? '')
+      .replace('{{remetente}}', this.user?.nome ?? '')
+      .replace('{{empresa}}', this.user?.empresa?.nome ?? '')
+      .replace('{{mes}}', this.mes?.value ?? '')
+      .replace('{{ano}}', this.ano?.value ?? '')
+      .replace('{{chave_pix}}', this.user?.empresa?.chave_pix ?? '');
   }
 
   sendMessage() {
-    const message = document.getElementById('message')?.innerText;
-
-    const mdMessage = this.message;
+  const mdMessage = this.message.replace(/%0D/g, '\n');
 
     const whasappUrl = `https://web.whatsapp.com/send?phone=55${this.selectedUsuario?.whatsapp}&
     &text=${mdMessage}`;

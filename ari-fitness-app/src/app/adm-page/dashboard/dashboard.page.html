@@ -16,9 +16,9 @@
                         Receitas
                       </ion-label>
                     </div>
-                    <ion-card-title>R$ 53,4K <ion-chip color="success"> + 3%</ion-chip>
+                    <ion-card-title> {{ totals.totalReceitas| currency:'BRL'}} <ion-chip color="success"> + 3%</ion-chip>
                     </ion-card-title>
-                    <ion-card-subtitle class="mt-2">Mês: Dez/2024</ion-card-subtitle>
+                    <ion-card-subtitle class="mt-2">Desde de {{totals.receita_por_mes[0].mesAno}}</ion-card-subtitle>
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -31,9 +31,9 @@
                         Despesas
                       </ion-label>
                     </div>
-                    <ion-card-title>R$ 13,2k <ion-chip color="success"> + 13%</ion-chip>
+                    <ion-card-title>{{ totals.totalDespesas | currency:'BRL'}} <ion-chip color="success"> + 13%</ion-chip>
                     </ion-card-title>
-                    <ion-card-subtitle class="mt-2">Mês: Dez/2024</ion-card-subtitle>
+                    <ion-card-subtitle class="mt-2">Desde de {{totals.despesa_por_mes[0].mesAno}}</ion-card-subtitle>
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -48,7 +48,7 @@
                         Alunos
                       </ion-label>
                     </div>
-                    <ion-card-title>89 <ion-chip color="danger"> - 5%</ion-chip>
+                    <ion-card-title>{{ totals.totalMembros }} <ion-chip color="danger"> - 5%</ion-chip>
                     </ion-card-title>
                     <ion-card-subtitle class="mt-2">Alunos Ativos</ion-card-subtitle>
                   </ion-card-content>
@@ -63,7 +63,7 @@
                         Treinadores
                       </ion-label>
                     </div>
-                    <ion-card-title>2 <ion-chip color="success"> + 100%</ion-chip>
+                    <ion-card-title>{{ totals.totalInstrutores }} <ion-chip color="success"> + 100%</ion-chip>
                     </ion-card-title>
                     <ion-card-subtitle class="mt-2">Treinadores Ativos</ion-card-subtitle>
                   </ion-card-content>
@@ -75,7 +75,7 @@
             <ion-card class="info-card">
               <ion-card-content>
                 <h4 class="fw-bolder">
-                  Analise de Receitas (R$/Mes)
+                  Analise de Receitas (R$/Mes) - Ultimos 12 Meses
                 </h4>
               </ion-card-content>
               <ngx-charts-bar-vertical-2d [results]="receitasMensais" [gradient]="true" [xAxis]="false" [yAxis]="false"

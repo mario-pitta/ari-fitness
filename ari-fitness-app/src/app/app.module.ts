@@ -27,6 +27,11 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PageSizeService } from 'src/core/services/page-size/page-size.service';
 import { provideMarkdown } from 'ngx-markdown';
 
+import ptBr from '@angular/common/locales/pt';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(ptBr);
+
 register();
 
 const httpProviders = () => provideHttpClient(withInterceptorsFromDi());

@@ -1,8 +1,12 @@
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { IonSplitPaneCustomEvent } from '@ionic/core';
 import { tap } from 'rxjs';
+import { Usuario } from 'src/core/models/Usuario';
+import { AuthService } from 'src/core/services/auth/auth.service';
+import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
 import { PageSizeService } from 'src/core/services/page-size/page-size.service';
 
 @Component({
@@ -14,6 +18,7 @@ export class AdminHomeComponent implements OnInit {
   @ViewChild('content') content!: ElementRef;
   @ViewChild('menu') menu!: ElementRef;
   showSplitPane = false;
+  user!: Usuario
 
   breadcrumbs: {
     title: string;
@@ -24,7 +29,9 @@ export class AdminHomeComponent implements OnInit {
   constructor(
     private menuCtrl: MenuController,
     private router: Router,
-    private pageSize: PageSizeService
+    private pageSize: PageSizeService,
+    private dashBoardService: TransacaoFinanceiraDashService,
+    private authService: AuthService
   ) {
     this.router.events.subscribe((e: any) => {
       if (e instanceof NavigationEnd) {
@@ -52,8 +59,12 @@ export class AdminHomeComponent implements OnInit {
     });
   }
 
+
+
   ngOnInit() {
+
     this.isMobile = this.pageSize.getSize().isMobile;
+
   }
 
   toggleMenu() {

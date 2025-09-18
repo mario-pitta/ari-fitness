@@ -15,16 +15,50 @@ import { DashboardMembersService } from 'src/core/services/dashboard/members/mem
 })
 export class DashboardPage implements OnInit {
   view: [number, number] = [520, 230];
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isMobile();
-
-
-  }
 
   chartSizes: number[] = [];
   searchControl: FormControl = new FormControl();
 
+    totals = {
+      totalMembros: 0,
+      totalInstrutores: 0,
+      totalReceitas: 0,
+      totalDespesas: 0,
+      totalAulas: 0,
+      totalFichas: 0,
+      receita_por_mes: [] as {
+        mes: number;
+        ano: number;
+        mesAno: string;
+        valor: number;
+      }[],
+      despesa_por_mes: [] as {
+        mes: number;
+        ano: number;
+        mesAno: string;
+        valor: number;
+      }[],
+    };
+  members: IUsuario[] = [];
+  usuario: Usuario = this.auth.getUser;
+  loading: boolean = true;
+
+
+  constructor(
+    private usuarioService: UsuarioService,
+    private dashboardService: DashboardMembersService,
+    private auth: AuthService,
+    private transFinServ: TransacaoFinanceiraDashService
+  ) {
+    this.searchControl.valueChanges.subscribe((value) => {
+      this.getMembers(value);
+    });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.isMobile();
+  }
   isMobile() {
     const innerWidth = window.innerWidth;
     console.log('innerWidth: ', innerWidth);
@@ -38,17 +72,13 @@ export class DashboardPage implements OnInit {
     } else if (innerWidth < 1000) {
       this.view = [650, 230];
     } else if (innerWidth < 1980) {
-
       this.view = [780, 230];
     }
     console.log('this.view: ', this.view);
   }
 
-  constructor(private usuarioService: UsuarioService, private dashboardService: DashboardMembersService, private auth: AuthService, private transFinServ: TransacaoFinanceiraDashService) {
-    this.searchControl.valueChanges.subscribe((value) => {
-      this.getMembers(value);
-    });
-  }
+
+  meses = Constants.meses;
 
   receitasMensais = [
     {
@@ -118,29 +148,29 @@ export class DashboardPage implements OnInit {
     },
   ];
 
-  members: IUsuario[] = [
-  ];
-  usuario: Usuario = this.auth.getUser
-  loading: boolean = true;
   ngOnInit() {
     console.log('iniciando dashboard...');
-
-    this.getMembers();
-    this.getFinanceData();
-    this.getBestInstrutoresData()
     this.isMobile();
-  }
-  getMembers(text?: string, flag_ativo: boolean = true, orderBy: string = 'nome') {
 
+    // this.getMembers();
+    // this.getFinanceData();
+    this.getTotals();
+    // this.getBestInstrutoresData();
+  }
+  getMembers(
+    text?: string,
+    flag_ativo: boolean = true,
+    orderBy: string = 'nome'
+  ) {
     this.loading = true;
     const filters: Partial<IUsuario> = {
       tipo_usuario: Constants.ALUNO_ID,
       fl_ativo: flag_ativo,
-      empresa_id: this.usuario.empresa_id
+      empresa_id: this.usuario.empresa_id,
     };
 
     if (text) {
-      filters['nome'] = text
+      filters['nome'] = text;
     }
 
     this.usuarioService.findByFilters(filters).subscribe({
@@ -153,28 +183,41 @@ export class DashboardPage implements OnInit {
         this.loading = false;
       },
       complete: () => (this.loading = false),
-
     });
   }
 
   getFinanceData() {
-    this.transFinServ.getFinancialResumeByEmpresaId(this.usuario.empresa_id as string).subscribe({
-      next: (data) => {
-        console.log('💻🔍🪲 - getFinanceData', data);
-        console.log('💻🔍🪲 - getFinanceData', data);
-
-
-      }
-    })
+    this.transFinServ
+      .getFinancialResumeByEmpresaId(this.usuario.empresa_id as string)
+      .subscribe({
+        next: (data) => {
+          console.log('💻🔍🪲 - getFinanceData', data);
+          console.log('💻🔍🪲 - getFinanceData', data);
+        },
+      });
   }
 
-  getBestInstrutoresData() {
+  getBestInstrutoresData() {}
 
+  getTotals() {
 
+    this.transFinServ
+      .getTotalsByEmpresaId(this.usuario.empresa_id as string)
+      .subscribe((totals) => {
+        console.log('totals: ', totals);
+        this.totals = totals as any;
 
+        this.receitasMensais = [{
+            name: 'Meses',
+            series: this.totals.receita_por_mes.map(r => {
+              return {
+                name: (this.meses.find(m => m.value === (r.mes + 1))?.label || '') + '/' + r.ano,
+                value: r.valor,
+                despesas: 500,
+              };
+            }),
 
-
+        }];
+      });
   }
-
-
 }

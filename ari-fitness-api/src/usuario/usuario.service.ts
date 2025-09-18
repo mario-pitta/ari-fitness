@@ -59,7 +59,7 @@ export class UsuarioService {
         );
         // atualiza o mes como pago
         if (mesHistorico) {
-          console.log('houve pagamento em ', mesHistorico.label);
+          // console.log('houve pagamento em ', mesHistorico.label);
           meses.find(
             (m) => m.ano === anoPagamento && m.mes === mesPagamento,
           )!.pago = true;
@@ -68,12 +68,12 @@ export class UsuarioService {
     });
     
     //Se for o primeiro usuario, loga os meses
-    if (isFirstUser) {
-      console.log('usuario cadastrado em ', dataCadastro);
-      console.log('numero de transacoes ', transacoes.length); 
-      console.log('data atual ', dataAtual);
-      console.log('meses do usuario ', user.nome, meses);
-    }
+    // if (isFirstUser) {
+    //   console.log('usuario cadastrado em ', dataCadastro);
+    //   console.log('numero de transacoes ', transacoes.length); 
+    //   console.log('data atual ', dataAtual);
+    //   console.log('meses do usuario ', user.nome, meses);
+    // }
     return meses.every((m) => m.pago);
   }
 
@@ -98,7 +98,7 @@ export class UsuarioService {
         ascending: true,
       });
 
-    console.log('res do findByFilters', res);
+    // console.log('res do findByFilters', res);
     if (!res.error) {
       res.data = res.data?.map((u, i) => ({
         ...u,
@@ -131,7 +131,7 @@ export class UsuarioService {
         {},
       )
       .then((res) => {
-        console.log('RES: ', res);
+        // console.log('RES: ', res);
 
         return res;
       });

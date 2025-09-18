@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TransacaoFinanceira } from 'src/core/models/TransacaoFInanceira';
@@ -29,6 +28,9 @@ export class TransacaoFinanceiraDashService {
 
   getFinancialResumeByEmpresaId(empresaId: string){
     return this.http.get(`${environment.apiUrl}/transacao-financeira-dash/receitas-por-mes/${empresaId}`)
+  }
 
+  getTotalsByEmpresaId(empresaId: string){
+    return this.http.get(`${environment.apiUrl}/dashboard/totals/${empresaId}`)
   }
 }
