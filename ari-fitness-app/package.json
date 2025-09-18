@@ -1,6 +1,6 @@
 {
     "name": "ari-fitness-app",
-    "version": "1.3.4",
+    "version": "1.3.6",
     "author": "Mario Pitta",
     "homepage": "",
     "ionic_sass": "./sass.config.js",

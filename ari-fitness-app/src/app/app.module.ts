@@ -4,7 +4,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { NgModule, isDevMode } from '@angular/core';
+import { LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; // Import here
 
@@ -64,6 +64,9 @@ const httpProviders = () => provideHttpClient(withInterceptorsFromDi());
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptors, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        // ************************************
+    { provide: LOCALE_ID, useValue: 'pt' },
+    // ************************************
     PageSizeService,
   ],
   bootstrap: [AppComponent],

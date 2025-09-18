@@ -325,7 +325,7 @@ export class DashboardService {
       .select('plano_id, planos(nome), count:id')
       .eq('empresa_id', empresaId)
       .eq('tipo_usuario', 5)
-      .group('plano_id, planos(nome)');
+      
 
     if (error) {
       throw new Error(`Erro ao obter membros por plano: ${JSON.stringify(error)}`);
