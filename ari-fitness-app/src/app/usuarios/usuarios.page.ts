@@ -14,8 +14,8 @@ import { FormTransacaoFinaceiraComponent } from '../shared/form-transacao-finace
 import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
 import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
 import Constants from 'src/core/Constants';
-import { TransacaoFinanceira } from '../../../../ari-fitness-api/dist/transacao_financeira/TransacaoFinanceira.interface';
-import { FormaDePagamento } from 'src/core/models/TransacaoFInanceira';
+
+import { FormaDePagamento, TransacaoFinanceira } from 'src/core/models/TransacaoFInanceira';
 
 const WHATSAPP_MESSAGE_TEMPLATE = `
     Olá, {{nome}}. Aqui é {{remetente}}, da *{{empresa}}*. Tudo bem? %0D
