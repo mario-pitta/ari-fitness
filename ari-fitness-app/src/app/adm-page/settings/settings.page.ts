@@ -38,7 +38,7 @@ export class SettingsPage implements OnInit {
         title: 'Ajuda',
         subtitle: 'Acesse nossa central de ajuda',
         icon: 'help',
-        path: ''
+        path: 'faq'
       },
       {
         title: 'Sobre',

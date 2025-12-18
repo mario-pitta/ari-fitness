@@ -1,0 +1,40 @@
+<ion-title>
+    Central de Ajuda</ion-title>
+<div class="faq-header ion-text-center">
+    <h2>Como podemos ajudar?</h2>
+    <p>Tire suas dúvidas ou assista aos tutoriais em vídeo abaixo.</p>
+</div>
+
+<div *ngFor="let cat of faqCategories" class="category-section">
+    <ion-item-divider sticky color="light">
+        <ion-icon [name]="cat.icon" slot="start"></ion-icon>
+        <ion-label>{{ cat.name }}</ion-label>
+    </ion-item-divider>
+
+    <ion-accordion-group>
+        <ion-accordion *ngFor="let item of cat.questions; let i = index" [value]="item.q">
+            <ion-item slot="header" color="light">
+                <ion-label class="question-text">{{ item.q }}</ion-label>
+            </ion-item>
+
+            <div class="ion-padding answer-content" slot="content">
+                <p>{{ item.a }}</p>
+
+                <div class="video-container" *ngIf="item.videoId">
+                    <div class="video-placeholder">
+                        <ion-icon name="play-circle"></ion-icon>
+                        <p>Vídeo Tutorial: {{ item.q }}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-accordion>
+    </ion-accordion-group>
+</div>
+
+<div class="support-footer ion-text-center ion-padding">
+    <p>Ainda precisa de ajuda?</p>
+    <ion-button fill="outline" color="primary" href="mailto:suporte@mvk.com">
+        <ion-icon name="mail-outline" slot="start"></ion-icon>
+        Contatar Suporte
+    </ion-button>
+</div>

@@ -104,6 +104,8 @@ const routes: Routes = [
   },
 
 
+
+
   // {
   //   path: 'equipamentos',
   //   loadChildren: () => import('./equipamentos/equipamentos.module').then( m => m.EquipamentosPageModule)
