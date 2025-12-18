@@ -10,6 +10,7 @@ import { AuthService } from 'src/core/services/auth/auth.service';
 import { OverlayControllerService } from 'src/core/services/overlay-controller.service';
 import { PageSizeService } from 'src/core/services/page-size/page-size.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
+import { inject } from '@vercel/analytics';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
     this.pageSizeService.screenSizeChange$.subscribe((size) => {
       console.log('size: ', size);
     });
+    inject();
   }
 
   isMobile = false;
