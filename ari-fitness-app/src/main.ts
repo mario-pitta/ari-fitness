@@ -8,8 +8,9 @@ import 'prismjs';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
-
+import { inject } from '@vercel/analytics';
 if (environment.production) {
+  inject();
   enableProdMode();
 
 
