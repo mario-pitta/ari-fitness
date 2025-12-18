@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Sobre a Aplicação</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+
+
+<div class="hero-section ion-text-center ion-padding">
+    <div class="logo-container">
+        <ion-icon name="barbell" color="primary"></ion-icon>
+    </div>
+    <h1 class="app-title">{{ appName }}</h1>
+    <ion-badge color="light" class="version-badge">v{{ appVersion }}</ion-badge>
+    <p class="app-tagline">Gestão inteligente para sua academia ou box.</p>
+</div>
+
+<ion-grid>
+    <ion-row>
+        <ion-col size="12">
+            <ion-card class="modern-card">
+                <ion-card-header>
+                    <ion-card-subtitle>O Projeto</ion-card-subtitle>
+                    <ion-card-title>Nossa Missão</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    O <strong>MVK Gym Manager</strong> nasceu para simplificar o controle de treinos, financeiro e presença (Check-in) em ambientes fitness, unindo facilidade, segurança e alta performance.
+                </ion-card-content>
+            </ion-card>
+        </ion-col>
+
+        <ion-col size="12">
+            <h3 class="section-title ion-padding-start">Tecnologias Utilizadas</h3>
+            <div class="tech-container">
+                <div *ngFor="let tech of techStack" class="tech-item">
+                    <ion-icon [name]="tech.icon" [color]="tech.color"></ion-icon>
+                    <span>{{ tech.name }}</span>
+                </div>
+            </div>
+        </ion-col>
+
+        <ion-col size="12">
+            <ion-card class="modern-card">
+                <ion-item lines="none" class="dev-item">
+                    <ion-avatar slot="start">
+                        <img src="https://github.com/mvk.devs.png" /> </ion-avatar>
+                    <ion-label>
+                        <h2>Desenvolvido por</h2>
+                        <p>{{ 'MvK Devs' }}</p>
+                    </ion-label>
+                    <ion-button fill="clear" href="https://github.com/mvk.devs" target="_blank">
+                        <ion-icon slot="icon-only" name="logo-github"></ion-icon>
+                    </ion-button>
+                </ion-item>
+            </ion-card>
+        </ion-col>
+    </ion-row>
+</ion-grid>
+
+<div class="footer-note ion-text-center">
+    <p>&copy; {{ year }} MVK Devs. Todos os direitos reservados.</p>
+    <p><small>Ambiente de Produção Ativo</small></p>
+</div>

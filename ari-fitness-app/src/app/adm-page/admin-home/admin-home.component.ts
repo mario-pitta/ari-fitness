@@ -8,7 +8,8 @@ import { Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TransacaoFinanceiraDashService } from 'src/core/services/dashboard/transacao-financeira-dash/transacao-financeira-dash.service';
 import { PageSizeService } from 'src/core/services/page-size/page-size.service';
-
+// @ts-ignore
+import packageInfo from'../../../../package.json';
 @Component({
   selector: 'app-admin-home',
   templateUrl: './admin-home.component.html',
@@ -19,6 +20,7 @@ export class AdminHomeComponent implements OnInit {
   @ViewChild('menu') menu!: ElementRef;
   showSplitPane = false;
   user!: Usuario
+  appVersion: string = packageInfo.version;
 
   breadcrumbs: {
     title: string;

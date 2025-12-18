@@ -13,6 +13,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./empresa/empresa.module').then((m) => m.EmpresaPageModule),
   },
+  {
+    path: 'sobre',
+    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule)
+  },
+
 ];
 
 @NgModule({

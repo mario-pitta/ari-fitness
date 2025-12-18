@@ -1,65 +1,62 @@
+#!/bin/bash
 
+# Etapa 0: Gerar Versão, Changelog e Tag (Localmente)
+echo "🚀 Iniciando processo de Versionamento e Changelog..."
+npx standard-version
 
-# Etapa 0:  Nova versão
-echo "Atualizando versão: $CURRENT_VERSION"
-
-# Obter a versão atual do package.json usando sed
-CURRENT_VERSION=$(sed -n 's/.*"version": "\(.*\)",*/\1/p' package.json)
-# Dividir a versão
-IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
-# Incrementar a versão
-if [ "$PATCH" -lt 9 ]; then
-  PATCH=$((PATCH + 1))
+if [ $? -eq 0 ]; then
+  NEW_VERSION=$(node -p "require('./package.json').version")
+  echo "✅ Versão local atualizada para: $NEW_VERSION"
 else
-  PATCH=0
-  if [ "$MINOR" -lt 9 ]; then
-    MINOR=$((MINOR + 1))
-  else
-    MINOR=0
-    MAJOR=$((MAJOR + 1))
-  fi
+  echo "❌ ERRO: Falha ao gerar versão e changelog."
+  exit 1
 fi
-
-NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-
-# Atualizar a versão no package.json usando sed
-sed -i "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" package.json
-
-echo "Versão do package.json atualizada para $NEW_VERSION"
-
-
 
 # Etapa 1: Construir a versão de produção do frontend
 echo "- Iniciando criacao dos bundles do frontend 👌"
 ionic build --prod
 if [ $? -eq 0 ]; then
-  echo "✅ BUNDLES DO FRONTEND CREATED COM SUCESSO 👌"
+  echo "✅ BUNDLES DO FRONTEND CRIADOS COM SUCESSO 👌"
 else
-  echo "❌ ERRO: Falha na construção dos bundles."
-  echo $?
-  exit 1 # Sai do script com código de erro
+  echo "❌ ERRO: Falha na construção dos bundles do frontend."
+  exit 1
 fi
 
 # Etapa 2: Gerar versão de produção da API
 echo "- Iniciando criacao dos bundles do backend 👌"
 npm run --prefix ../ari-fitness-api build
 if [ $? -eq 0 ]; then
-  echo "✅ BUILD DE PRODUÇÃO FEITO COM SUCESSO!" + $?
+  echo "✅ BUILD DE PRODUÇÃO DA API FEITO COM SUCESSO!"
 else
   echo "❌ ERRO: FALHA NO BUILD DE PRODUÇÃO DA API."
-  echo $?
-  exit 1 # Sai do script com código de erro
+  exit 1
 fi
 
-echo "- Iniciando DEPLOY 🚀🚀🚀"
-# Etapa 3: Implantar a API
+# Etapa 3: Implantar (Deploy) na Vercel/Produção
+echo "- Iniciando DEPLOY para produção 🚀🚀🚀"
 npm run --prefix ../ari-fitness-api deploy
 
 if [ $? -eq 0 ]; then
-  echo "✅ API IMPLANTADA COM SUCESSO!" + $?
+  echo "✅ DEPLOY EM PRODUÇÃO CONCLUÍDO COM SUCESSO!"
+
+  # --- NOVA ETAPA: PUSH AUTOMÁTICO ---
+  echo "📤 Sincronizando versão $NEW_VERSION com o repositório remoto..."
+
+  # Envia o commit de release e a TAG gerada
+  # Nota: 'master' é o nome da sua branch conforme os logs anteriores
+  git push --follow-tags origin master
+
+  if [ $? -eq 0 ]; then
+    echo "✅ REPOSITÓRIO ATUALIZADO (Commit + Tag)!"
+  else
+    echo "⚠️ ALERTA: O deploy funcionou, mas houve um erro ao fazer o push para o GitHub."
+    echo "Verifique sua conexão ou permissões e tente: git push --follow-tags"
+  fi
+  # -----------------------------------
+
 else
-  echo "❌ ERRO: Falha na implantação da API."
-  exit 1 # Sai do script com código de erro
+  echo "❌ ERRO CRÍTICO: Falha na implantação. O código remoto NÃO foi atualizado."
+  exit 1
 fi
 
-echo " PROCESSO DE BUILD E DEPLOY CONCLUÍDO! 🎉🎉🎉"
+echo "🎉 PROCESSO FINALIZADO: Versão $NEW_VERSION disponível em produção e no GitHub!"
