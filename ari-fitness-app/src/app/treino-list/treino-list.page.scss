@@ -1,3 +1,44 @@
 ion-card {
-  overflow: auto;
+    overflow: auto;
+}
+
+.custom-searchbar {
+    --border-radius: 12px;
+    --box-shadow: none;
+    --background: var(--ion-color-step-50);
+}
+
+.exercicios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10px 10px;
+    h3 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin: 0;
+    }
+}
+
+.exercicio-card {
+    margin: 10px 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--ion-color-step-100);
+    h2 {
+        font-weight: 600;
+        color: var(--ion-color-primary);
+    }
+}
+
+.exercicio-details {
+    ion-badge {
+        --padding-start: 8px;
+        --padding-end: 8px;
+        font-weight: 500;
+    }
+}
+
+.modal-treino {
+    --border-radius: 16px;
 }

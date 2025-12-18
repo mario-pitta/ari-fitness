@@ -48,12 +48,12 @@ export class TreinosListPage implements OnInit {
     private fichaAlunoService: FichaAlunoService,
     private toastr: ToastrService,
     private alertController: AlertController
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.user = this.auth.getUser;
     console.log(this.user);
-    console.log('💻🔍🪲 - this.listMode', this.gridMode);
+    console.log('💻🔍🪲 - this.gridMode', this.gridMode);
 
 
     this.createForm();
@@ -132,7 +132,7 @@ export class TreinosListPage implements OnInit {
     });
   }
 
-  @Input({required: true}) gridMode: boolean = true;
+  @Input({ required: true }) gridMode: boolean = true;
   openTreinoEditor(treino: Treino) {
     this.openModal = true;
 
@@ -163,11 +163,15 @@ export class TreinosListPage implements OnInit {
         console.log('💻🔍🪲 - edit', event);
 
 
-          this.openTreinoEditor(event.value)
+        this.openTreinoEditor(event.value)
         break;
       case 'loading':
         this.loading = event.value;
         break;
+      case 'reload':
+        this.filterList();
+        break;
+
       default:
         break;
     }
@@ -207,14 +211,14 @@ export class TreinosListPage implements OnInit {
     el.target.style.setProperty('--color', `warning`);
     el.target.classList.toggle('clock-animated');
 
-    setTimeout(() => {}, this.interval);
+    setTimeout(() => { }, this.interval);
   }
 
   openClock() {
     alert('vai abrir o cronometro!');
   }
 
-  closeClock() {}
+  closeClock() { }
 
   openTreinoForm(treino?: Treino) {
     console.log(treino);
@@ -241,10 +245,10 @@ export class TreinosListPage implements OnInit {
     this.exercicios.clear();
     this.f.reset();
     this.modalController.dismiss();
-    this.gridMode = false;
+    // this.gridMode = false;
   }
 
-  onSelectTreino() {}
+  onSelectTreino() { }
 
   associateToUser() {
     const body = {
@@ -313,7 +317,7 @@ export class TreinosListPage implements OnInit {
     );
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.gridMode = false;
   }
 }

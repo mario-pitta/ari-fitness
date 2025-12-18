@@ -22,7 +22,7 @@ export class TreinoListItemComponent implements OnInit {
     this.output.emit({action: 'loading', value: true});
     this.treinoService.delete(id).subscribe({
       next: () => {
-        this.output.emit({reload: true});
+        this.output.emit({action: 'reload', value: true});
       },
       error: (err) => console.error(err),
       complete: () => {
