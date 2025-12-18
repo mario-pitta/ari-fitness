@@ -9,7 +9,7 @@
             <ion-list [inset]="false">
                 <!-- TODO TRANSFORMAR EM  JSON -->
                 <ion-item button routerLink="/admin/dashboard">
-                    <ion-icon name="grid-outline" slot="start"></ion-icon>
+                    <ion-icon name="stats-chart" slot="start"></ion-icon>
                     Dashboard
                 </ion-item>
                 <ion-item button routerLink="/admin/membros">
@@ -17,7 +17,8 @@
                     Alunos
                 </ion-item>
                 <ion-item button routerLink="/admin/qrcode">
-                    <ion-icon name="apps" slot="start"></ion-icon>
+
+                    <ion-icon name="qr-code" slot="start"></ion-icon>
                     Check-in
                 </ion-item>
                 <ion-item button routerLink="/admin/instrutores">
@@ -65,7 +66,8 @@
         <ion-content class="ion-padding">
             <ion-breadcrumbs [maxItems]="4">
                 <ion-breadcrumb href="#admin">Home</ion-breadcrumb>
-                <ion-breadcrumb *ngFor="let breadcrumb of breadcrumbs" [href]="'#'+breadcrumb.href">{{breadcrumb.title | titlecase}}</ion-breadcrumb>
+                <ion-breadcrumb *ngFor="let breadcrumb of breadcrumbs" [href]="'#'+breadcrumb.href">{{breadcrumb.title | titlecase}}
+                </ion-breadcrumb>
             </ion-breadcrumbs>
             <router-outlet></router-outlet>
         </ion-content>

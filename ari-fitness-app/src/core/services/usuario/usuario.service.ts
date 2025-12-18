@@ -8,15 +8,16 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class UsuarioService {
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) { }
 
   create(usuario: Usuario) {
     delete usuario.id;
     delete usuario.created_at;
 
     return this.http
-    .post<Usuario>(environment.apiUrl + '/usuario', usuario)
-    .pipe(take(1));
+      .post<Usuario>(environment.apiUrl + '/usuario', usuario)
+      .pipe(take(1));
   }
   update(usuario: Usuario | Partial<Usuario> | any) {
 
@@ -45,5 +46,22 @@ export class UsuarioService {
     return this.http
       .get<Usuario[]>(environment.apiUrl + '/usuario/search?' + query)
       .pipe(take(1));
+  }
+
+
+  registrarCheckIn(cpf: string, nome: string, empresa_id: string) {
+    return this.http.post(environment.apiUrl + `/usuario/check-in`, { cpf, nome, empresa_id }).pipe(take(1));
+  }
+  getCheckinsByEmpresa(empresaId: string, data_inicio: Date, data_fim: Date) {
+    return this.http
+      .get<any[]>(environment.apiUrl + `/usuario/check-in/empresa/${empresaId}?data_inicio=${data_inicio.toISOString()}&data_fim=${data_fim.toISOString()}`)
+      .pipe(take(1));
+  }
+  getFrequencyByCPF(cpf: string) {
+    return this.http.post<any>(environment.apiUrl + `/usuario/frequency-by-cpf/`, { cpf }).pipe(take(1));
+  }
+
+  deleteCheckinById(checkinId: number) {
+    return this.http.post(environment.apiUrl + `/usuario/check-in/${checkinId}/delete`, {}).pipe(take(1));
   }
 }

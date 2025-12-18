@@ -15,7 +15,7 @@ import {
 
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService) { }
 
   /**
    * The function `findAll` retrieves all users and sends the data or an error response using the
@@ -36,7 +36,7 @@ export class UsuarioController {
         console.error('erro no usuario/findAll', _res.error);
         res.status(500).send({
           status: 500,
-          ..._res.error,
+          ..._res.error
         });
       }
 
@@ -44,6 +44,15 @@ export class UsuarioController {
     });
   }
 
+
+  /**
+   * The function finds users by filters and sends the results or an error response.
+   *
+   * @param {Response} res
+   * @param {(Partial<Usuario> | Usuario)} filters
+   * @return {*} 
+   * @memberof UsuarioController
+   */
   @Get('/search')
   findByFilters(
     @Res() res: Response,
@@ -102,7 +111,7 @@ export class UsuarioController {
 
   //#region Instrutor
   @Get('instrutor/:empresaId')
-  findInstrutorByFilters(@Res() res: Response, @Param('empresaId')  empresaId: number, @Query() filters: Partial<Usuario> | Usuario) {
+  findInstrutorByFilters(@Res() res: Response, @Param('empresaId') empresaId: number, @Query() filters: Partial<Usuario> | Usuario) {
     console.log('search instrutor... byFilters', filters);
     return this.usuarioService.findInstrutorByFilters(empresaId, filters).then((_res) => {
       if (_res.error) {
@@ -117,6 +126,76 @@ export class UsuarioController {
     });
   }
 
-
   //#endregion
+
+  //#region Check-in
+  @Post('check-in')
+  registrarCheckIn(@Body() body: { cpf: string; nome: string, empresa_id: string }, @Res() res: Response) {
+    console.log('registrando check-in para o CPF:', body.cpf, 'na empresa:', body.empresa_id);
+    return this.usuarioService.registrarCheckin(body.cpf, body.nome, body.empresa_id).then((_res) => {
+      if (_res.error) {
+        console.error('erro no usuario/check-in', _res.error);
+        res.status(500).send({
+          status: 500,
+          ..._res.error,
+        });
+      }
+      return res.send(_res.data);
+    });
+  }
+  //#endregion
+
+
+  /** Obter os registro de checkin dos alunos da empresa */
+  @Get('check-in/empresa/:empresaId')
+  getCheckinsByEmpresa(@Res() res: Response, @Param('empresaId') empresaId: string) {
+    console.log('Obtendo check-ins para a empresa:', empresaId);
+    return this.usuarioService.getCheckinsByEmpresa(empresaId).then((_res: any) => {
+      if (_res.error) {
+        console.error('erro no usuario/check-in/empresa', _res.error);
+        res.status(500).send({
+          status: 500,
+          ..._res.error,
+        });
+      }
+      return res.send(_res.data);
+    });
+  }
+
+  /** Excluir registro de chekin, apenas o admin da empresa pode fazer isso. */
+  @Post('check-in/:checkinId/delete')
+  // @Rules('admin')
+  deleteCheckinById(@Res() res: Response, @Param('checkinId') checkinId: string) {
+    console.log('Excluindo check-in com ID:', checkinId);
+    return this.usuarioService.deleteCheckinById(checkinId).then((_res: any) => {
+      if (_res.error) {
+        console.error('erro no usuario/check-in/:checkinId/delete', _res.error);
+        res.status(500).send({
+          status: 500,
+          ..._res.error,
+        });
+      }
+      return res.send(_res.data);
+    }); 
+    
+  
+  }
+
+
+  /** Obter frequencia pelo CPF */
+  @Get('frequency-by-cpf/:cpf')
+  async getFrequencyByCPF(@Res() res: Response, @Query('cpf') cpf: string) {
+    console.log('Obtendo frequência para o CPF:', cpf);
+    return this.usuarioService.getFrequencyByCPF(cpf).then((_res: any) => {
+      if (_res.error) {
+        console.error('erro no usuario/frequency-by-cpf', _res.error);
+        res.status(500).send({
+          status: 500,
+          ..._res.error,
+        });
+      }
+      return res.send(_res.data);
+    });
+  }
+
 }
