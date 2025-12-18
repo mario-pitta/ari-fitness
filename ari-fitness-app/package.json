@@ -1,6 +1,6 @@
 {
     "name": "mvk-gym-manager",
-    "version": "1.3.9",
+    "version": "1.5.0",
     "author": "Mario Pitta",
     "homepage": "",
     "ionic_sass": "./sass.config.js",
@@ -15,7 +15,8 @@
         "deploy": "sh deploy.sh",
         "start:full": "npm-run-all --parallel  start  start:server",
         "test": "ng test",
-        "lint": "ng lint"
+        "lint": "ng lint",
+        "release": "standard-version"
     },
     "private": true,
     "dependencies": {
@@ -96,6 +97,7 @@
         "karma-jasmine": "~5.1.0",
         "karma-jasmine-html-reporter": "~2.1.0",
         "npm-run-all": "^4.1.5",
+        "standard-version": "^9.5.0",
         "typescript": "~5.4.0"
     },
     "description": "An Ionic project"
