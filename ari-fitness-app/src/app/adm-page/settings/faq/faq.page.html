@@ -20,11 +20,15 @@
             <div class="ion-padding answer-content" slot="content">
                 <p>{{ item.a }}</p>
 
+                <p *ngIf="item.videoId">Vídeo Tutorial: <a href="https://www.youtube.com/watch?v={{ item.videoId }}" target="_blank" rel="noopener">Assistir</a></p>
                 <div class="video-container" *ngIf="item.videoId">
-                    <div class="video-placeholder">
+                    <!-- <div class="video-placeholder">
                         <ion-icon name="play-circle"></ion-icon>
                         <p>Vídeo Tutorial: {{ item.q }}</p>
-                    </div>
+                    </div> -->
+                    <!-- <video src="https://www.youtube.com/watch?v={{ item.videoId }}" controls></video> -->
+                    <iframe width="1335" height="751" [src]="item.videoUrl" binding="true" title="{{item.q}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen></iframe>
                 </div>
             </div>
         </ion-accordion>

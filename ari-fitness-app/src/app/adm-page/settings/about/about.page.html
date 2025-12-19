@@ -1,66 +1,113 @@
-<ion-header class="ion-no-border">
-    <ion-toolbar>
-        <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Sobre a Aplicação</ion-title>
-    </ion-toolbar>
-</ion-header>
+<ion-toolbar>
+    <ion-title>Sobre a Aplicação</ion-title>
 
+</ion-toolbar>
 
-
-<div class="hero-section ion-text-center ion-padding">
+<div class="hero-section ion-text-center">
     <div class="logo-container">
-        <ion-icon name="barbell" color="primary"></ion-icon>
+        <img src="../assets/mvk-gym-manager-logo.png" alt="MVK Gym Manager Logo" srcset="">
     </div>
-    <h1 class="app-title">{{ appName }}</h1>
-    <ion-badge color="light" class="version-badge">v{{ appVersion }}</ion-badge>
-    <p class="app-tagline">Gestão inteligente para sua academia ou box.</p>
+    <!-- <h1 class="app-title">{{ appName }}</h1> -->
+    <ion-badge color="primary" mode="ios">v{{ appVersion }}</ion-badge>
 </div>
 
-<ion-grid>
-    <ion-row>
+<ion-grid fixed class="ion-padding-bottom">
+
+    <ion-row class="ion-padding-top">
         <ion-col size="12">
-            <ion-card class="modern-card">
+            <div class="section-intro ion-text-center">
+                <h2 class="main-title">O Projeto</h2>
+                <p class="description-text">
+                    O <strong>MVK Gym Manager</strong> é uma solução completa de gestão desenvolvida para academias, estúdios e centros de treinamento que desejam mais controle, eficiência e profissionalismo em suas operações.
+                </p>
+            </div>
+        </ion-col>
+    </ion-row>
+
+    <ion-row>
+        <ion-col size-xs="12" size-md="6">
+            <ion-card class="info-card h-100">
                 <ion-card-header>
-                    <ion-card-subtitle>O Projeto</ion-card-subtitle>
+                    <ion-icon name="flag-outline" color="primary" class="card-icon"></ion-icon>
                     <ion-card-title>Nossa Missão</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
-                    O <strong>MVK Gym Manager</strong> nasceu para simplificar o controle de treinos, financeiro e presença (Check-in) em ambientes fitness, unindo facilidade, segurança e alta performance.
+                    Facilitar a rotina de gestores e profissionais do setor fitness por meio de uma plataforma moderna, intuitiva e segura, simplificando o controle de treinos, financeiro e check-in.
                 </ion-card-content>
             </ion-card>
         </ion-col>
 
-        <ion-col size="12">
-            <h3 class="section-title ion-padding-start">Tecnologias Utilizadas</h3>
-            <div class="tech-container">
-                <div *ngFor="let tech of techStack" class="tech-item">
-                    <ion-icon [name]="tech.icon" [color]="tech.color"></ion-icon>
-                    <span>{{ tech.name }}</span>
-                </div>
-            </div>
-        </ion-col>
-
-        <ion-col size="12">
-            <ion-card class="modern-card">
-                <ion-item lines="none" class="dev-item">
-                    <ion-avatar slot="start">
-                        <img src="https://github.com/mvkdevs.png" /> </ion-avatar>
-                    <ion-label>
-                        <h2>Desenvolvido por</h2>
-                        <p>{{ 'MvK Devs' }}</p>
-                    </ion-label>
-                    <ion-button fill="clear" href="https://github.com/mvkdevs" target="_blank">
-                        <ion-icon slot="icon-only" name="logo-github"></ion-icon>
-                    </ion-button>
-                </ion-item>
+        <ion-col size-xs="12" size-md="6">
+            <ion-card class="info-card h-100">
+                <ion-card-header>
+                    <ion-icon name="eye-outline" color="secondary" class="card-icon"></ion-icon>
+                    <ion-card-title>Nossa Visão</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    Ser a principal referência em software de gestão para o mercado fitness, reconhecida por entregar resultados reais, inovação constante e uma experiência transformadora.
+                </ion-card-content>
             </ion-card>
         </ion-col>
     </ion-row>
+
+    <ion-row class="ion-padding-top">
+        <ion-col size="12">
+            <h2 class="section-label ion-text-center">Nossos Valores</h2>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="6" size-lg="4">
+            <ion-item lines="none" class="valor-item">
+                <ion-icon slot="start" name="trending-up-outline" color="success"></ion-icon>
+                <ion-label>
+                    <h3>Resultado para o cliente</h3>
+                    <p>Foco em ganho real de tempo e eficiência.</p>
+                </ion-label>
+            </ion-item>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="6" size-lg="4">
+            <ion-item lines="none" class="valor-item">
+                <ion-icon slot="start" name="bulb-outline" color="warning"></ion-icon>
+                <ion-label>
+                    <h3>Inovação com propósito</h3>
+                    <p>Tecnologia para resolver problemas reais.</p>
+                </ion-label>
+            </ion-item>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="6" size-lg="4">
+            <ion-item lines="none" class="valor-item">
+                <ion-icon slot="start" name="shield-checkmark-outline" color="primary"></ion-icon>
+                <ion-label>
+                    <h3>Confiabilidade e segurança</h3>
+                    <p>Dados protegidos e operação segura.</p>
+                </ion-label>
+            </ion-item>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="6" size-lg="4">
+            <ion-item lines="none" class="valor-item">
+                <ion-icon slot="start" name="leaf-outline" color="tertiary"></ion-icon>
+                <ion-label>
+                    <h3>Simplicidade e usabilidade</h3>
+                    <p>Soluções fáceis, sem complexidade.</p>
+                </ion-label>
+            </ion-item>
+        </ion-col>
+
+        <ion-col size-xs="12" size-md="6" size-lg="4">
+            <ion-item lines="none" class="valor-item">
+                <ion-icon slot="start" name="infinite-outline" color="danger"></ion-icon>
+                <ion-label>
+                    <h3>Compromisso com a evolução</h3>
+                    <p>Evoluímos junto com o mercado.</p>
+                </ion-label>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+
 </ion-grid>
 
-<div class="footer-note ion-text-center">
+<div class="footer-note ion-text-center ion-padding">
     <p>&copy; {{ year }} MVK Devs. Todos os direitos reservados.</p>
-    <p><small>Ambiente de Produção Ativo</small></p>
 </div>

@@ -98,27 +98,33 @@ const routes: Routes = [
       },
       {
         path: 'stats',
-        loadChildren: () => import('../stats/stats.module').then( m => m.StatsPageModule)
+        loadChildren: () => import('../stats/stats.module').then(m => m.StatsPageModule)
       },
       {
         path: 'admin',
-        loadChildren: () => import('../adm-page/adm-page.module').then( m => m.AdmPagePageModule)
+        loadChildren: () => import('../adm-page/adm-page.module').then(m => m.AdmPagePageModule)
       },
       {
         path: '',
-        redirectTo: 'home',
+        redirectTo: 'admin',
         pathMatch: 'full',
       },
+
     ],
   },
   {
     path: '',
     redirectTo: 'admin',
     pathMatch: 'full',
-  },
+  }, {
+    path: '**',
+    redirectTo: 'admin',
+    pathMatch: 'full',
+
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }
