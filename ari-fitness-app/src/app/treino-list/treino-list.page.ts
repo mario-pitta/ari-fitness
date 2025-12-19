@@ -26,6 +26,7 @@ export class TreinosListPage implements OnInit {
   @Input() selectedTreinos: any[] = [];
   filteredTreinos: Treino[] = [];
   user!: Usuario;
+  @Input() aluno!: Usuario | any;
   selectedTreino: any;
   interval: number = 15;
   openModal: boolean = false;
@@ -36,6 +37,7 @@ export class TreinosListPage implements OnInit {
   gruposMusculares: GrupoMuscular[] = [];
   searchText: string = '';
   @Input() enableEdit: boolean = true;
+  @Input() enableSelect: boolean = false;
 
   constructor(
     private aRoute: ActivatedRoute,
@@ -45,7 +47,6 @@ export class TreinosListPage implements OnInit {
     private treinoService: TreinoService,
     private parteDoCorpoService: ParteDoCorpoService,
     private grupoMuscularService: GrupoMuscularService,
-    private fichaAlunoService: FichaAlunoService,
     private toastr: ToastrService,
     private alertController: AlertController
   ) { }
@@ -121,7 +122,7 @@ export class TreinosListPage implements OnInit {
     this.form = this.fb.group({
       id: [null, Validators.nullValidator],
       nome: ['', [Validators.required]],
-      exercicios: this.fb.array([]),
+      exercicios: this.fb.array([]), 
       grupo_muscular_id: [null, Validators.nullValidator],
       grupo_muscular: this.fb.group({}),
       parte_do_corpo_id: [null, Validators.nullValidator],

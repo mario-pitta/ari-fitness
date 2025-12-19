@@ -230,9 +230,10 @@ export class FichaTreinoAlunoPage implements OnInit {
     this.modalController
       .create({
         component: TreinosListPage,
-        componentProps: {
+        componentProps: { 
           enableEdit: true,
-          listMode: true,
+          gridMode: false,
+          enableSelect: true,
           selectedTreinos: this.treinos.value,
         },
       })

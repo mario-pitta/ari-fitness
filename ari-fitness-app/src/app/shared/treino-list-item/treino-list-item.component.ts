@@ -12,12 +12,13 @@ export class TreinoListItemComponent implements OnInit {
   @Input() treino!: Treino | any;
   @Input() user!: Usuario | any;
   @Input() enableEdit!: boolean;
+  @Input() enableSelect!: boolean;
   @Output() output: EventEmitter<any> = new EventEmitter();
   constructor(private treinoService: TreinoService) {}
 
   ngOnInit() {}
-
-
+ 
+ 
   deleteTreino(id: number) {
     this.output.emit({action: 'loading', value: true});
     this.treinoService.delete(id).subscribe({

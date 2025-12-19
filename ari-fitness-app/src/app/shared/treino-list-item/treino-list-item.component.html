@@ -3,7 +3,7 @@
         <div class="d-flex">
             <div class="d-block w-100">
                 <ion-card-title>
-                    <ion-checkbox [(ngModel)]="treino.checked" [id]="'treino_id_'+treino.id" (ionChange)="output.emit({ action: 'check', value: treino })"></ion-checkbox>
+                    <ion-checkbox *ngIf="enableSelect" [(ngModel)]="treino.checked" [id]="'treino_id_'+treino.id" (ionChange)="output.emit({ action: 'check', value: treino })"></ion-checkbox>
                     {{ treino.nome }}</ion-card-title>
                 <ion-card-subtitle [for]="'treino_id_'+treino.id">Nível: {{ treino.nivel_dificuldade }}</ion-card-subtitle>
                 <p *ngIf="treino.parte_do_corpo">
