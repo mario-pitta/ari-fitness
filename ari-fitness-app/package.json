@@ -1,6 +1,6 @@
 {
     "name": "mvk-gym-manager",
-    "version": "1.5.1",
+    "version": "1.5.2",
     "author": "Mario Pitta",
     "homepage": "",
     "ionic_sass": "./sass.config.js",
