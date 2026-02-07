@@ -7,6 +7,7 @@ import { IUsuario, Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { DashboardMembersService } from 'src/core/services/dashboard/members/members.service';
+import { map, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
@@ -155,7 +156,7 @@ export class DashboardPage implements OnInit {
     // this.getMembers();
     // this.getFinanceData();
     this.getTotals();
-    // this.getBestInstrutoresData();
+    this.getBestInstrutoresData();
   }
   getMembers(
     text?: string,
@@ -197,7 +198,23 @@ export class DashboardPage implements OnInit {
       });
   }
 
-  getBestInstrutoresData() {}
+
+  teachers$: Observable<IUsuario[]> | undefined;
+  getBestInstrutoresData() {
+    this.teachers$ = this.usuarioService.findByFilters({
+      tipo_usuario: Constants.INSTRUTOR_ID,
+      empresa_id: this.usuario.empresa_id,
+    }).pipe(
+      map((users) => {
+        // users.sort((a, b) => {
+        //   const aulasA = a.aulas?.length || 0;
+        //   const aulasB = b.aulas?.length || 0;
+        //   return aulasB - aulasA; // Ordena em ordem decrescente
+        // });
+        return users.slice(0, 2); // Retorna os 5 primeiros
+      })
+    )
+  }
 
   getTotals() {
 
