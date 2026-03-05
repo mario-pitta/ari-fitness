@@ -1,7 +1,260 @@
-table tr:hover {
-  cursor: pointer;
-  animation: zoomIn 0.15s ease-in forwards;
-  background-color: #3f3b3b;
-  box-shadow: #3f3b3b;
+// Variables
+$glass-bg: rgba(var(--ion-color-step-50, 255, 255, 255), 0.05);
+$glass-border: rgba(var(--ion-color-step-100, 255, 255, 255), 0.1);
+$success-rgb: rgb(45, 211, 111);
+$danger-rgb: rgb(235, 68, 90);
+
+.dashboard-grid {
+  margin-bottom: 2rem;
 }
 
+// Metric Cards
+.metric-card {
+  background: var(--ion-color-step-50);
+  border: 1px solid var(--ion-color-step-100);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+
+
+  .metric-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    .icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+
+    ion-card-subtitle {
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+  }
+
+  ion-card-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-top: 8px;
+  }
+}
+
+// Glass Cards (Charts)
+.glass-card {
+  background: $glass-bg;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.glow-success {
+  box-shadow: 0 8px 32px rgba($success-rgb, 0.15);
+  border-color: rgba($success-rgb, 0.3);
+}
+
+.glow-danger {
+  box-shadow: 0 8px 32px rgba($danger-rgb, 0.15);
+  border-color: rgba($danger-rgb, 0.3);
+}
+
+// Transaction Card (Mirrors User Card Style)
+.transaction-card {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--ion-color-step-50);
+  border: 1px solid var(--ion-color-step-100);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--ion-color-step-100);
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .tx-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+
+    ion-icon {
+      font-size: 24px;
+    }
+
+    &.tx-in {
+      background: rgba($success-rgb, 0.1);
+      color: var(--ion-color-success);
+    }
+
+    &.tx-out {
+      background: rgba($danger-rgb, 0.1);
+      color: var(--ion-color-danger);
+    }
+  }
+
+  .tx-details {
+    flex: 1;
+
+    h3 {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+    }
+
+    .tx-desc {
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+      color: var(--ion-color-medium);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px; // fallback
+    }
+
+    .tx-date {
+      font-size: 0.8rem;
+      color: var(--ion-color-step-400);
+    }
+  }
+
+  .tx-amount {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 16px;
+    min-width: 120px;
+    text-align: right;
+  }
+
+  .tx-actions {
+    display: flex;
+    gap: 4px;
+  }
+
+  &.is-mobile {
+    flex-wrap: wrap;
+    position: relative;
+
+    .tx-amount {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .tx-actions {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+    }
+
+    .tx-desc {
+      max-width: 180px;
+    }
+  }
+}
+
+// AI Button
+.ai-analysis-btn {
+  --background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  --background-hover: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+  --border-radius: 24px;
+  --box-shadow: 0 4px 14px 0 rgba(168, 85, 247, 0.39);
+  margin-right: 16px;
+  animation: pulse 2s infinite;
+
+  .btn-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 8px;
+  }
+
+  .ai-icon {
+    font-size: 1.4rem;
+  }
+
+  ion-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(168, 85, 247, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+  }
+}
+
+// Helpers
+.bg-success-light {
+  background: rgba($success-rgb, 0.1);
+}
+
+.bg-danger-light {
+  background: rgba($danger-rgb, 0.1);
+}
+
+.color-success {
+  color: var(--ion-color-success) !important;
+}
+
+.color-danger {
+  color: var(--ion-color-danger) !important;
+}
+
+// Prominent Add Button
+.add-tx-btn {
+  --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+// Chart Legends Text Color Fix for Dark/Light Mode
+::ng-deep {
+  .ngx-charts {
+
+    .legend-labels text,
+    .legend-title-text {
+      fill: var(--ion-text-color) !important;
+      font-weight: 500;
+    }
+  }
+}

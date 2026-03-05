@@ -281,13 +281,22 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
         this.emit(true);
         this.modalController.dismiss(res[0]);
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err)
+        this.toastr.open({
+          message: err.error.message,
+          duration: 5000,
+          position: 'top',
+          color: 'danger',
+        });
+      },
     });
   }
 
   emit(success: boolean) {
     this.output.emit(success);
     this.response.next(success);
+    this.modalController.dismiss({ success });
   }
 
   toastr = inject(ToastrService);

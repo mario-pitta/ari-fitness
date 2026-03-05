@@ -5,7 +5,7 @@ import { DataBaseService } from 'src/datasource/database.service';
 
 @Injectable()
 export class DashboardService {
-  constructor(private database: DataBaseService) {}
+  constructor(private database: DataBaseService) { }
 
   getAllMembersDashboard(filters?: Partial<Usuario> | Usuario) {
     console.log('filters: ', filters);
@@ -249,6 +249,7 @@ export class DashboardService {
     const transacoes = await this.database.supabase
       .from('transacao_financeira')
       .select('id, valor_final, tr_tipo_id, data_lancamento')
+      .eq('fl_ativo', true)
       .eq('empresa_id', empresaId);
 
     if (transacoes.error) {
@@ -263,7 +264,7 @@ export class DashboardService {
     initial_date.setMonth(dataAtual.getMonth() - 11);
 
 
-     const processTransactionByDateAndType = (data_lancamento: string, tr_tipo_id: number, valor_final: number) => {
+    const processTransactionByDateAndType = (data_lancamento: string, tr_tipo_id: number, valor_final: number) => {
       const transacaoDate = new Date(data_lancamento);
       if (transacaoDate >= initial_date && transacaoDate <= dataAtual) {
         const mes = new Date(data_lancamento).getMonth();
@@ -300,8 +301,8 @@ export class DashboardService {
       }
 
       processTransactionByDateAndType(data_lancamento as string, tr_tipo_id, valor_final);
-    
-       
+
+
     });
 
     totals.receita_por_mes = totals.receita_por_mes.sort((a, b) => {
@@ -325,7 +326,7 @@ export class DashboardService {
       .select('plano_id, planos(nome), count:id')
       .eq('empresa_id', empresaId)
       .eq('tipo_usuario', 5)
-      
+
 
     if (error) {
       throw new Error(`Erro ao obter membros por plano: ${JSON.stringify(error)}`);

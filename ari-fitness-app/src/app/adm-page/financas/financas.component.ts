@@ -31,7 +31,7 @@ export class FinancasComponent implements OnInit {
   tipo!: string;
   user!: IUsuario;
   selectedItem: TransacaoFinanceira | undefined;
-  chartViewSize: [number, number] = [250, 250];
+  chartViewSize: [number, number] = [500, 500];
 
   today = new Date();
   data_inicio: string = new Date(
@@ -49,9 +49,10 @@ export class FinancasComponent implements OnInit {
     .toISOString()
     .split('T')[0];
 
-  totalReceitas: number = 0;
-  totalDespesas: number = 0;
-  saldo: number = 0;
+  totalReceitas: number | string = 0;
+  totalDespesas: number | string = 0;
+  saldo: number | string = 0;
+  isSaldoPositivo: boolean = true;
   totalReceitasPorCategoria: CategoryChart[] = [];
   totalDespesasPorCategoria: CategoryChart[] = [];
   periodo = new FormControl(0, [Validators.required]);
@@ -89,17 +90,17 @@ export class FinancasComponent implements OnInit {
 
   buildChartViewSize(e: { screenSize: number; isMobile: boolean }) {
     if (e.screenSize < 769) {
-      this.chartViewSize = [150, 150];
+      this.chartViewSize = [300, 150];
     } else if (e.screenSize < 845) {
-      this.chartViewSize = [90, 125];
+      this.chartViewSize = [180, 125];
     } else if (e.screenSize < 936) {
-      this.chartViewSize = [130, 130];
+      this.chartViewSize = [300, 130];
     } else if (e.screenSize < 1100) {
-      this.chartViewSize = [150, 150];
+      this.chartViewSize = [400, 150];
     } else if (e.screenSize < 1598) {
-      this.chartViewSize = [200, 200];
+      this.chartViewSize = [500, 200];
     } else if (e.screenSize > 1725) {
-      this.chartViewSize = [250, 250];
+      this.chartViewSize = [550, 250];
     } else console.log('this.chartViewSize: ', this.chartViewSize);
   }
 
@@ -172,8 +173,12 @@ export class FinancasComponent implements OnInit {
           console.log(res);
           this.totalReceitas = res.totalReceitas.toFixed(2);
           this.totalDespesas = res.totalDespesas.toFixed(2);
-          // this.loading=false
-          this.saldo = res.saldo.toFixed(2);
+
+          // New Metrics Calculation
+          // Lucro Líquido: Receitas - Despesas
+          this.saldo = (res.totalReceitas - res.totalDespesas).toFixed(2);
+          this.isSaldoPositivo = (res.totalReceitas - res.totalDespesas) >= 0;
+
           this.totalReceitasPorCategoria = res.totalReceitasPorCategoria.map(
             (i: any) => {
               return {
@@ -181,10 +186,6 @@ export class FinancasComponent implements OnInit {
                 value: i.valor_final,
               };
             }
-          );
-          console.log(
-            'this.totalReceitasPorCategoria: ',
-            this.totalReceitasPorCategoria
           );
 
           this.totalDespesasPorCategoria = res.totalDespesasPorCategoria.map(
@@ -194,10 +195,6 @@ export class FinancasComponent implements OnInit {
                 value: i.valor_final,
               };
             }
-          );
-          console.log(
-            'this.totalDespesasPorCategoria: ',
-            this.totalDespesasPorCategoria
           );
         },
         complete: () => {
@@ -267,7 +264,7 @@ export class FinancasComponent implements OnInit {
             handler: () => {
               this.transFinService
                 .save({
-                  ...transacao,
+                  id: transacao.id,
                   fl_ativo: false,
                 })
                 .subscribe({
@@ -301,7 +298,9 @@ export class FinancasComponent implements OnInit {
 
           this.transacoes = res.filter(
             (t: TransacaoFinanceira) => (t.valor_final as number) > 0
-          );
+          ).sort((a: TransacaoFinanceira, b: TransacaoFinanceira) => {
+            return new Date(b.data_lancamento as string).getTime() - new Date(a.data_lancamento as string).getTime();
+          });
           this.loading = false;
         },
       });
@@ -326,6 +325,8 @@ export class FinancasComponent implements OnInit {
       .then((m) => {
         m.present();
         m.onDidDismiss().then((res) => {
+          console.log('res: ', res);
+
           if (res.data) {
             this.ngOnInit();
           }

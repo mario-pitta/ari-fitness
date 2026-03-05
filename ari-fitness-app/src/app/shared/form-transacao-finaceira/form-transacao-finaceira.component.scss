@@ -1,46 +1,117 @@
-
-ion-radio {
-  // display: none; /* Esconde o círculo padrão */
+// Modern Form Aesthetics
+.form-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
-ion-item:has(ion-radio) {
-  --padding-start: 10px; /* Ajusta o padding interno do item */
-  --inner-padding-end: 10px;
-  // border: 1px solid #ccc; /* Adiciona borda aos itens */
-  // border-radius: 5px; /* Arredonda os cantos */
-  // margin-bottom: 5px; /* Espaçamento entre os itens */
-  transition: background-color 0.3s, border-color 0.3s; /* Transição suave */
-  height: 35px;
-  font-size: 10px;
-  display: flex;
-}
+.modern-input {
+  --background: var(--ion-color-step-50, #f4f5f8);
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  margin-bottom: 8px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
 
-
-ion-item * {
-  color: #424040
-}
-
-
-div.item-checked{
-  background: var(--ion-color-primary) !important;
-  border-color: var(--ion-color-primary);
-  color: white;
+  &.ion-focused {
+    border-color: var(--ion-color-primary);
+    --background: rgba(var(--ion-color-primary-rgb), 0.05);
   }
-// ion-radio.radio-checked::part(container) {
-//   background: #6815ec;
-//   border-color: transparent;
-// }
-
-ion-item.item-checked:has(ion-radio) {
-  /* Estilo quando o item está selecionado */
-  --ion-item-background: var(
-    --ion-color-primary
-  )  !important; /* Usa a cor primária do tema Ionic */
-  border-color: var(--ion-color-primary);
-  color: white;
 }
 
-ion-item:has(ion-radio):hover {
-  background-color: #e6e6e6;
-  border-color: #adadad;
+.final-value-input {
+  --background: rgba(var(--ion-color-success-rgb), 0.1);
+  --color: var(--ion-color-success);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+// Custom Wrappers for Non-Input Elements
+.datetime-wrapper,
+.file-upload-wrapper {
+  background: var(--ion-color-step-50, #f4f5f8);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 64px;
+
+  .text-muted {
+    font-size: 0.85rem;
+    color: var(--ion-color-medium);
+  }
+
+  .file-input {
+    font-size: 0.9rem;
+    color: var(--ion-text-color);
+
+    &::file-selector-button {
+      background: var(--ion-color-primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 6px 12px;
+      margin-right: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+
+      &:hover {
+        background: var(--ion-color-primary-shade);
+      }
+    }
+  }
+}
+
+// Discount Group
+.discount-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .discount-input {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .discount-toggle {
+    display: flex;
+    background: var(--ion-color-step-100);
+    border-radius: 12px;
+    padding: 4px;
+    height: 56px;
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      border-radius: 8px;
+      font-weight: 600;
+      color: var(--ion-color-medium);
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.active {
+        background: var(--ion-color-primary);
+        color: white;
+        box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
+      }
+    }
+  }
+}
+
+// Footer
+.form-footer {
+  background: transparent;
+
+  .action-btn {
+    --border-radius: 16px;
+    --box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.3);
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    height: 54px;
+  }
 }

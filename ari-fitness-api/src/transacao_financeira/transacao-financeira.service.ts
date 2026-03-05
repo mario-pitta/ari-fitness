@@ -58,8 +58,15 @@ export class TransacaoFinanceiraService {
       throw new HttpException('Data da transação financeira não informada', HttpStatus.BAD_REQUEST);
     }
 
+    if (typeof transacaoFinanceira.pago_por === 'object') {
+      transacaoFinanceira = {
+        ...transacaoFinanceira,
+        pago_por: (transacaoFinanceira.pago_por as any)?.id,
+      }
+    }
+
     switch (transacaoFinanceira.tr_categoria_id) {
-      case 1: //MENSALIDADE
+      case 1 || 14: //MENSALIDADE
         if (!transacaoFinanceira.pago_por) {
           throw new HttpException('Membro da transação financeira não informado', HttpStatus.BAD_REQUEST);
         }
@@ -68,6 +75,8 @@ export class TransacaoFinanceiraService {
       default:
         break;
     }
+
+    return transacaoFinanceira;
   }
 
   /**
@@ -80,7 +89,9 @@ export class TransacaoFinanceiraService {
    */
   async create(body: TransacaoFinanceira) {
     console.log('body: ', body);
-    await this.validateTransacaoFinanceira(body);
+
+
+    body = await this.validateTransacaoFinanceira(body);
 
     return this.database.supabase
       .from(tableName)

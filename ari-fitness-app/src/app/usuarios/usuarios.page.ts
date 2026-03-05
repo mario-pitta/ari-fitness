@@ -611,7 +611,7 @@ export class UsuariosPage implements OnInit {
                 fl_pago: true,
                 mes: p.mes,
                 ano: p.ano,
-                descricao: `${action === 'isentar' ? 'Isenção de pagamento' : 'Pagamento'} do mês ${p.nome_mes} do ano ${p.ano} pelo Aluno: ${this.selectedUsuario?.nome}`,
+                descricao: `${action === 'isentar' ? 'Isenção de pagamento' : 'Pagamento'} do mês ${p.nome_mes.label} do ano ${p.ano} pelo Aluno: ${this.selectedUsuario?.nome}`,
                 recebido_por: this.user?.id as number,
                 forma_pagamento: FormaDePagamento.PIX,
               };
