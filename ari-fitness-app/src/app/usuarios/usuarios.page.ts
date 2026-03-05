@@ -36,6 +36,7 @@ export class UsuariosPage implements OnInit {
   downloadRecibo() {
     throw new Error('Method not implemented.');
   }
+
   pagamentos: {
     checked: boolean;
     mes: number;
@@ -97,91 +98,91 @@ export class UsuariosPage implements OnInit {
       value: number;
     }[];
   }[] = [
-    // {
-    //   title: 'Novos Alunos',
-    //   subtitle:
-    //     'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
-    //   size: 3,
-    //   data: [
-    //     {
-    //       name: 'Mulheres',
-    //       value: 7,
-    //     },
-    //     {
-    //       name: 'Homens',
-    //       value: 2,
-    //     },
-    //   ],
-    //   iconColor: 'success',
-    //   chartType: 'pie',
-    //   value: 9,
-    //   cardIconName: 'person-add',
-    //   tendency: 'up',
-    //   tendencyValue: 7,
-    // },
-    // {
-    //   title: 'Visitantes',
-    //   subtitle: 'No mês',
-    //   size: 6,
-    //   data: [
-    //     {
-    //       name: 'Mulheres',
-    //       value: 28,
-    //     },
-    //     {
-    //       name: 'Homens',
-    //       value: 35,
-    //     },
-    //   ],
-    //   iconColor: 'warning',
-    //   chartType: 'bar',
-    //   value: '15',
-    //   cardIconName: 'person',
-    //   tendency: 'down',
-    //   tendencyValue: -8,
-    // },
-    // {
-    //   title: 'Horarios de Pico',
-    //   subtitle: '',
-    //   size: 6,
-    //   data: [
-    //     {
-    //       name: '5:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '6:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '7:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '16:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '17:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '18:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //     {
-    //       name: '19:20h',
-    //       value: Number((Math.random() * 100).toFixed(0)),
-    //     },
-    //   ],
-    //   iconColor: 'danger',
-    //   chartType: 'bar',
-    //   value: null,
-    //   cardIconName: 'alarm-outline',
-    //   // tendency: 'down',
-    //   // tendencyValue: -28,
-    // },
-  ];
+      // {
+      //   title: 'Novos Alunos',
+      //   subtitle:
+      //     'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
+      //   size: 3,
+      //   data: [
+      //     {
+      //       name: 'Mulheres',
+      //       value: 7,
+      //     },
+      //     {
+      //       name: 'Homens',
+      //       value: 2,
+      //     },
+      //   ],
+      //   iconColor: 'success',
+      //   chartType: 'pie',
+      //   value: 9,
+      //   cardIconName: 'person-add',
+      //   tendency: 'up',
+      //   tendencyValue: 7,
+      // },
+      // {
+      //   title: 'Visitantes',
+      //   subtitle: 'No mês',
+      //   size: 6,
+      //   data: [
+      //     {
+      //       name: 'Mulheres',
+      //       value: 28,
+      //     },
+      //     {
+      //       name: 'Homens',
+      //       value: 35,
+      //     },
+      //   ],
+      //   iconColor: 'warning',
+      //   chartType: 'bar',
+      //   value: '15',
+      //   cardIconName: 'person',
+      //   tendency: 'down',
+      //   tendencyValue: -8,
+      // },
+      // {
+      //   title: 'Horarios de Pico',
+      //   subtitle: '',
+      //   size: 6,
+      //   data: [
+      //     {
+      //       name: '5:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '6:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '7:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '16:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '17:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '18:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //     {
+      //       name: '19:20h',
+      //       value: Number((Math.random() * 100).toFixed(0)),
+      //     },
+      //   ],
+      //   iconColor: 'danger',
+      //   chartType: 'bar',
+      //   value: null,
+      //   cardIconName: 'alarm-outline',
+      //   // tendency: 'down',
+      //   // tendencyValue: -28,
+      // },
+    ];
   discountType: string = '%';
   recibo: any;
   pagamentosLoading: boolean = false;
@@ -197,7 +198,7 @@ export class UsuariosPage implements OnInit {
     private transacaoFinanceiraDashService: TransacaoFinanceiraDashService,
     private transacaoFinanceiraService: TransacaoFinanceiraService,
     private alertController: AlertController
-  ) {}
+  ) { }
   user: IUsuario | null = null;
   ngOnInit() {
     this.user = this.authService.getUser;
@@ -473,7 +474,7 @@ export class UsuariosPage implements OnInit {
   }
 
   sendMessage() {
-  const mdMessage = this.message.replace(/%0D/g, '\n');
+    const mdMessage = this.message.replace(/%0D/g, '\n');
 
     const whasappUrl = `https://web.whatsapp.com/send?phone=55${this.selectedUsuario?.whatsapp}&
     &text=${mdMessage}`;
@@ -761,9 +762,8 @@ export class UsuariosPage implements OnInit {
 
     const alert = await this.alertController.create({
       header: 'Confirmar',
-      message: `Deseja realmente ${
-        usuario.fl_ativo ? 'desativar' : 'ativar'
-      } o usuário ${usuario.nome}?`,
+      message: `Deseja realmente ${usuario.fl_ativo ? 'desativar' : 'ativar'
+        } o usuário ${usuario.nome}?`,
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
@@ -781,8 +781,7 @@ export class UsuariosPage implements OnInit {
                 next: (res) => {
                   if (res) {
                     this.toastr.success(
-                      `Usuário ${
-                        usuario.fl_ativo ? 'desativado' : 'ativado'
+                      `Usuário ${usuario.fl_ativo ? 'desativado' : 'ativado'
                       } com sucesso!`,
                       'top'
                     );
@@ -796,5 +795,59 @@ export class UsuariosPage implements OnInit {
       ],
     });
     alert.present();
+  }
+
+  importStudents(event: any) {
+    // Keep it for now if needed, but we'll use openImportModal
+    const file = event.target.files[0];
+    if (!file || !this.user?.empresa?.id) return;
+    console.log('event = ', event)
+
+    this.toastr.success('Processando planilha...', 'top');
+    this.usuarioService.importStudents(file, this.user.empresa.id).subscribe({
+      next: (res: any) => {
+        const successCount = res.success.length;
+        const errorCount = res.errors.length;
+
+        if (errorCount > 0) {
+          let errorMessage = `${successCount} alunos importados. ${errorCount} falhas:\n`;
+          res.errors.forEach((err: any) => {
+            errorMessage += `- ${err.row}: ${err.reason}\n`;
+          });
+          this.alertController.create({
+            header: 'Resultado da Importação',
+            message: errorMessage,
+            buttons: ['OK']
+          }).then(alert => alert.present());
+        } else {
+          this.toastr.success(`${successCount} alunos importados com sucesso!`, 'top');
+          this.confetti.showConfetti();
+        }
+        this.getUsuarios();
+      },
+      error: (err) => {
+        this.toastr.error('Erro ao importar alunos: ' + err.message);
+      }
+    });
+  }
+
+  exportStudents() {
+    if (!this.user?.empresa?.id) return;
+
+    this.toastr.success('Gerando planilha...', 'top');
+    this.usuarioService.exportStudents(this.user.empresa.id).subscribe({
+      next: (blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `alunos_${new Date().toLocaleDateString()}.xlsx`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toastr.success('Exportação concluída!', 'top');
+      },
+      error: (err) => {
+        this.toastr.error('Erro ao exportar alunos: ' + err.message);
+      }
+    });
   }
 }

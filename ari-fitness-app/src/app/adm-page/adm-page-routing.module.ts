@@ -36,6 +36,11 @@ const routes: Routes = [
             data: { role: 'admin' }
           },
           {
+            path: 'importar',
+            loadChildren: () => import('../usuarios/importar/importar.module').then(m => m.ImportarPageModule),
+            data: { role: 'admin' }
+          },
+          {
             path: 'cadastro-usuario',
             loadChildren: () => import('../pessoa-form/pessoa-form.module').then(m => m.PessoaFormPageModule),
             data: { role: ['admin', 'instrutor'], tipoUsuario: Constants.ALUNO_ID }

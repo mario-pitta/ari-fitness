@@ -6,7 +6,8 @@
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-col *ngFor="let card of memberDataCard" [attr.size-xs]="12" [attr.size-md]="6" [attr.size-lg]="card.size" [size]="card.size">
+    <ion-col *ngFor="let card of memberDataCard" [attr.size-xs]="12" [attr.size-md]="6" [attr.size-lg]="card.size"
+      [size]="card.size">
       <ion-card class="member-data-card" [ngClass]="card.chartType ? 'chart-card' : ''">
         <ion-card-content>
           @if(!card.value && card.chartType){
@@ -49,9 +50,16 @@
 <ion-grid>
   <ion-row>
     <ion-col size="6">
-      <h6 class="ms-3 d-flex gap-2 ion-align-items-center">Membros: <ion-button size="small" fill="clear" shape="round"
-          color="success  " [routerLink]="['/admin/membros/cadastro-usuario']">
+      <h6 class="ms-3 d-flex gap-2 ion-align-items-center">Membros:
+        <ion-button size="small" fill="clear" shape="round" color="success"
+          [routerLink]="['/admin/membros/cadastro-usuario']">
           <ion-icon name="add"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="clear" shape="round" color="primary" (click)="exportStudents()">
+          <ion-icon name="download-outline"></ion-icon>
+        </ion-button>
+        <ion-button size="small" fill="clear" shape="round" color="secondary" routerLink="importar">
+          <ion-icon name="cloud-upload-outline"></ion-icon>
         </ion-button>
       </h6>
       <ion-row></ion-row>
@@ -61,7 +69,9 @@
     <ion-grid>
       <ion-row class="ion-align-items-center">
         <ion-col size="6">
-          <ion-searchbar placeholder="Buscar por..." [(ngModel)]="searchText" (ionClear)="searchText = ''; filterMember({ detail: { value: 'input' }})" (ionInput)="filterMember({ detail: { value: 'input' }})"></ion-searchbar>
+          <ion-searchbar placeholder="Buscar por..." [(ngModel)]="searchText"
+            (ionClear)="searchText = ''; filterMember({ detail: { value: 'input' }})"
+            (ionInput)="filterMember({ detail: { value: 'input' }})"></ion-searchbar>
         </ion-col>
 
         <!-- <ion-col size="3" class="d-flex gap-2 ion-align-items-center ion-justify-content-around">
@@ -85,9 +95,10 @@
             <ion-icon name="funnel" size="small"></ion-icon>
             <ion-label>Filtrar:</ion-label>
           </ion-card-subtitle>
-          <ion-select name="filterMemberSelector" id="filterMemberSelector" (ionChange)="filterMember($event)" interface="popover" value="todos">
+          <ion-select name="filterMemberSelector" id="filterMemberSelector" (ionChange)="filterMember($event)"
+            interface="popover" value="todos">
             <ion-select-option [value]="'todos'" selected>Todos</ion-select-option>
-            <ion-select-option [value]="'ativos'" >Ativos</ion-select-option>
+            <ion-select-option [value]="'ativos'">Ativos</ion-select-option>
             <ion-select-option [value]="'inadimplentes'">Inadimplentes</ion-select-option>
             <ion-select-option [value]="'inativos'">Inativos</ion-select-option>
           </ion-select>
@@ -274,7 +285,8 @@
 
       <div class="ion-padding" id="message">
 
-        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é {{ user?.nome }}, da <strong>{{ user?.empresa?.nome }}</strong>. Tudo bem?</p>
+        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é {{ user?.nome }}, da <strong>{{ user?.empresa?.nome }}</strong>.
+          Tudo bem?</p>
 
         <p>Ainda não foi identificado o pagamento da sua mensalidade do mês de <strong>{{ mes?.value }}</strong> de
           <strong>{{ ano?.value }}</strong>.
@@ -479,34 +491,35 @@
             </ion-col>
           </ion-row>
           <ng-container *ngIf="!pagamentosLoading && pagamentos.length > 0">
-          <ion-item *ngFor="let pagamento of pagamentos">
-            <ion-label>
-              <ion-row>
-                <ion-col size="1" class="ion-text-end">
-                  <ion-checkbox *ngIf="!pagamento.pago" [(ngModel)]="pagamento.checked"></ion-checkbox>
-                </ion-col>
-                <ion-col size="11">
-                  <p>{{ pagamento.nome_mes.label }}/{{ pagamento.ano }}</p>
-                  <h2>Pago em: {{ pagamento.transacao?.data_lancamento | date: 'dd/MM/yyyy' }}</h2>
-                  <p>Valor: R$ {{ pagamento.transacao?.valor_final }}</p>
-                  <p>Status:
-                    <ion-chip color="{{ pagamento.pago ? 'success' : 'warning' }}">
-                      {{ pagamento.pago ? 'Pago' : 'Nao Pago' }}
-                    </ion-chip>
-                  </p>
+            <ion-item *ngFor="let pagamento of pagamentos">
+              <ion-label>
+                <ion-row>
+                  <ion-col size="1" class="ion-text-end">
+                    <ion-checkbox *ngIf="!pagamento.pago" [(ngModel)]="pagamento.checked"></ion-checkbox>
+                  </ion-col>
+                  <ion-col size="11">
+                    <p>{{ pagamento.nome_mes.label }}/{{ pagamento.ano }}</p>
+                    <h2>Pago em: {{ pagamento.transacao?.data_lancamento | date: 'dd/MM/yyyy' }}</h2>
+                    <p>Valor: R$ {{ pagamento.transacao?.valor_final }}</p>
+                    <p>Status:
+                      <ion-chip color="{{ pagamento.pago ? 'success' : 'warning' }}">
+                        {{ pagamento.pago ? 'Pago' : 'Nao Pago' }}
+                      </ion-chip>
+                    </p>
 
-                </ion-col>
-              </ion-row>
-            </ion-label>
-          </ion-item>
-          <ion-row class="ion-justify-content-center ion-align-items-center d-flex ion-padding">
-            <ion-col size="6" class="ion-text-end">
-              <ion-button color="warning" shape="round" (click)="registrarPagamentos('isentar')" >Isentar</ion-button>
-            </ion-col>
-            <ion-col size="6" class="ion-text-start">
-              <ion-button color="primary" shape="round" (click)="registrarPagamentos('registrar')" >Registrar</ion-button>
-            </ion-col>
-          </ion-row>
+                  </ion-col>
+                </ion-row>
+              </ion-label>
+            </ion-item>
+            <ion-row class="ion-justify-content-center ion-align-items-center d-flex ion-padding">
+              <ion-col size="6" class="ion-text-end">
+                <ion-button color="warning" shape="round" (click)="registrarPagamentos('isentar')">Isentar</ion-button>
+              </ion-col>
+              <ion-col size="6" class="ion-text-start">
+                <ion-button color="primary" shape="round"
+                  (click)="registrarPagamentos('registrar')">Registrar</ion-button>
+              </ion-col>
+            </ion-row>
           </ng-container>
         </ion-list>
       </ng-container>

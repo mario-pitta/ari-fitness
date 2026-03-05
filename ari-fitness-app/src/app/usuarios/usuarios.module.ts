@@ -10,7 +10,6 @@ import { UsuariosPage } from './usuarios.page';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TransacaoFinanceiraFormModule } from "../shared/transacao-financeira-form/transacao-financeira-form.module";
 import { FormTransacaoFinanceiraModule } from '../shared/form-transacao-finaceira/form-transacao-financeira.module';
-
 @NgModule({
   imports: [
     CommonModule,
@@ -20,9 +19,9 @@ import { FormTransacaoFinanceiraModule } from '../shared/form-transacao-finaceir
     NgxChartsModule,
     ReactiveFormsModule,
     FormTransacaoFinanceiraModule
-],
+  ],
   declarations: [UsuariosPage],
   exports: [UsuariosPage],
   schemas: []
 })
-export class UsuariosPageModule {}
+export class UsuariosPageModule { }

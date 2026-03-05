@@ -64,4 +64,22 @@ export class UsuarioService {
   deleteCheckinById(checkinId: number) {
     return this.http.post(environment.apiUrl + `/usuario/check-in/${checkinId}/delete`, {}).pipe(take(1));
   }
+
+  importStudents(file: File, empresaId: string) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(environment.apiUrl + `/usuario/import?empresaId=${empresaId}`, formData).pipe(take(1));
+  }
+
+  getMappings(empresaId: string) {
+    return this.http.get<{ plans: any[], schedules: any[] }>(environment.apiUrl + `/usuario/mappings?empresaId=${empresaId}`).pipe(take(1));
+  }
+
+  batchCreate(students: any[], empresaId: string) {
+    return this.http.post(environment.apiUrl + `/usuario/batch-create?empresaId=${empresaId}`, { students }).pipe(take(1));
+  }
+
+  exportStudents(empresaId: string) {
+    return this.http.get(environment.apiUrl + `/usuario/export?empresaId=${empresaId}`, { responseType: 'blob' as 'json' }).pipe(take(1));
+  }
 }

@@ -1,0 +1,113 @@
+<ion-header>
+    <ion-toolbar color="primary">
+        <ion-title>Importação em Lote</ion-title>
+        <ion-buttons slot="end">
+            <ion-button (click)="cancel()">
+                <ion-icon name="close"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+    <div class="import-container">
+        <div class="upload-area" (click)="fileInput.click()" (dragover)="$event.preventDefault()"
+            (drop)="onDrop($event)">
+            <ion-icon name="cloud-upload-outline"></ion-icon>
+            <h3>Arraste sua planilha aqui ou clique para selecionar</h3>
+            <p>Formatos suportados: .xlsx, .xls, .csv</p>
+            <input type="file" #fileInput (change)="onFileChange($event)" style="display: none"
+                accept=".xlsx, .xls, .csv">
+        </div>
+
+        @if(isProcessing) {
+        <div class="processing-overlay">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Processando dados...</p>
+        </div>
+        }
+
+        @if(importData.length > 0) {
+        <div class="preview-area">
+            <h6 class="ion-padding-top">Prévia dos Dados:</h6>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <ion-checkbox [(ngModel)]="selectAll" (ionChange)="toggleAll()"></ion-checkbox>
+                            </th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Plano</th>
+                            <th>Horário</th>
+                            <th>Status/Erro</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(row of importData; track $index) {
+                        <tr>
+                            <td>
+                                <ion-checkbox [(ngModel)]="row.selected"
+                                    [disabled]="row.invalidFields.length > 0"></ion-checkbox>
+                            </td>
+                            <td [class.invalid]="row.invalidFields.includes('nome')" data-label="Nome">
+                                <ion-input [value]="row.nome"
+                                    (ionInput)="updateRowField(row, 'nome', $event.target.value)" placeholder="Nome"
+                                    class="inline-input"></ion-input>
+                            </td>
+                            <td [class.invalid]="row.invalidFields.includes('cpf')" data-label="CPF">
+                                <ion-input [value]="row.cpf"
+                                    (ionInput)="updateRowField(row, 'cpf', $event.target.value)" placeholder="CPF"
+                                    class="inline-input"></ion-input>
+                            </td>
+                            <td [class.invalid]="row.invalidFields.includes('plano')" data-label="Plano">
+                                <ion-select [value]="row.processedData.plano" placeholder="Selecione"
+                                    (ionChange)="updateRowField(row, 'plano_id', $event.detail.value)"
+                                    class="inline-select" interface="popover">
+                                    @for(plano of planos; track plano.id) {
+                                    <ion-select-option [value]="plano.id">{{ plano.descricao }}</ion-select-option>
+                                    }
+                                </ion-select>
+                            </td>
+                            <td [class.invalid]="row.invalidFields.includes('horario')" data-label="Horário">
+                                <ion-select [value]="row.processedData.horario_id" placeholder="Selecione"
+                                    (ionChange)="updateRowField(row, 'horario_id', $event.detail.value)"
+                                    class="inline-select" interface="popover">
+                                    @for(h of horarios; track h.id) {
+                                    <ion-select-option [value]="h.id">{{ h.hora_inicio }} - {{ h.hora_fim
+                                        }}</ion-select-option>
+                                    }
+                                </ion-select>
+                            </td>
+                            <td [class.error-text]="row.errorDescription" data-label="Status/Erro">
+                                @if(row.errorDescription) {
+                                <ion-text color="danger" size="small">{{ row.errorDescription }}</ion-text>
+                                } @else {
+                                <ion-text color="success" size="small">Pronto</ion-text>
+                                }
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if(!canImport) {
+            <ion-note color="danger" class="ion-padding-top d-block">
+                * Corrija os campos destacados em vermelho na planilha e tente novamente.
+            </ion-note>
+            }
+        </div>
+        }
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-button slot="start" fill="clear" color="medium" (click)="cancel()">Cancelar</ion-button>
+        <ion-button slot="end" color="success" [disabled]="!canImport || isLoading" (click)="import()">
+            @if(isLoading) { <ion-spinner name="dots"></ion-spinner> } @else { Importar {{ selectedCount }} Alunos }
+        </ion-button>
+    </ion-toolbar>
+</ion-footer>
