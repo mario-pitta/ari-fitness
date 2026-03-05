@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { Historico } from 'src/core/models/Historico';
   styleUrls: ['./treinos.page.scss'],
 })
 export class TreinosPage implements OnInit {
-  user!: Usuario;
+  user!: IUsuario;
   selectedTreino: any;
   interval: any;
   openModal: boolean = false;
@@ -59,8 +59,8 @@ export class TreinosPage implements OnInit {
     console.log('ficha: ', ficha);
 
     this.selectedTreino = ficha?.treinos.find(
-        (t: any) => t.treino.id == event
-      )?.treino;
+      (t: any) => t.treino.id == event
+    )?.treino;
     console.log('selectedTreino ============ ', this.selectedTreino);
   }
   serieArr: any[] = [];
@@ -123,7 +123,7 @@ export class TreinosPage implements OnInit {
     el.target.style.setProperty('--color', `warning`);
     el.target.classList.toggle('clock-animated');
 
-    setTimeout(() => {}, this.interval);
+    setTimeout(() => { }, this.interval);
   }
 
   resetCounter() {

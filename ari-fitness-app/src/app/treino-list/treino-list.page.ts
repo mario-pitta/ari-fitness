@@ -1,7 +1,7 @@
 import { FichaAlunoService } from './../../core/services/ficha-aluno/ficha-aluno.service';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlertController, ModalController, ToastController } from '@ionic/angular';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
 import { Treino } from 'src/core/models/Treino';
@@ -25,8 +25,8 @@ import { ActivatedRoute } from '@angular/router';
 export class TreinosListPage implements OnInit {
   @Input() selectedTreinos: any[] = [];
   filteredTreinos: Treino[] = [];
-  user!: Usuario;
-  @Input() aluno!: Usuario | any;
+  user!: IUsuario;
+  @Input() aluno!: IUsuario | any;
   selectedTreino: any;
   interval: number = 15;
   openModal: boolean = false;
@@ -122,7 +122,7 @@ export class TreinosListPage implements OnInit {
     this.form = this.fb.group({
       id: [null, Validators.nullValidator],
       nome: ['', [Validators.required]],
-      exercicios: this.fb.array([]), 
+      exercicios: this.fb.array([]),
       grupo_muscular_id: [null, Validators.nullValidator],
       grupo_muscular: this.fb.group({}),
       parte_do_corpo_id: [null, Validators.nullValidator],

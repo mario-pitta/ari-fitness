@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import Constants from 'src/core/Constants';
 import { Treino } from 'src/core/models/Treino';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { PagetitleService } from 'src/core/services/pagetitle.service';
 
@@ -32,12 +32,12 @@ export class HomePage implements OnInit {
       },
     });
   }
-  user!: Usuario;
+  user!: IUsuario;
   treinoUrlImage: string = MALE_BG_URLS.PERNAS;
 
 
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.user = this.auth.getUser;
@@ -48,53 +48,53 @@ export class HomePage implements OnInit {
     this.treinos =
       this.user.tipo_usuario == Constants.ALUNO_ID
         ? this.user.ficha_aluno
-            ?.filter((f) => f.fl_ativo)[0]
-            .treinos?.map((t: any) => {
-              let url = '';
+          ?.filter((f) => f.fl_ativo)[0]
+          .treinos?.map((t: any) => {
+            let url = '';
 
-              switch (true) {
-                case t.treino.grupo_muscular_id == 1:
-                  console.log('entrou aqi...  PEITO', t);
-                  url = MALE_BG_URLS.PEITO;
-                  break;
-                case t.treino.grupo_muscular_id == 2 ||
-                  t.treino.grupo_muscular_id == 3:
-                  console.log('entrou aqi...  COSTAS', t);
-                  url = MALE_BG_URLS.COSTAS;
-                  break;
-                case t.treino.grupo_muscular_id == 4 ||
-                  t.treino.grupo_muscular_id == 5 ||
-                  t.treino.grupo_muscular_id == 6 ||
-                  t.treino.grupo_muscular_id == 15:
-                  console.log('entrou aqi...  BRACOS', t);
-                  url = MALE_BG_URLS.BRACOS;
-                  break;
-                case t.treino.grupo_muscular_id == 7 ||
-                  t.treino.grupo_muscular_id == 8 ||
-                  t.treino.grupo_muscular_id == 10 ||
-                  t.treino.grupo_muscular_id == 14:
-                  console.log('entrou aqi...  PERNAS', t);
-                  url = MALE_BG_URLS.PERNAS;
-                  break;
-                case t.treino.grupo_muscular_id == 9:
-                  console.log('entrou aqi...  GLUTEOS', t);
-                  url = MALE_BG_URLS.GLUTEOS;
-                  break;
+            switch (true) {
+              case t.treino.grupo_muscular_id == 1:
+                console.log('entrou aqi...  PEITO', t);
+                url = MALE_BG_URLS.PEITO;
+                break;
+              case t.treino.grupo_muscular_id == 2 ||
+                t.treino.grupo_muscular_id == 3:
+                console.log('entrou aqi...  COSTAS', t);
+                url = MALE_BG_URLS.COSTAS;
+                break;
+              case t.treino.grupo_muscular_id == 4 ||
+                t.treino.grupo_muscular_id == 5 ||
+                t.treino.grupo_muscular_id == 6 ||
+                t.treino.grupo_muscular_id == 15:
+                console.log('entrou aqi...  BRACOS', t);
+                url = MALE_BG_URLS.BRACOS;
+                break;
+              case t.treino.grupo_muscular_id == 7 ||
+                t.treino.grupo_muscular_id == 8 ||
+                t.treino.grupo_muscular_id == 10 ||
+                t.treino.grupo_muscular_id == 14:
+                console.log('entrou aqi...  PERNAS', t);
+                url = MALE_BG_URLS.PERNAS;
+                break;
+              case t.treino.grupo_muscular_id == 9:
+                console.log('entrou aqi...  GLUTEOS', t);
+                url = MALE_BG_URLS.GLUTEOS;
+                break;
 
-                default:
-                  console.log('entrou aqi...  default', t);
+              default:
+                console.log('entrou aqi...  default', t);
 
-                  url = MALE_BG_URLS.ABDOMINAL;
-                  break;
-              }
+                url = MALE_BG_URLS.ABDOMINAL;
+                break;
+            }
 
-              const _t: any = {
-                ...t,
-                banner_img: url,
-              };
+            const _t: any = {
+              ...t,
+              banner_img: url,
+            };
 
-              return _t;
-            })
+            return _t;
+          })
         : [];
   }
 

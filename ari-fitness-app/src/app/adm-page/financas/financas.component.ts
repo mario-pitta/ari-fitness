@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { AlertController, ModalController } from '@ionic/angular';
 import { TransacaoFinanceira } from 'src/core/models/TransacaoFInanceira';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { ConfettiService } from 'src/core/services/confetti/confetti.service';
 import { PageSizeService } from 'src/core/services/page-size/page-size.service';
@@ -29,7 +29,7 @@ export class FinancasComponent implements OnInit {
   openModalTransacao: boolean = false;
   action!: string;
   tipo!: string;
-  user!: Usuario;
+  user!: IUsuario;
   selectedItem: TransacaoFinanceira | undefined;
   chartViewSize: [number, number] = [250, 250];
 
@@ -241,8 +241,8 @@ export class FinancasComponent implements OnInit {
             };
           });
         },
-        error: (err) => {},
-        complete: () => {},
+        error: (err) => { },
+        complete: () => { },
       });
   }
 

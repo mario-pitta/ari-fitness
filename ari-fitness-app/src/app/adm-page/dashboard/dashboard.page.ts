@@ -20,28 +20,28 @@ export class DashboardPage implements OnInit {
   chartSizes: number[] = [];
   searchControl: FormControl = new FormControl();
 
-    totals = {
-      totalMembros: 0,
-      totalInstrutores: 0,
-      totalReceitas: 0,
-      totalDespesas: 0,
-      totalAulas: 0,
-      totalFichas: 0,
-      receita_por_mes: [] as {
-        mes: number;
-        ano: number;
-        mesAno: string;
-        valor: number;
-      }[],
-      despesa_por_mes: [] as {
-        mes: number;
-        ano: number;
-        mesAno: string;
-        valor: number;
-      }[],
-    };
+  totals = {
+    totalMembros: 0,
+    totalInstrutores: 0,
+    totalReceitas: 0,
+    totalDespesas: 0,
+    totalAulas: 0,
+    totalFichas: 0,
+    receita_por_mes: [] as {
+      mes: number;
+      ano: number;
+      mesAno: string;
+      valor: number;
+    }[],
+    despesa_por_mes: [] as {
+      mes: number;
+      ano: number;
+      mesAno: string;
+      valor: number;
+    }[],
+  };
   members: IUsuario[] = [];
-  usuario: Usuario = this.auth.getUser;
+  usuario: IUsuario = this.auth.getUser;
   loading: boolean = true;
 
 
@@ -225,14 +225,14 @@ export class DashboardPage implements OnInit {
         this.totals = totals as any;
 
         this.receitasMensais = [{
-            name: 'Meses',
-            series: this.totals.receita_por_mes.map(r => {
-              return {
-                name: (this.meses.find(m => m.value === (r.mes + 1))?.label || '') + '/' + r.ano,
-                value: r.valor,
-                despesas: 500,
-              };
-            }),
+          name: 'Meses',
+          series: this.totals.receita_por_mes.map(r => {
+            return {
+              name: (this.meses.find(m => m.value === (r.mes + 1))?.label || '') + '/' + r.ano,
+              value: r.valor,
+              despesas: 500,
+            };
+          }),
 
         }];
       });

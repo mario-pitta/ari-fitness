@@ -254,6 +254,21 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
       transition: all 0.3s ease;
 
+      .status-dot {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 3px solid var(--ion-background-color);
+        background: var(--ion-color-medium);
+
+        &.online {
+          background: var(--ion-color-success);
+        }
+      }
+
       &:hover {
         transform: scale(1.02);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
@@ -289,10 +304,16 @@
               object-fit: cover;
             }
 
+
+          }
+
+          .name-details {
+            position: relative;
+
             .status-dot {
               position: absolute;
-              bottom: -2px;
-              right: -2px;
+              top: -2px;
+              left: -20px;
               width: 14px;
               height: 14px;
               border-radius: 50%;
@@ -303,9 +324,7 @@
                 background: var(--ion-color-success);
               }
             }
-          }
 
-          .name-details {
             h4 {
               margin: 0;
               font-size: 1.1rem;

@@ -84,9 +84,9 @@
             <img
               [src]="member.genero === 'M' ? 'https://avatar.iran.liara.run/public/5': 'https://avatar.iran.liara.run/public/60'"
               alt="">
-            <div class="status-dot" [class.online]="member.fl_ativo"></div>
-          </div> -->
+            </div> -->
           <div class="name-details">
+            <div class="status-dot" [class.online]="member.fl_ativo"></div>
             <h4>{{member.nome}}</h4>
             <span>{{member.whatsapp || 'Sem WhatsApp'}}</span>
           </div>
@@ -116,8 +116,10 @@
           </div>
           <div class="info-item">
             <span class="label">Pagamento</span>
-            <ion-badge [color]="!member.fl_ativo ? 'danger' : member.fl_adimplente ? 'success' : 'warning'" mode="ios">
-              {{!member.fl_ativo ? 'Inativo' : member.fl_adimplente ? 'Em Dia' : 'Em Atraso'}}
+            <ion-badge
+              [color]="member.status_pagamento.label === 'Em Dia' ? 'success' : member.status_pagamento.label === 'Em Atraso' ? 'danger' : 'warning'"
+              mode="ios">
+              {{ member.status_pagamento.label }}
             </ion-badge>
           </div>
         </div>
@@ -230,11 +232,7 @@
       </form>
 
       <div class="ion-padding" id="message">
-        <p>Olá, {{ selectedUsuario?.nome }}. Aqui é {{ user?.nome }}, da <strong>{{ user?.empresa?.nome }}</strong>.</p>
-        <p>Ainda não foi identificado o pagamento da sua mensalidade do mês de <strong>{{ mes?.value }}</strong> de
-          <strong>{{ ano?.value }}</strong>.
-        </p>
-        <p>Chave Pix: <strong>{{user?.empresa?.chave_pix}}</strong></p>
+        {{message}}
       </div>
     </div>
 
@@ -274,7 +272,7 @@
         <ion-list [inset]="true">
           <ion-item>
             <ion-label>Filtrar por Ano</ion-label>
-            <ion-select interface="popover" placeholder="2025" (ionChange)="filterAno($event)">
+            <ion-select interface="popover" [placeholder]="anos[0].value" (ionChange)="filterAno($event)">
               <ion-select-option *ngFor="let ano of anos" [value]="ano">{{ ano.value }}</ion-select-option>
             </ion-select>
           </ion-item>

@@ -12,7 +12,7 @@ import { IonCheckboxCustomEvent } from '@ionic/core';
 import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario, Usuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TarefasService } from 'src/core/services/tarefas/tarefas.service';
 import { ToastrService } from 'src/core/services/toastr/toastr.service';
@@ -50,7 +50,7 @@ export class PlanejadorPage implements OnInit, OnDestroy {
   showTaskForm: boolean = false;
   cols: { title: string; visible: boolean; tasks: Tarefa[]; status_tarefa_id: number }[] = [];
 
-  user: Usuario | null = null;
+  user: IUsuario | null = null;
 
   taskForm!: FormGroup;
 

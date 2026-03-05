@@ -22,8 +22,11 @@ const WHATSAPP_MESSAGE_TEMPLATE = `
   Ainda não foi identificado o pagamento da sua mensalidade do mês de *{{mes}}* de *{{ano}}*.%0D
   Para informar o pagamento, favor enviar o comprovante de pagamento via WhatsApp. %0D%0D
 
-  Caso ainda não tenha realizado o pagamento, segue os dados de transferência: %0D
-    *Chave Pix*: {{chave_pix}} %0D%0D
+  Caso ainda não tenha realizado o pagamento, segue os dados de transferência: 
+  
+  *Chave Pix*: {{chave_pix}} 
+
+
   Caso prefira utilizar o cartão de crédito, favor solicite um link de pagamento ou vá até a recepção. %0DSerá um prazer te atender!`;
 
 @Component({
@@ -97,92 +100,7 @@ export class UsuariosPage implements OnInit {
       size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'auto';
       value: number;
     }[];
-  }[] = [
-      // {
-      //   title: 'Novos Alunos',
-      //   subtitle:
-      //     'Mês ' + (new Date().getMonth() + 1).toLocaleString().toString(),
-      //   size: 3,
-      //   data: [
-      //     {
-      //       name: 'Mulheres',
-      //       value: 7,
-      //     },
-      //     {
-      //       name: 'Homens',
-      //       value: 2,
-      //     },
-      //   ],
-      //   iconColor: 'success',
-      //   chartType: 'pie',
-      //   value: 9,
-      //   cardIconName: 'person-add',
-      //   tendency: 'up',
-      //   tendencyValue: 7,
-      // },
-      // {
-      //   title: 'Visitantes',
-      //   subtitle: 'No mês',
-      //   size: 6,
-      //   data: [
-      //     {
-      //       name: 'Mulheres',
-      //       value: 28,
-      //     },
-      //     {
-      //       name: 'Homens',
-      //       value: 35,
-      //     },
-      //   ],
-      //   iconColor: 'warning',
-      //   chartType: 'bar',
-      //   value: '15',
-      //   cardIconName: 'person',
-      //   tendency: 'down',
-      //   tendencyValue: -8,
-      // },
-      // {
-      //   title: 'Horarios de Pico',
-      //   subtitle: '',
-      //   size: 6,
-      //   data: [
-      //     {
-      //       name: '5:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '6:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '7:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '16:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '17:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '18:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //     {
-      //       name: '19:20h',
-      //       value: Number((Math.random() * 100).toFixed(0)),
-      //     },
-      //   ],
-      //   iconColor: 'danger',
-      //   chartType: 'bar',
-      //   value: null,
-      //   cardIconName: 'alarm-outline',
-      //   // tendency: 'down',
-      //   // tendencyValue: -28,
-      // },
-    ];
+  }[] = [];
   discountType: string = '%';
   recibo: any;
   pagamentosLoading: boolean = false;
@@ -423,7 +341,8 @@ export class UsuariosPage implements OnInit {
               idade:
                 new Date().getFullYear() -
                 new Date(u.data_nascimento).getFullYear(),
-              fl_pago: checkStatusPagamento(u),
+              fl_pago: u.status_pagamento === 'Em Dia',
+              status_pagamento: u.status_pagamento,
             };
           });
           console.log('this.usuarioList: ', this.usuarioList);
@@ -472,17 +391,20 @@ export class UsuariosPage implements OnInit {
   }
 
   sendMessage() {
-    const mdMessage = this.message.replace(/%0D/g, '\n');
+    const mdMessage = encodeURIComponent(this.message.replace(/%0D/g, '\n'));
 
-    const whasappUrl = `https://web.whatsapp.com/send?phone=55${this.selectedUsuario?.whatsapp}&
-    &text=${mdMessage}`;
+    const formatedNumber = this.selectedUsuario?.whatsapp?.replace(/\D/g, '');
+
+    const whasappUrl = `https://wa.me/55${formatedNumber}?text=${mdMessage}`;
+
+    console.log('whasappUrl = ', whasappUrl)
 
     const a = document.createElement('a');
     a.href = whasappUrl;
-    a.target = 'https://web.whatsapp.com/';
+    a.target = '_blank';
     a.click();
-    this.showCobrancaModal = false;
-    this.selectedUsuario = null;
+    // this.showCobrancaModal = false;
+    // this.selectedUsuario = null;
   }
 
   copyMessage() {
@@ -689,7 +611,7 @@ export class UsuariosPage implements OnInit {
                 fl_pago: true,
                 mes: p.mes,
                 ano: p.ano,
-                descricao: '',
+                descricao: `${action === 'isentar' ? 'Isenção de pagamento' : 'Pagamento'} do mês ${p.nome_mes} do ano ${p.ano} pelo Aluno: ${this.selectedUsuario?.nome}`,
                 recebido_por: this.user?.id as number,
                 forma_pagamento: FormaDePagamento.PIX,
               };
@@ -703,6 +625,10 @@ export class UsuariosPage implements OnInit {
                   );
                   this.confetti.showConfetti();
                   this.getUsuarios();
+                  this.getTransacoesByUser(
+                    this.selectedUsuario as Usuario,
+                    this.pagamentos[0].ano
+                  );
                 },
               });
             });
@@ -738,7 +664,7 @@ export class UsuariosPage implements OnInit {
         break;
       case 'inadimplentes':
         this.usuarioList = this.usuarios.filter(
-          (u) => !u.fl_adimplente && u.fl_ativo
+          (u) => u.status_pagamento.label !== 'Em Dia' && u.fl_ativo
         );
         break;
       case 'input':

@@ -38,6 +38,7 @@ export interface IUsuario {
   different criteria or roles within the system.
   *
   */
+
   tipo_usuario: string | number;
   relato_dor: boolean;
   medicacao_em_uso: string;
@@ -53,6 +54,10 @@ export interface IUsuario {
   data_ultimo_pagamento?: Date | string;
   fl_pago?: boolean;
   fl_adimplente?: boolean;
+  status_pagamento?: {
+    label: string;
+    errors: string[];
+  } | any;
 
 }
 export class Usuario implements IUsuario {
@@ -97,6 +102,10 @@ export class Usuario implements IUsuario {
   data_ultimo_pagamento?: Date | string;
   fl_pago?: boolean;
   fl_adimplente?: boolean;
+  status_pagamento?: {
+    label: string;
+    errors: string[];
+  } | any;
 
   constructor(obj: IUsuario) {
     Object.assign(this, obj);

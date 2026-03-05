@@ -28,21 +28,21 @@ export class UsuarioController {
    * log the error and send a 500 status response with the error details. If the operation is
    * successful, it will send a response with the data of all users.
    */
-  @Get()
-  findAll(@Res() res: Response) {
-    console.log('getting all users...');
-    return this.usuarioService.findAll().then((_res) => {
-      if (_res.error) {
-        console.error('erro no usuario/findAll', _res.error);
-        res.status(500).send({
-          status: 500,
-          ..._res.error
-        });
-      }
+  // @Get()
+  // findAll(@Res() res: Response) {
+  //   console.log('getting all users...');
+  //   return this.usuarioService.findAll().then((_res) => {
+  //     if (_res.error) {
+  //       console.error('erro no usuario/findAll', _res.error);
+  //       res.status(500).send({
+  //         status: 500,
+  //         ..._res.error
+  //       });
+  //     }
 
-      return res.send(_res.data);
-    });
-  }
+  //     return res.send(_res.data);
+  //   });
+  // }
 
 
   /**
@@ -176,9 +176,9 @@ export class UsuarioController {
         });
       }
       return res.send(_res.data);
-    }); 
-    
-  
+    });
+
+
   }
 
 

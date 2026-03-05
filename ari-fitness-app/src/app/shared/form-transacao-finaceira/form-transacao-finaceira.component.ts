@@ -17,7 +17,7 @@ import {
 import { ConfettiService } from 'src/core/services/confetti/confetti.service';
 import { TransacaoFinanceiraService } from 'src/core/services/transacao-financeira/transacao-financeira.service';
 import { FormaDePagamento } from 'src/core/models/TransacaoFInanceira';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { UsuarioService } from 'src/core/services/usuario/usuario.service';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { ModalController, SelectChangeEventDetail } from '@ionic/angular';
@@ -39,7 +39,7 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
   @Input() transacaoFinanceira!: TransacaoFinanceira | undefined;
   @Input() tipoTransacaoId: number = 1;
   @Input() categoriaTransacaoId!: number;
-  @Input() selectedMembro!: Usuario | any;
+  @Input() selectedMembro!: IUsuario | any;
   @Input() selectedUsuario: any;
   @Input() servicoId!: number;
   @Input() action: string = 'nova';
@@ -53,10 +53,10 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
   showReciboModal: boolean = false;
   categorias: CategoriaFinanceira[] = [];
   tipos: TipoTransacaoFinanceira[] = [];
-  membros: Usuario[] = [];
+  membros: IUsuario[] = [];
   formasPagamento: string[] = [];
   discountType: '%' | 'R$' = '%';
-  user!: Usuario;
+  user!: IUsuario;
   auth = inject(AuthService);
   usuarioService = inject(UsuarioService);
 
@@ -75,7 +75,7 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
   constructor(
     private transFinancService: TransacaoFinanceiraService,
     private modalController: ModalController
-  ) {}
+  ) { }
   async ngOnInit() {
     this.user = this.auth.getUser;
 
@@ -124,8 +124,8 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
       'desconto',
       new FormControl(
         this.transacaoFinanceira?.desconto_perc ||
-          this.transacaoFinanceira?.desconto_real ||
-          0,
+        this.transacaoFinanceira?.desconto_real ||
+        0,
         [Validators.nullValidator]
       )
     );
@@ -180,7 +180,7 @@ export class FormTransacaoFinaceiraComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFormChange($event: Event) {}
+  onFormChange($event: Event) { }
   onChangeMembro($event: IonSelectCustomEvent<SelectChangeEventDetail<any>>) {
     // valor_real
 

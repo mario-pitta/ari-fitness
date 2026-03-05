@@ -10,7 +10,7 @@ import { Maskito } from '@maskito/core';
 
 import Constants from 'src/core/Constants';
 
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { TipoUsuario } from 'src/core/models/TipoUsuario';
 import { Horario } from 'src/core/models/Horario';
 
@@ -59,7 +59,7 @@ export class PessoaFormPage implements OnInit {
     private router: Router,
     private auth: AuthService
   ) { }
-  user!: Usuario
+  user!: IUsuario
   ngOnInit() {
     this.user = this.auth.getUser;
     console.log('this.user: ', this.user);
@@ -80,7 +80,7 @@ export class PessoaFormPage implements OnInit {
 
   getUserInfo(id: any) {
     this.usuarioService.findByFilters({ id: id }).subscribe({
-      next: (data: Usuario[]) => {
+      next: (data: IUsuario[]) => {
         this.form.patchValue(data[0]);
         this.calcIMC()
         // console.log(this.form.value);

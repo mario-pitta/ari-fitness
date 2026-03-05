@@ -1,7 +1,7 @@
 import Constants from 'src/core/Constants';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { ItemReorderEventDetail, ModalController } from '@ionic/angular';
-import { Usuario } from 'src/core/models/Usuario';
+import { IUsuario } from 'src/core/models/Usuario';
 import { AuthService } from 'src/core/services/auth/auth.service';
 import { TreinoExercicioFormPage } from '../treino-exercicio-form/treino-exercicio-form.page';
 import { TreinosListPage } from '../treino-list/treino-list.page';
@@ -22,14 +22,14 @@ import { ToastrService } from 'src/core/services/toastr/toastr.service';
 export class FichaTreinoAlunoPage implements OnInit {
   Constants = Constants;
   /** Esse atributo refere-se ao Usuario Logado no app */
-  user!: Usuario;
+  user!: IUsuario;
   selectedTreino: any;
   interval: number = 15;
   openModal: boolean = false;
   // treinos: Treino[] = [];
   /** Esse atributo refere-se ao Aluno que tera sua ficha gerenciada pelo adm ou instrutor  */
   // aluno!: Partial<Usuario> | Usuario;
-  instrutores: Usuario[] = [];
+  instrutores: IUsuario[] = [];
   fichaAtual!: FichaAluno;
   loading: boolean = false;
   form: FormGroup = new FormGroup({});
@@ -197,13 +197,13 @@ export class FichaTreinoAlunoPage implements OnInit {
     });
 
     this.instrutor?.patchValue({
-      id: (ficha.instrutor as Partial<Usuario>)?.id,
-      nome: (ficha.instrutor as Partial<Usuario>)?.nome,
+      id: (ficha.instrutor as Partial<IUsuario>)?.id,
+      nome: (ficha.instrutor as Partial<IUsuario>)?.nome,
     });
 
     this.cadastrado_por?.patchValue({
-      id: (ficha.cadastrado_por as Partial<Usuario>)?.id,
-      nome: (ficha.cadastrado_por as Partial<Usuario>)?.nome,
+      id: (ficha.cadastrado_por as Partial<IUsuario>)?.id,
+      nome: (ficha.cadastrado_por as Partial<IUsuario>)?.nome,
     });
 
     this.f.patchValue({
@@ -230,7 +230,7 @@ export class FichaTreinoAlunoPage implements OnInit {
     this.modalController
       .create({
         component: TreinosListPage,
-        componentProps: { 
+        componentProps: {
           enableEdit: true,
           gridMode: false,
           enableSelect: true,
@@ -269,14 +269,14 @@ export class FichaTreinoAlunoPage implements OnInit {
     el.target.style.setProperty('--color', `warning`);
     el.target.classList.toggle('clock-animated');
 
-    setTimeout(() => {}, this.interval);
+    setTimeout(() => { }, this.interval);
   }
 
   openClock() {
     alert('vai abrir o cronometro!');
   }
 
-  closeClock() {}
+  closeClock() { }
 
   openTreinoForm() {
     this.modalController
@@ -318,7 +318,7 @@ export class FichaTreinoAlunoPage implements OnInit {
     req.subscribe({
       next: (res) => {
         this.toastr.success('Operação bem sucedida');
-        if(this.aluno?.value.id == this.user.id){
+        if (this.aluno?.value.id == this.user.id) {
           this.auth.login(this.user.cpf, this.user.data_nascimento).subscribe();
         }
 

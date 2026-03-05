@@ -1,11 +1,11 @@
 import { Exercicio } from "./Exercicio";
 import { Treino } from "./Treino";
-import { Usuario } from "./Usuario";
+import { IUsuario } from "./Usuario";
 
 export interface Historico {
   id?: number;
 
-  aluno: Usuario;
+  aluno: IUsuario;
   treino: Treino;
   exercicio: Exercicio;
   series: number;

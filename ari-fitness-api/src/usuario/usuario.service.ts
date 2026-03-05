@@ -25,59 +25,67 @@ export class UsuarioService {
     });
   }
 
-  checkAdimplencia(user: Usuario, transacoes: [], isFirstUser: boolean): boolean {
-
-    //Cria uma lista de meses desde que o aluno foi cadastrado ate a data atual
-    const meses: {
-      ano: number;
-      mes: number;
-      label: string;
-      pago: boolean;
-    }[] = [];
+  /**
+   * Analisa o status de pagamento do aluno com base nas transações de Matrícula (14) e Mensalidade (1).
+   * Scenarios:
+   * 1. Sem Matrícula: Falta transação 14. -> "Pendencias" (ou "Sem Matrícula")
+   * 2. Em Atraso: Hoje > dia_vencimento AND sem pagamento no mês atual.
+   * 3. Há Pendências: Faltam transações em meses anteriores desde o cadastro.
+   * 4. Em Dia: Se tudo acima estiver ok.
+   */
+  checkStatusPagamento(user: Usuario, transacoes: TransacaoFinanceira[]): {
+    label: string;
+    errors: string[];
+  } {
     const dataAtual = new Date();
     const dataCadastro = new Date(user.created_at as string);
+    const diaVencimento = typeof user.data_vencimento === 'number'
+      ? user.data_vencimento
+      : parseInt(user.data_vencimento?.toString()) || 10;
 
+    // 1. Verificar Matrícula (Categoria 14)
+    // const temMatricula = transacoes.some(t => t.tr_categoria_id === 14 && t.fl_pago);
+    // if (!temMatricula) return { label: 'Há Pendências', errors: ['Sem Matrícula'] }; // Matrícula é obrigatória
+
+    // Criar lista de meses necessários desde o cadastro até hoje
+    const mesesNecessarios: { ano: number; mes: number }[] = [];
     const anoCadastro = dataCadastro.getFullYear();
     const mesCadastro = dataCadastro.getMonth();
-
     const anoAtual = dataAtual.getFullYear();
     const mesAtual = dataAtual.getMonth();
 
     for (let ano = anoCadastro; ano <= anoAtual; ano++) {
-      const mesInicio = ano === anoCadastro ? mesCadastro : 0;
-      const mesFim = ano === anoAtual ? mesAtual : 11;
-      for (let mes = mesInicio; mes <= mesFim; mes++) {
-        meses.push({ ano, mes, label: `${mes + 1}/${ano}`, pago: false });
+      const start = (ano === anoCadastro) ? mesCadastro : 0;
+      const end = (ano === anoAtual) ? mesAtual : 11;
+      for (let mes = start; mes <= end; mes++) {
+        mesesNecessarios.push({ ano, mes });
       }
     }
 
-    transacoes.forEach((t: TransacaoFinanceira) => {
-      if (t.fl_pago) {
-        // const dataPagamento = new Date(t.data_lancamento as string);
-        const anoPagamento = t.ano;
-        const mesPagamento = t.mes - 1; //-1 pq o mes vem 1-12 e o getMonth() retorna 0-11
+    // Mapear transações pagas (Matrícula ou Mensalidade)
+    const pagamentosRealizados = transacoes
+      .filter(t => t.fl_pago && (t.tr_categoria_id === 1 || t.tr_categoria_id === 14))
+      .map(t => `${t.ano}-${t.mes - 1}`);
 
-        const mesHistorico = meses.find(
-          (m) => m.ano === anoPagamento && m.mes === mesPagamento,
-        );
-        // atualiza o mes como pago
-        if (mesHistorico) {
-          // console.log('houve pagamento em ', mesHistorico.label);
-          meses.find(
-            (m) => m.ano === anoPagamento && m.mes === mesPagamento,
-          )!.pago = true;
-        }
+    // 2. Verificar atraso no mês ATUAL
+    const jaPagouEsteMes = pagamentosRealizados.includes(`${anoAtual}-${mesAtual}`);
+    const diaHoje = dataAtual.getDate();
+
+    if (!jaPagouEsteMes && diaHoje > diaVencimento) {
+      return { label: 'Em Atraso', errors: ['Sem pagamento no mês atual'] };
+    }
+
+    // 3. Verificar se há pendências em meses ANTERIORES
+    // (Ignoramos o mês atual se hoje <= diaVencimento, pois ainda não "venceu")
+    for (const m of mesesNecessarios) {
+      if (m.ano === anoAtual && m.mes === mesAtual) continue;
+
+      if (!pagamentosRealizados.includes(`${m.ano}-${m.mes}`)) {
+        return { label: 'Há Pendências', errors: [`Sem pagamento em ${m.mes + 1}/${m.ano}`] };
       }
-    });
+    }
 
-    //Se for o primeiro usuario, loga os meses
-    // if (isFirstUser) {
-    //   console.log('usuario cadastrado em ', dataCadastro);
-    //   console.log('numero de transacoes ', transacoes.length); 
-    //   console.log('data atual ', dataAtual);
-    //   console.log('meses do usuario ', user.nome, meses);
-    // }
-    return meses.every((m) => m.pago);
+    return { label: 'Em Dia', errors: [] };
   }
 
   async findByFilters(filters: Partial<Usuario> | Usuario) {
@@ -91,24 +99,20 @@ export class UsuarioService {
         planos (
           *
         ), 
-        transacao_financeira!transacao_financeira_pago_por_fkey (
-          *
+        transacao_financeira!transacao_financeira_pago_por_fkey ( 
+          id, tr_categoria_id, fl_pago, ano, mes, data_lancamento
         )
         `,
       )
       .match({ ...filters })
-      .order('nome', {
-        ascending: true,
-      });
+      .order('nome', { ascending: true });
 
-    // console.log('res do findByFilters', res);
-    if (!res.error) {
-      res.data = res.data?.map((u, i) => ({
+    if (!res.error && res.data) {
+      res.data = res.data.map(u => ({
         ...u,
-        fl_adimplente: this.checkAdimplencia(u, u.transacao_financeira as [], i === 2),
+        status_pagamento: this.checkStatusPagamento(u, u.transacao_financeira as TransacaoFinanceira[]),
       }));
     }
-
 
     return res;
   }

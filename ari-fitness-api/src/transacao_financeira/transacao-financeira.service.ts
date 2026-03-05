@@ -8,7 +8,7 @@ const tableName = 'transacao_financeira';
 
 @Injectable()
 export class TransacaoFinanceiraService {
-  constructor(private database: DataBaseService, private usuarioService: UsuarioService) {}
+  constructor(private database: DataBaseService, private usuarioService: UsuarioService) { }
 
   /**
    * The `findAll` function retrieves all records from a specified table in a database.
@@ -18,7 +18,7 @@ export class TransacaoFinanceiraService {
   findAll(filter: Partial<TransacaoFinanceira> | TransacaoFinanceira | any) {
     console.log('findAll: ', filter);
     const { data_inicio, data_fim, orderBy, asc } = filter;
-   
+
     delete filter.data_inicio;
     delete filter.data_fim;
     delete filter.orderBy;
@@ -36,8 +36,8 @@ export class TransacaoFinanceiraService {
       )
       .match({ ...filter, fl_ativo: true })
       // filtrar por data de lancamento
-      .gte(data_inicio ? 'data_lancamento' : '', data_inicio ? data_inicio : '')
-      .lte(data_fim ? 'data_lancamento' : '', data_fim ? data_fim : '')
+      .gte(data_inicio ? 'created_at' : '', data_inicio ? data_inicio : '')
+      .lte(data_fim ? 'created_at' : '', data_fim ? data_fim : '')
       // ordenar
       .order(orderBy, {
         ascending: asc,
@@ -58,16 +58,16 @@ export class TransacaoFinanceiraService {
       throw new HttpException('Data da transação financeira não informada', HttpStatus.BAD_REQUEST);
     }
 
-   switch (transacaoFinanceira.tr_categoria_id) {
-    case 1: //MENSALIDADE
-      if(!transacaoFinanceira.pago_por) {
-        throw new HttpException('Membro da transação financeira não informado', HttpStatus.BAD_REQUEST);
-      }
-      break;
-   
-    default:
-      break;
-   }
+    switch (transacaoFinanceira.tr_categoria_id) {
+      case 1: //MENSALIDADE
+        if (!transacaoFinanceira.pago_por) {
+          throw new HttpException('Membro da transação financeira não informado', HttpStatus.BAD_REQUEST);
+        }
+        break;
+
+      default:
+        break;
+    }
   }
 
   /**
@@ -152,7 +152,7 @@ export class TransacaoFinanceiraService {
       case 1: //MENSALIDADE
         console.log('MENSALIDADE: ');
 
-         await this.usuarioService.update({
+        await this.usuarioService.update({
           id: transacaoFinanceira.pago_por,
           data_ultimo_pagamento: transacaoFinanceira.data_lancamento,
         });

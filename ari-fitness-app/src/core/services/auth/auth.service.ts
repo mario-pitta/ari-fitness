@@ -17,11 +17,11 @@ export class AuthService {
     this.user.set(this.userValue.value);
   }
 
-  get getUser() : IUsuario {
+  get getUser(): IUsuario {
     return this.userValue.value;
   }
 
-  updateUser(user: IUsuario){
+  updateUser(user: IUsuario) {
     this.setUser(user)
   }
 
@@ -35,7 +35,7 @@ export class AuthService {
     return this.http
       .get(
         environment.apiUrl +
-          `/auth/login?cpf=${cpf}&senha=${senha}`
+        `/auth/login?cpf=${cpf}&senha=${senha}`
       )
       .pipe(
         map((u: Usuario | any) => {
