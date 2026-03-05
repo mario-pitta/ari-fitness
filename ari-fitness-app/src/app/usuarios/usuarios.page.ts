@@ -235,8 +235,9 @@ export class UsuariosPage implements OnInit {
           };
         }) => {
           console.log('res: ', res);
+          this.memberDataCard = []; // Clear current cards before rebuild
           this.buildTotalMembersChartCard(res);
-          // this.buildNovosMembrosChartCard(res);
+          this.buildNovosMembrosChartCard(res);
           // this.buildDiariasChartCard(res);
           this.buildHorariosChartCard(res);
         },
@@ -246,8 +247,8 @@ export class UsuariosPage implements OnInit {
   buildHorariosChartCard(res: any) {
     const cardData = {
       title: 'Horários de Pico',
-      subtitle: '',
-      size: 6,
+      subtitle: 'Alunos por faixa horária',
+      size: 4,
       iconColor: 'danger',
       chartType: 'bar',
       value: null,
@@ -275,17 +276,15 @@ export class UsuariosPage implements OnInit {
 
   buildTotalMembersChartCard(res: any) {
     const cardData = {
-      title: 'Alunos',
-      size: 6,
+      title: 'Total de Alunos',
+      size: 4,
       iconColor: 'primary',
       chartType: 'pie',
       cardIconName: 'people',
-      subtitle: '',
+      subtitle: 'Distribuição por gênero',
       value: res.totalMembers.total,
-      tendencyValue:
-        `${res.totalMembers.total > res.memberAtLastMonth ? '+ ' : '- '}` +
-        (res.totalMembers.total -
-          (res.totalMembers.total - res.memberAtLastMonth) / 100),
+      tendency: res.totalMembers.total >= res.memberAtLastMonth ? 'up' : 'down',
+      tendencyValue: (((res.totalMembers.total - res.memberAtLastMonth) / (res.memberAtLastMonth || 1)) * 100).toFixed(1),
       data: [
         {
           name: 'Mulheres',
@@ -302,16 +301,15 @@ export class UsuariosPage implements OnInit {
 
   buildNovosMembrosChartCard(res: any) {
     const cardData = {
-      title: 'Novos Membros',
-      subtitle: 'Total de novos membros',
-
-      size: 6,
-      iconColor: 'primary',
+      title: 'Novos no Mês',
+      subtitle: 'Entradas de ' + Constants.meses[new Date().getMonth()].label,
+      size: 4,
+      iconColor: 'success',
       chartType: 'pie',
-      value: null,
-      cardIconName: 'people',
+      value: res.newMembers.total,
+      cardIconName: 'person-add',
       tendency: 'up',
-      tendencyValue: null,
+      tendencyValue: res.newMembers.tendency?.toFixed(1) || 0,
       data: [
         {
           name: 'Mulheres',
@@ -797,40 +795,17 @@ export class UsuariosPage implements OnInit {
     alert.present();
   }
 
-  importStudents(event: any) {
-    // Keep it for now if needed, but we'll use openImportModal
-    const file = event.target.files[0];
-    if (!file || !this.user?.empresa?.id) return;
-    console.log('event = ', event)
 
-    this.toastr.success('Processando planilha...', 'top');
-    this.usuarioService.importStudents(file, this.user.empresa.id).subscribe({
-      next: (res: any) => {
-        const successCount = res.success.length;
-        const errorCount = res.errors.length;
-
-        if (errorCount > 0) {
-          let errorMessage = `${successCount} alunos importados. ${errorCount} falhas:\n`;
-          res.errors.forEach((err: any) => {
-            errorMessage += `- ${err.row}: ${err.reason}\n`;
-          });
-          this.alertController.create({
-            header: 'Resultado da Importação',
-            message: errorMessage,
-            buttons: ['OK']
-          }).then(alert => alert.present());
-        } else {
-          this.toastr.success(`${successCount} alunos importados com sucesso!`, 'top');
-          this.confetti.showConfetti();
-        }
-        this.getUsuarios();
-      },
-      error: (err) => {
-        this.toastr.error('Erro ao importar alunos: ' + err.message);
-      }
-    });
+  getGlowColor(color: string): string {
+    const colors: { [key: string]: string } = {
+      primary: 'rgba(var(--ion-color-primary-rgb), 0.1)',
+      success: 'rgba(var(--ion-color-success-rgb), 0.1)',
+      warning: 'rgba(var(--ion-color-warning-rgb), 0.1)',
+      danger: 'rgba(var(--ion-color-danger-rgb), 0.1)',
+      medium: 'rgba(var(--ion-color-medium-rgb), 0.1)',
+    };
+    return colors[color] || colors['primary'];
   }
-
   exportStudents() {
     if (!this.user?.empresa?.id) return;
 
