@@ -26,15 +26,9 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 /**
- * Ionic Dark Mode
+ * Ionic Dark Mode (Controlled via body.dark)
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
  */
-
-@import "@ionic/angular/css/palettes/dark.always.css";
-@import "@ionic/angular/css/palettes/dark.class.css";
-@import "@ionic/angular/css/palettes/dark.system.css";
 
 
 
@@ -90,7 +84,7 @@ ion-content {
   }
 
   &::-webkit-scrollbar-track {
-    background: #fff;
+    background: var(--ion-background-color);
   }
 
   &::-webkit-scrollbar-track:hover {
@@ -114,6 +108,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -122,6 +117,7 @@ body {
 a {
   text-decoration: none;
 }
+
 .container {
   text-align: center;
 
@@ -160,29 +156,35 @@ ion-content {
 }
 
 svg {
-  color: white;
+  color: var(--ion-text-color);
 }
+
 .tab-selected svg {
   color: var(--ion-tab-bar-color-selected, var(--ion-color-primary, #0054e9));
 }
+
 .ion-selectable:hover * {
   color: var(--ion-tab-bar-color-selected, var(--ion-color-primary, #0054e9));
 }
+
 .d-flex {
   display: flex !important;
 }
 
 .w-100 {
-  width: 100% !important  ;
+  width: 100% !important;
 }
+
 .w-90 {
-  width: 90% !important  ;
+  width: 90% !important;
 }
+
 .w-75 {
-  width: 75% !important  ;
+  width: 75% !important;
 }
+
 .w-10 {
-  width: 10% !important  ;
+  width: 10% !important;
 }
 
 .text-break {
@@ -205,7 +207,7 @@ svg {
 }
 
 .overlay {
-  box-shadow: 0px 0px 150px 150px #0b0b0bde;
+  box-shadow: 0px 0px 150px 150px rgba(0, 0, 0, 0.5);
 }
 
 /* Estilo básico */
@@ -219,7 +221,8 @@ table {
   table {
     display: block;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Para dispositivos móveis */
+    -webkit-overflow-scrolling: touch;
+    /* Para dispositivos móveis */
   }
 
   th,
@@ -250,6 +253,7 @@ ion-card {
   0% {
     transform: scale(1);
   }
+
   100% {
     transform: scale(1.02);
   }

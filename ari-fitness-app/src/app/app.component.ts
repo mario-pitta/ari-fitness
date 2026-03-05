@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   user: any;
   pageTitle: string = 'MvK Gym App';
   showOptions: boolean = false;
+  isDarkMode: boolean = false;
 
   constructor(
     private titleService: PagetitleService,
@@ -47,11 +48,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    // console.log('AppComponent Initing....');
-    // setTimeout(() => {
-
-    //   this.confetti.clearConfetti();
-    // }, 250);
+    this.initializeTheme();
 
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationStart) {
@@ -67,10 +64,29 @@ export class AppComponent implements OnInit {
     this.user = JSON.parse(localStorage.getItem('user') as string);
     this.titleService.title.asObservable().subscribe({
       next: (title) => {
-        // console.log('AppComponent getting page title', title);
         this.pageTitle = title;
       },
     });
+  }
+
+  initializeTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      this.isDarkMode = savedTheme === 'dark';
+    } else {
+      this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    this.applyTheme();
+  }
+
+  toggleTheme() {
+    this.isDarkMode = !this.isDarkMode;
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  private applyTheme() {
+    document.body.classList.toggle('dark', this.isDarkMode);
   }
 
   logout() {

@@ -44,6 +44,10 @@
           <ion-icon name="person" slot="start"></ion-icon>
           Meu Perfil
         </ion-item>
+        <ion-item [button]="true" (click)="toggleTheme()">
+          <ion-icon [name]="isDarkMode ? 'sunny-outline' : 'moon-outline'" slot="start"></ion-icon>
+          Modo {{ isDarkMode ? 'Claro' : 'Escuro' }}
+        </ion-item>
         <ion-item [button]="true" (click)="showOptions = false; logout()">
           <ion-icon name="exit" slot="start"></ion-icon>
           Sair

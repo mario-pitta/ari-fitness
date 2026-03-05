@@ -77,7 +77,7 @@
 
   <div class="members-grid">
     @for(member of usuarioList ; track $index){
-    <div class="member-card" [class.inactive]="!member.fl_ativo">
+    <div class="member-card glass-card border border-light-subtle " [class.inactive]="!member.fl_ativo">
       <div class="member-top" (click)="showNavigationOptions(member)">
         <div class="person-info">
           <!-- <div class="avatar-box">
