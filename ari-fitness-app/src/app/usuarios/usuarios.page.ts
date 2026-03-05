@@ -427,7 +427,7 @@ export class UsuariosPage implements OnInit {
             };
           });
           console.log('this.usuarioList: ', this.usuarioList);
-          this.usuarioList = this.usuarios;
+          this.usuarioList = this.usuarios.filter((u: Usuario) => u.fl_ativo);
         },
       });
   }
